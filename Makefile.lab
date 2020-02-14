@@ -1,0 +1,20 @@
+# **DO NOT MODIFY**
+
+export COURSE := OS2020
+URL := 'http://ics.nju.edu.cn/%7ejyywiki'
+
+submit: clean-all
+	@cd $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) && \
+	  curl -sSL '$(URL)/submit.sh' | bash
+
+git:
+	@git add $(shell find . -name "*.c") $(shell find . -name "*.h") -A --ignore-errors
+	@while (test -e .git/index.lock); do sleep 0.1; done
+	@(hostnamectl && uptime) | git commit -F - -q --author='tracer-nju <tracer@nju.edu.cn>' --no-verify --allow-empty
+	@sync
+
+.PHONY: clean-all
+
+clean-all:
+	@make -C ../abstract-machine clean > /dev/null
+	@find .. -type d -name build | xargs rm -rf
