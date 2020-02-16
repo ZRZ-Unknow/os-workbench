@@ -69,6 +69,7 @@ void search(struct process *proc){
       if(atoi(entry->d_name)!=proc->pid){
         struct process *thread=malloc(sizeof(struct process));
         thread->pid=atoi(entry->d_name); thread->ppid=proc->pid; thread->state=proc->state; thread->parent=proc; thread->children=NULL;
+        sprintf(thread->name,"{%.16s}",proc->name); 
         printf("thread:%d %d %s %c\n",thread->pid,thread->ppid,thread->name,thread->state);
         struct ChildList *thread_child=malloc(sizeof(struct ChildList));
         thread_child->child=thread;
