@@ -28,6 +28,28 @@ bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
 struct process *root=&root_proc;
+//在父节点中添加孩子节点到孩子列表中
+void insert(struct process *proc,struct ChildList *child){
+  if(!HAV_N || proc->children==NULL){
+    child->next=proc->children;
+    proc->children=child;
+  }
+  else{
+    struct ChildList *p=proc->children;
+    struct ChildList *pre=p;
+    int i=0;
+    while(p!=NULL && p->child->pid<child->child->pid){
+      if(i==0) p=p->next;
+      else{
+        p=p->next;
+        pre=pre->next;
+      }
+      i++;
+    }
+    pre->next=child;
+    child->next=p;
+  }
+}
 void search(struct process *proc){
   //读取文件，填入进程的信息
   char statpath[64],childpath[64],threadpath[64];
@@ -45,7 +67,7 @@ void search(struct process *proc){
   while(fscanf(fp,"%d",&child_id)!=EOF){
     struct process *child=malloc(sizeof(struct process));
     child->pid=child_id; child->ppid=proc->pid; child->parent=proc; child->children=NULL;
-    printf("proc:%d %d %s %c\n",child->pid,child->ppid,child->name,child->state);
+    printf("proc:%d %d \n",child->pid,child->ppid);
     search(child);
   }
   fclose(fp);
