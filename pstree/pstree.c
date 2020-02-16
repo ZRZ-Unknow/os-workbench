@@ -27,8 +27,19 @@ struct ChildList{
 bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
-//struct process *root=&root_proc;
-
+struct process *root=&root_proc;
+void search(struct process *proc){
+  //读取文件，填入进程的信息
+  char statpath[64],childpath[64],threadpath[64];
+  sprintf(statpath,"/proc/%d/stat",proc->pid);
+  sprintf(childpath,"/proc/%d/task/%d/children",proc->pid,proc->pid);
+  sprintf(threadpath,"/proc/%d/task/",proc->pid);
+  FILE *fp=fopen(statpath,"r");
+  fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
+  proc->name[strlen(proc->name)-1]='\0';
+  printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
+  fclose(fp);
+}
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
