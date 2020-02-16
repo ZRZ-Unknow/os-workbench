@@ -27,7 +27,7 @@ struct ChildList{
 bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
-struct process *root=&root_proc;
+//struct process *root=&root_proc;
 
 int main(int argc, char *argv[]) {
   int i;
