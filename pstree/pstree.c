@@ -39,6 +39,16 @@ void search(struct process *proc){
   proc->name[strlen(proc->name)-1]='\0';
   printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
   fclose(fp);
+  //递归寻找孩子
+  fp=fopen(childpath,"r");
+  pid_t child_id;
+  while(fscanf(fp,"%d",&child_id)!=EOF){
+    struct process *child=malloc(sizeof(struct process));
+    child->pid=child_id; child->ppid=proc->pid; child->parent=proc; child->children=NULL;
+    printf("proc:%d %d %s %c\n",child->pid,child->ppid,child->name,child->state);
+    search(child);
+  }
+  fclose(fp);
 }
 int main(int argc, char *argv[]) {
   int i;
