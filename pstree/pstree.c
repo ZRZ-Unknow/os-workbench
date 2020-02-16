@@ -58,5 +58,6 @@ int main(int argc, char *argv[]) {
     printf("pstree v1.0\nCopyright (C) 2020 ZRZ\n");
     return 0;
   }
+  search(root);
   return 0;
 }
