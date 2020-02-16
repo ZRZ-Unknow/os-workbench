@@ -67,6 +67,9 @@ void search(struct process *proc){
   while(fscanf(fp,"%d",&child_id)!=EOF){
     struct process *child=malloc(sizeof(struct process));
     child->pid=child_id; child->ppid=proc->pid; child->parent=proc; child->children=NULL;
+    struct ChildList *_child=malloc(sizeof(struct ChildList));
+    _child->child=child;
+    insert(proc,_child); 
     printf("proc:%d %d \n",child->pid,child->ppid);
     search(child);
   }
