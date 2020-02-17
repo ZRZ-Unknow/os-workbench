@@ -139,6 +139,7 @@ void scan(){
   }
   closedir(procdir);
 }
+
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
@@ -154,7 +155,9 @@ int main(int argc, char *argv[]) {
     }
   }
   if(HAV_V){
-    printf("pstree v1.0\nCopyright (C) 2020 ZRZ\n");
+    fprintf(stderr,_("pstree v1.0\n"));
+    fprintf(stderr,_("Copyright (C) 2020 ZRZ\n\n")); 
+    fprintf(stderr,_("THIS IS A SIMPLE PSTREE IMPLEMENTATION\n"));
     return 0;
   }
   search(root);
