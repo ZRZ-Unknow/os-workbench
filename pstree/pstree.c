@@ -104,6 +104,32 @@ void search(struct process *proc){
   }
   fclose(fp);
 }
+
+//扫描/proc文件夹，将不在树中的进程加入进去
+void scan(){
+  DIR *procdir=opendir("/proc");
+  struct dirent *entry;
+  while((entry=readdir(procdir))!=NULL){
+    if(strspn(entry->d_name,"0123456789")==strlen(entry->d_name)){  //是否是数字
+      pid_t proc_pid=atoi(entry->d_name);
+      char statpath[64]="";
+      sprintf(statpath,"/proc/%d/stat",proc_pid);
+      struct process *proc=malloc(sizeof(struct process));
+      proc->children=NULL;proc->parent=NULL;
+      FILE *fp=fopen(statpath,"r");
+      fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
+      proc->name[strlen(proc->name)-1]='\0';
+      fclose(fp);
+//看这个进程是否在树中:它本身在树中或者它的父母不在树中(进程的父母编号要比孩子小，这保证了若它的父母不应在树中则它也不应在树中)
+      if(proc->ppid==0 || proc_find(proc_pid,root)!=NULL || proc_find(proc->ppid,root)==NULL){  
+        free(proc);
+        continue;
+      }
+      printf("dddddd\n");                                                          
+    }
+  }
+  closedir(procdir);
+}
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
