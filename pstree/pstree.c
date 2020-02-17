@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+//思路：先从1进程为根进行搜索建树，然后搜索/proc的其他文件夹，把不在树中的加入进去
 
 #define pid_t int
 
@@ -28,6 +29,17 @@ bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
 struct process *root=&root_proc;
+//从树中的proc的位置开始搜索它的子树中是否有pid的进程
+struct process *proc_find(pid_t pid,struct process *proc)
+{
+  if(proc->pid==pid) return proc;
+  for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
+    struct process *res=proc_find(pid,p->child);
+    if(res) return res;
+  }
+  return NULL; 
+}
+
 //在父节点中添加孩子节点到孩子列表中
 void insert(struct process *proc,struct ChildList *child){
   if(!HAV_N || proc->children==NULL){
