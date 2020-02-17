@@ -47,8 +47,10 @@ void insert(struct process *proc,struct ChildList *child){
     proc->children=child;
   }
   else{
+    printf("ddd\n");
     struct ChildList *p=proc->children;
     struct ChildList *pre=p;
+    printf("aa\n");
     int i=0;
     while(p!=NULL && p->child->pid<child->child->pid){
       if(i==0) p=p->next;
