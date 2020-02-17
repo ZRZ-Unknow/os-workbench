@@ -142,7 +142,8 @@ void scan(){
 void printBackup(struct process *proc){
   if(proc->parent!=NULL) printBackup(proc->parent);
   int print_len;
-  print_len=(int)strlen(proc->name);
+  if(HAV_P) print_len=(int)strlen(proc->name)+2+len(proc->pid));
+  else print_len=(int)strlen(proc->name);
   printf("%s%*s",(proc==root?"":(proc->children->next?" | ":"   ")),print_len,"");
 }
 void printTree(struct process *proc){
