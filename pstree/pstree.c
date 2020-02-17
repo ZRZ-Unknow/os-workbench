@@ -158,9 +158,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   search(root);
-  //printf("start scan\n");
   scan();
-  //printf("end scan\n");
-  debugprint(root);
+  //debugprint(root);
   return 0;
 }
