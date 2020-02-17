@@ -30,6 +30,12 @@ bool HAV_N=false;
 bool HAV_P=false;
 struct process *root=&root_proc;
 //从树中的proc的位置开始搜索它的子树中是否有pid的进程
+void debugprint(struct process *proc){
+  printf("pid:%d ppid:%d name:%s state:%c\n",proc->pid,proc->ppid,proc->name,proc->state);
+  for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
+    debugprint(p->child);
+  }
+}
 struct process *proc_find(pid_t pid,struct process *proc)
 {
   if(proc->pid==pid) return proc;
@@ -161,5 +167,6 @@ int main(int argc, char *argv[]) {
   printf("start scan\n");
   scan();
   printf("end scan\n");
+  debugprint(root);
   return 0;
 }
