@@ -58,8 +58,10 @@ void insert(struct process *proc,struct ChildList *child){
       }
       i++;
     }
+    printf("aaa\n");
     pre->next=child;
     child->next=p;
+    printf("ccc\n");
   }
 }
 void search(struct process *proc){
