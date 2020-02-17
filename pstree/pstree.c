@@ -155,9 +155,9 @@ int main(int argc, char *argv[]) {
     }
   }
   if(HAV_V){
-    fprintf(stderr,_("pstree v1.0\n"));
-    fprintf(stderr,_("Copyright (C) 2020 ZRZ\n\n")); 
-    fprintf(stderr,_("THIS IS A SIMPLE PSTREE IMPLEMENTATION\n"));
+    fprintf(stderr,("pstree v1.0\n"));
+    fprintf(stderr,("Copyright (C) 2020 ZRZ\n\n")); 
+    fprintf(stderr,("THIS IS A SIMPLE PSTREE IMPLEMENTATION\n"));
     return 0;
   }
   search(root);
