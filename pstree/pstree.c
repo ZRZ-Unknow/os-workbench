@@ -139,6 +139,11 @@ void scan(){
   }
   closedir(procdir);
 }
+int len(pid_t p){
+  int i=0;
+  while(p){i++;p=p/10;}
+  return i;
+}
 void printBackup(struct process *proc){
   if(proc->parent!=NULL) printBackup(proc->parent);
   int print_len;
