@@ -81,7 +81,7 @@ void search(struct process *proc){
   FILE *fp=fopen(statpath,"r");
   fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
   proc->name[strlen(proc->name)-1]='\0';
-  printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
+  //printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
   fclose(fp);
    // 打开thread,thread是没有孩子的
   DIR *taskdir=opendir(threadpath);
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
     else if(strcmp(argv[i],"-V")==0 || strcmp(argv[i],"--version")==0) HAV_V=true;
     else{
       printf("only these arguments are allowed:-p,--show-pids,-n,--numeric-sort,-V,--version\n");
-      return -1;
+      return 0;
     }
   }
   if(HAV_V){
