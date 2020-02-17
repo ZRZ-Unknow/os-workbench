@@ -149,6 +149,8 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   search(root);
+  printf("start scan\n");
   scan();
+  printf("end scan\n");
   return 0;
 }
