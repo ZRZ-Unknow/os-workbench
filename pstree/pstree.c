@@ -29,13 +29,14 @@ bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
 struct process *root=&root_proc;
-//从树中的proc的位置开始搜索它的子树中是否有pid的进程
 void debugprint(struct process *proc){
   printf("pid:%d ppid:%d name:%s state:%c\n",proc->pid,proc->ppid,proc->name,proc->state);
   for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
     debugprint(p->child);
   }
 }
+
+//从树中的proc的位置开始搜索它的子树中是否有pid的进程
 struct process *proc_find(pid_t pid,struct process *proc)
 {
   if(proc->pid==pid) return proc;
@@ -48,31 +49,26 @@ struct process *proc_find(pid_t pid,struct process *proc)
 
 //在父节点中添加孩子节点到孩子列表中
 void insert(struct process *proc,struct ChildList *child){
-  assert(child);
   if(!HAV_N || proc->children==NULL){
-    printf("NULL\n");
     child->next=proc->children;
     proc->children=child;
-    printf("null\n"); 
   }
   else{
-    printf("ddd\n");
-    struct ChildList *p=proc->children;
-    struct ChildList *pre=p;
-    printf("aa\n");
-    int i=0;
-    while(p!=NULL && p->child->pid<child->child->pid){
-      if(i==0) p=p->next;
-      else{
-        p=p->next;
-        pre=pre->next;
-      }
-      i++;
+    if(proc->children->child->pid>child->child->pid){
+      child->next=proc->children;
+      proc->children=child;
+      return;
     }
-    printf("aaa\n");
+    struct ChildList *p=proc->children->next;
+    struct ChildList *pre=proc->children;
+    while(p){
+      if(pre->child->pid<=child->child->pid && p->child->pid>=child->child->pid)
+        break;
+      p=p->next;
+      pre=pre->next;
+    }
     pre->next=child;
     child->next=p;
-    printf("ccc\n");
   }
 }
 void search(struct process *proc){
