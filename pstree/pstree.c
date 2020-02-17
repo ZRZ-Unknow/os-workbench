@@ -179,5 +179,6 @@ int main(int argc, char *argv[]) {
   search(root);
   scan();
   //debugprint(root);
+  printTree(root);
   return 0;
 }
