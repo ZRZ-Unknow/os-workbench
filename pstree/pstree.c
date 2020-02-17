@@ -139,7 +139,23 @@ void scan(){
   }
   closedir(procdir);
 }
-
+void printBackup(struct process *proc){
+  if(proc->parent!=NULL) printBackup(proc->parent);
+  int print_len;
+  else print_len=(int)strlen(proc->name);
+  printf("%s%*s",(proc==root?"":(proc->children->next?" | ":"   ")),print_len,"");
+}
+void printTree(struct process *proc){
+  if(HAV_P) printf("%s%s(%d)%s",(proc==&root_proc?"":(proc==proc->parent->children->child ? "-+-":" |-" )),proc->name,proc->pid,proc->children?"":"\n");
+  else printf("%s%s%s",(proc==root?"":(proc==proc->parent->children->child ? "-+-":" |-" )),proc->name,proc->children?"":"\n");
+  for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
+    if(p->child->parent->children==p) printTree(p->child);
+    else{
+      printBackup(p->child->parent);
+      printTree(p->child);
+    }
+  }
+}
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
