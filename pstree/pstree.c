@@ -135,7 +135,7 @@ void scan(){
       fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
       proc->name[strlen(proc->name)-1]='\0';
       fclose(fp);
-//看这个进程是否在树中:它本身在树中或者它的父母不在树中(进程的父母编号要比孩子小，这保证了若它的父母不应在树中则它也不应在树中)
+      //看这个进程是否在树中:它本身在树中或者它的父母不在树中(进程的父母编号要比孩子小，这保证了若它的父母不应在树中则它也不应在树中)
       if(proc->ppid==0 || proc_find(proc_pid,root)!=NULL || proc_find(proc->ppid,root)==NULL){  
         free(proc);
         continue;
