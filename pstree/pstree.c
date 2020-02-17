@@ -42,9 +42,12 @@ struct process *proc_find(pid_t pid,struct process *proc)
 
 //在父节点中添加孩子节点到孩子列表中
 void insert(struct process *proc,struct ChildList *child){
+  assert(child);
   if(!HAV_N || proc->children==NULL){
+    printf("NULL\n");
     child->next=proc->children;
     proc->children=child;
+    printf("null\n"); 
   }
   else{
     printf("ddd\n");
@@ -89,7 +92,9 @@ void search(struct process *proc){
         printf("thread:%d %d %s %c\n",thread->pid,thread->ppid,thread->name,thread->state);
         struct ChildList *thread_child=malloc(sizeof(struct ChildList));
         thread_child->child=thread;
+        printf("thread insert\n");
         insert(proc,thread_child);
+        printf("thread end\n");
       }
     }
   }
