@@ -29,6 +29,7 @@ bool HAV_V=false;
 bool HAV_N=false;
 bool HAV_P=false;
 struct process *root=&root_proc;
+
 void debugprint(struct process *proc){
   printf("pid:%d ppid:%d name:%s state:%c\n",proc->pid,proc->ppid,proc->name,proc->state);
   for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
@@ -91,12 +92,10 @@ void search(struct process *proc){
         struct process *thread=malloc(sizeof(struct process));
         thread->pid=atoi(entry->d_name); thread->ppid=proc->pid; thread->state=proc->state; thread->parent=proc; thread->children=NULL;
         sprintf(thread->name,"{%.16s}",proc->name);//thread显示名字要加花括号 
-        printf("thread:%d %d %s %c\n",thread->pid,thread->ppid,thread->name,thread->state);
+        //printf("thread:%d %d %s %c\n",thread->pid,thread->ppid,thread->name,thread->state);
         struct ChildList *thread_child=malloc(sizeof(struct ChildList));
         thread_child->child=thread;
-        printf("thread insert\n");
         insert(proc,thread_child);
-        printf("thread end\n");
       }
     }
   }
@@ -110,7 +109,7 @@ void search(struct process *proc){
     struct ChildList *_child=malloc(sizeof(struct ChildList));
     _child->child=child;
     insert(proc,_child); 
-    printf("proc:%d %d \n",child->pid,child->ppid);
+    //printf("proc:%d %d \n",child->pid,child->ppid);
     search(child);
   }
   fclose(fp);
@@ -136,7 +135,6 @@ void scan(){
         free(proc);
         continue;
       }
-      printf("dddddd\n");                                                          
     }
   }
   closedir(procdir);
