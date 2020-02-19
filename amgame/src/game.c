@@ -29,13 +29,12 @@ int main(const char *args) {
   _ioe_init();
   init_screen();
   init_snake();
-  draw_snake();
   puts("mainargs = \"");
   puts(args); // make run mainargs=xxx
   puts("\"\n");
 
   splash();
-
+  draw_snake();
   puts("Press any key to see its key code...\n");
   while (1) {
     if(read_key()==1)_halt(0);
