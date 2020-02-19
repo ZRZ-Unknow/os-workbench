@@ -1,5 +1,6 @@
 #include <am.h>
 #include <amdev.h>
+#include <klib.h>
 
 void splash();
 void print_key();
