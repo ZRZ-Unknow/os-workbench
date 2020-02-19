@@ -16,7 +16,11 @@ void init_snake(){
   snake.node[1].x=(w/SIDE/2)*SIDE,snake.node[1].y=(h/SIDE/2)*SIDE-SIDE;
   snake.node[2].x=(w/SIDE/2)*SIDE,snake.node[2].y=(h/SIDE/2)*SIDE-2*SIDE;
 }
-
+void draw_snake(){
+  for(int i=0;i<snake.lenth;i++){
+      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,0x000000);
+  }
+}
 
 
 
@@ -25,6 +29,7 @@ int main(const char *args) {
   _ioe_init();
   init_screen();
   init_snake();
+  draw_snake();
   puts("mainargs = \"");
   puts(args); // make run mainargs=xxx
   puts("\"\n");

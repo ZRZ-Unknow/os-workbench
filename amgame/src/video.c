@@ -21,7 +21,9 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
   }
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTRL, &event, sizeof(event));
 }
-
+void _draw(int x, int y, int w, int h, uint32_t color){
+  draw_tile(x, y, w, h,color);
+}
 void splash() {
   init();
   for (int x = 0; x * SIDE <= w; x ++) {
