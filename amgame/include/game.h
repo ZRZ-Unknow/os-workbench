@@ -10,6 +10,9 @@
 #define LEFT 3
 #define RIGHT 4
 
+#define BLACK 0x000000
+#define WHITE 0xffffff
+#define RED 0xc73e3a
 struct Node{
   int x;
   int y;
