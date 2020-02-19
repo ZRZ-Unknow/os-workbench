@@ -18,7 +18,11 @@ void init_snake(){
 }
 void draw_snake(){
   for(int i=0;i<snake.lenth;i++){
-      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,0x000000);
+    if(i==snake.lenth-1){
+      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
+      break;
+    }
+    _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
   }
 }
 
