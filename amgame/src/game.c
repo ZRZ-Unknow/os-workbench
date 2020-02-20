@@ -158,6 +158,15 @@ int main(const char *args) {
       last_time=curr_time;
       int key=read_key();
       if(key==1)_halt(0);
+      if(key==38){                  //P
+        Log("Press C To Continue...");
+        int k=read_key();
+        while(true){
+          if(k==1)_halt(0);
+          if(k==58)break;     //C
+          k=read_key();
+        }
+      }
       switch (key){//1,2,3
         case 15:speed=150;break;
         case 16:speed=100;break;
