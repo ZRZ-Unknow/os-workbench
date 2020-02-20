@@ -179,6 +179,7 @@ int main(const char *args) {
       }
       draw_food();
     }
+    //死了或赢了后重启
     while((curr_time=uptime())<last_time+500){};
     init_snake();
     init_food();
