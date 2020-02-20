@@ -21,7 +21,19 @@ void init_snake(){
   snake.node[1].x=(w/SIDE/2)*SIDE,snake.node[1].y=(h/SIDE/2)*SIDE-SIDE;
   snake.node[2].x=(w/SIDE/2)*SIDE,snake.node[2].y=(h/SIDE/2)*SIDE-2*SIDE;
 }
+void init_food(){
+  srand(uptime());
+  int x=rand()%(w/SIDE);
+  int y=rand()%(h/SIDE);
+  food_1[0]=x*SIDE;
+  food_1[1]=y*SIDE;
 
+  srand(uptime());
+  x=rand()%(w/SIDE);
+  y=rand()%(h/SIDE);
+  food_2[0]=x*SIDE;
+  food_2[1]=y*SIDE;
+}
 
 
 int main(const char *args) {
@@ -29,6 +41,7 @@ int main(const char *args) {
   init();
   init_snake();
   init_edge();
+  init_food();
   splash();
   draw_snake();
   while (1) {
