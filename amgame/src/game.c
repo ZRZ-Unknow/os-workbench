@@ -201,7 +201,8 @@ int main(const char *args) {
       }
     }
     //死了或赢了后重启
-    while((curr_time=uptime())<last_time+800){};
+    Log("Press R/Esc To Restart/End The Game");
+    
     Log("RESTART");
     init_snake();
     init_food();
