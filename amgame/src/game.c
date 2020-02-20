@@ -123,6 +123,9 @@ int main(const char *args) {
           default:mov=0;break;
         }
         update_snake(mov);
+        if(food_eaten){
+          food_eaten=false;
+        }
         splash();
         draw_snake();
         draw_food();
