@@ -153,25 +153,31 @@ int main(const char *args) {
   
     while (true) {
       while((curr_time=uptime())<last_time+150){};
-        last_time=curr_time;
-        int key=read_key();
-        if(key==1)_halt(0);
-        int mov=0;
-        switch (key){//w,s,a,d
-          case 30:mov=UP;break;
-          case 44:mov=DOWN;break;
-          case 43:mov=LEFT;break;
-          case 45:mov=RIGHT;break;
-          default:mov=0;break;
-        }
-        update_snake(mov);
-        if(food_eaten){
-          gen_food();
-          food_eaten=false;
-        }
-        splash();
-        draw_snake();
-        draw_food();
+      last_time=curr_time;
+      int key=read_key();
+      if(key==1)_halt(0);
+      int mov=0;
+      switch (key){//w,s,a,d
+        case 30:mov=UP;break;
+        case 44:mov=DOWN;break;
+        case 43:mov=LEFT;break;
+        case 45:mov=RIGHT;break;
+        default:mov=0;break;
+      }
+      update_snake(mov);
+      if(dead){
+        break;
+      }
+      if(food_eaten){
+        gen_food();
+        food_eaten=false;
+      }
+      splash();
+      draw_snake();
+      if(succ){
+        break;
+      }
+      draw_food();
     }
   }
   return 0;
