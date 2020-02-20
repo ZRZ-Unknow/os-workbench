@@ -28,7 +28,12 @@ struct Snake{
   int lenth;
   struct Node node[MAX_LEN];
 };
-
+int w,h;
+struct Snake snake;
+int edge[4][2];
+int food_1[2];
+int food_2[2];
+bool food_eaten=false;
 
 
 

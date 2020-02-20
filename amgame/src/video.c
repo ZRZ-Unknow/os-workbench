@@ -1,7 +1,8 @@
 #include <game.h>
 
-#define SIDE 16
-static int w, h;
+//#define SIDE 16
+//static int w, h;
+//extern int w,h;
 
 static void init() {
   _DEV_VIDEO_INFO_t info = {0};
