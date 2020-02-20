@@ -38,6 +38,6 @@ void draw_snake(){
       draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
       break;
     }
-    draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
+    draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,PURPLE);
   }
 }

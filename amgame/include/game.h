@@ -20,6 +20,10 @@
 #define WHITE 0xffffff
 #define RED 0xc73e3a
 #define CHOCOLATE 0xd2691e
+#define PURPLE 0x800080
+#define GREEN 0x869900
+
+
 struct Node{
   int x;
   int y;
