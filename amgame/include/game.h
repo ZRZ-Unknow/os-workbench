@@ -34,17 +34,14 @@ struct Snake{
   struct Node node[MAX_LEN];
 };
 
-
-
-
-void splash();
-void print_key();
 void draw_snake();
 void init();
 void draw_food();
-
-
-
+void splash();
 static inline void puts(const char *s) {
   for (; *s; s++) _putc(*s);
 }
+#define Log(format, ...) \
+  printf("\33[0m[\33[1;35mLog\33[0m]\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
+    __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+

@@ -153,6 +153,7 @@ int main(const char *args) {
   while(true){
     unsigned long last_time=uptime();
     unsigned long curr_time=uptime();
+    Log("SCORE:%d",score);
     while (true) {
       while((curr_time=uptime())<last_time+speed){};
       last_time=curr_time;
@@ -177,6 +178,7 @@ int main(const char *args) {
         break;
       }
       if(food_eaten && !succ){
+        Log("SCORE:%d",score);
         gen_food();
         food_eaten=false;
       }
