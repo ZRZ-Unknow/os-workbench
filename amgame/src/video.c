@@ -14,10 +14,10 @@ void init() {
   h = info.height;
   char ch[32]="";
   sprintf(ch,"You Need To Get %d Score To Win The Game\n",(MAX_LEN-3)*100);
-  printf("This Is A Gluttonous Snake Game\n");
-  printf("Press W,S,A,D To Control The Direction,Press 1,2,3 To Switch The Snake's Speed\n");
+  //printf("This Is A Gluttonous Snake Game\n");
+ //printf("Press W,S,A,D To Control The Direction,Press 1,2,3 To Switch The Snake's Speed\n");
   printf(ch);
-  printf("Good Luck!\n");
+  //printf("Good Luck!\n");
 }
 
 static void draw_tile(int x, int y, int w, int h, uint32_t color) {
