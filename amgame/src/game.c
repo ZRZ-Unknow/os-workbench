@@ -21,6 +21,14 @@ void init_snake(){
   snake.node[1].x=(w/SIDE/2)*SIDE,snake.node[1].y=(h/SIDE/2)*SIDE-SIDE;
   snake.node[2].x=(w/SIDE/2)*SIDE,snake.node[2].y=(h/SIDE/2)*SIDE-2*SIDE;
 }
+bool collision(int x,int y,int fx,int fy){   //在这里，x,y是没有乘SIDE的, 而fx,fy是乘过SIDE的
+  if(x==edge[0][0] || y==edge[0][1] || x*SIDE>=edge[3][0] || y*SIDE>=edge[3][1]) return true;
+  if(fx==x*SIDE && fy==y*SIDE) return true;
+  for(int i=0;i<snake.lenth;i++){
+    if(x*SIDE-snake.node[i].x>=0 && x*SIDE-snake.node[i].x<SIDE && y*SIDE-snake.node[i].y>=0 && y*SIDE-snake.node[i].y<SIDE) return true;
+  }
+  return false;
+}
 void init_food(){
   srand(uptime());
   int x=rand()%(w/SIDE);
