@@ -8,14 +8,6 @@ int food_1[2];
 int food_2[2];
 bool food_eaten=false;
 
-
-
-void init_screen() {
-  _DEV_VIDEO_INFO_t info = {0};
-  _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
-  w = info.width;
-  h = info.height;
-}
 void init_edge(){
   edge[0][0]=0;edge[0][1]=0;            //左上
   edge[1][0]=0;edge[1][1]=(h/SIDE-1)*SIDE;    //左下
@@ -29,15 +21,7 @@ void init_snake(){
   snake.node[1].x=(w/SIDE/2)*SIDE,snake.node[1].y=(h/SIDE/2)*SIDE-SIDE;
   snake.node[2].x=(w/SIDE/2)*SIDE,snake.node[2].y=(h/SIDE/2)*SIDE-2*SIDE;
 }
-void draw_snake(){
-  for(int i=0;i<snake.lenth;i++){
-    if(i==snake.lenth-1){
-      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
-      break;
-    }
-    _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
-  }
-}
+
 void draw_edge(){
 
 }
@@ -47,7 +31,6 @@ void draw_edge(){
 
 int main(const char *args) {
   _ioe_init();
-  init_screen();
   init_snake();
   puts("mainargs = \"");
   puts(args); // make run mainargs=xxx
