@@ -152,9 +152,9 @@ int main(const char *args) {
     unsigned long curr_time=uptime();
   
     while (true) {
+      int key=read_key();
       while((curr_time=uptime())<last_time+200){};
         last_time=curr_time;
-        int key=read_key();
         if(key==1)_halt(0);
         int mov=0;
         switch (key){//w,s,a,d
