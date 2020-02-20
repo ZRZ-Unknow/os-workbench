@@ -1,9 +1,10 @@
 #include <game.h>
 
-//#define SIDE 16
-//static int w, h;
-//extern int w,h;
-
+extern int w,h;
+extern int edge[4][2];
+extern int food_1[2];
+extern int food_2[2];
+extern struct Snake snake;
 static void init() {
   _DEV_VIDEO_INFO_t info = {0};
   _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
@@ -33,5 +34,14 @@ void splash() {
         draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, WHITE); // white
       //}
     }
+  }
+}
+void draw_snake(){
+  for(int i=0;i<snake.lenth;i++){
+    if(i==snake.lenth-1){
+      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
+      break;
+    }
+    _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
   }
 }
