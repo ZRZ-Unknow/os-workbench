@@ -34,6 +34,7 @@ struct Snake{
 
 void splash();
 void print_key();
+void draw_snake();
 void _draw(int x, int y, int w, int h, uint32_t color);
 static inline void puts(const char *s) {
   for (; *s; s++) _putc(*s);

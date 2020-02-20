@@ -39,9 +39,9 @@ void splash() {
 void draw_snake(){
   for(int i=0;i<snake.lenth;i++){
     if(i==snake.lenth-1){
-      _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
+      draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,RED);
       break;
     }
-    _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
+    draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
   }
 }
