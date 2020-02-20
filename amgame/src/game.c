@@ -179,6 +179,15 @@ int main(const char *args) {
       }
       draw_food();
     }
+    init_snake();
+    init_food();
+    food_eaten=0;
+    score=0;
+    dead=false;
+    succ=false;
+    splash();
+    draw_snake();
+    draw_food();
   }
   return 0;
 }
