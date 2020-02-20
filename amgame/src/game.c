@@ -93,6 +93,7 @@ void update_snake(int mov){
     snake.node[snake.lenth].y=head.y;
     snake.lenth++;
   }
+  snake.dire=((mov==NONE)?snake.dire:mov); 
 }
 
 int main(const char *args) {
