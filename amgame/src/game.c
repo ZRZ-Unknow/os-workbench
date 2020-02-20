@@ -167,7 +167,7 @@ int main(const char *args) {
       if(dead){
         break;
       }
-      if(food_eaten){
+      if(food_eaten && !succ){
         gen_food();
         food_eaten=false;
       }
