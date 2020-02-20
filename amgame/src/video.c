@@ -12,6 +12,9 @@ void init() {
   _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
   w = info.width;
   h = info.height;
+  char ch[32]="";
+  sprintf(ch,"You need to get %d score to win\n",(MAX_LEN-3)*100);
+  printf(ch);
 }
 
 static void draw_tile(int x, int y, int w, int h, uint32_t color) {
