@@ -172,11 +172,11 @@ int main(const char *args) {
         food_eaten=false;
       }
       splash();
+      draw_food();
       draw_snake();
       if(succ){
         break;
       }
-      draw_food();
     }
     //死了或赢了后重启
     while((curr_time=uptime())<last_time+500){};
