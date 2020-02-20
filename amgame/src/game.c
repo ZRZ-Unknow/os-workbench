@@ -153,7 +153,7 @@ int main(const char *args) {
   
     while (true) {
       int key=read_key();
-      while((curr_time=uptime())<last_time+100){};
+      while((curr_time=uptime())<last_time+150){};
         last_time=curr_time;
         if(key==1)_halt(0);
         int mov=0;
