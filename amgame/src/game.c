@@ -186,6 +186,7 @@ int main(const char *args) {
       draw_food();
       draw_snake();
       if(succ){
+        Log("SCORE:%d",score);
         break;
       }
     }
