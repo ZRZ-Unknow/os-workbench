@@ -3,6 +3,13 @@
 // Operating system is a C program!
 int w,h;
 struct Snake snake;
+int edge[4][2];
+int food_1[2];
+int food_2[2];
+bool food_eaten=false;
+
+
+
 void init_screen() {
   _DEV_VIDEO_INFO_t info = {0};
   _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));

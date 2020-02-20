@@ -2,7 +2,11 @@
 #include <amdev.h>
 #include <klib.h>
 
-
+#ifndef bool
+#define bool int8_t
+#define false 0
+#define true 1
+#endif
 
 #define MAX_LEN 100
 #define SIDE 16
