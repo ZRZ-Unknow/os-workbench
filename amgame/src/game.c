@@ -202,7 +202,12 @@ int main(const char *args) {
     }
     //死了或赢了后重启
     Log("Press R/Esc To Restart/End The Game");
-    
+    int k=read_key();
+    while(true){
+      if(k==32) break;
+      else if(k==1) _halt(0);
+      k=read_key();
+    } 
     Log("RESTART");
     init_snake();
     init_food();
