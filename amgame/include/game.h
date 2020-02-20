@@ -19,6 +19,7 @@
 #define BLACK 0x000000
 #define WHITE 0xffffff
 #define RED 0xc73e3a
+#define CHOCOLATE 0xd2691e
 struct Node{
   int x;
   int y;

@@ -22,21 +22,13 @@ void init_snake(){
   snake.node[2].x=(w/SIDE/2)*SIDE,snake.node[2].y=(h/SIDE/2)*SIDE-2*SIDE;
 }
 
-void draw_edge(){
-
-}
-
-
 
 
 int main(const char *args) {
   _ioe_init();
   init();
   init_snake();
-  puts("mainargs = \"");
-  puts(args); // make run mainargs=xxx
-  puts("\"\n");
-
+  init_edge();
   splash();
   draw_snake();
   while (1) {

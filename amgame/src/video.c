@@ -24,12 +24,11 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTRL, &event, sizeof(event));
 }
 void splash() {
-  init();
-  for (int x = 0; x * SIDE <= w; x ++) {
-    for (int y = 0; y * SIDE <= h; y++) {
-      //if ((x & 1) ^ (y & 1)) {
-        draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, WHITE); // white
-      //}
+  for (int x = 0; x <= w; x+=SIDE) {
+    for (int y = 0; y<= h;y+=SIDE) {
+      if(x==edge[0][0] || x>=edge[3][0] || y==edge[0][1] || y>=edge[3][1])
+        draw_tile(x,y,SIDE,SIDE,CHOCOLATE);
+      else draw_tile(x, y, SIDE, SIDE,BLACK);
     }
   }
 }
