@@ -8,7 +8,7 @@
 #define true 1
 #endif
 
-#define MAX_LEN 10
+#define MAX_LEN 103
 #define SIDE 16
 #define NONE 0
 #define UP 1
