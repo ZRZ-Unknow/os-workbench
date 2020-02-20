@@ -133,8 +133,7 @@ void update_snake(int mov){
   snake.dire=((mov==NONE)?snake.dire:mov); 
   score=(snake.lenth-3)*100;
   if(snake.lenth==MAX_LEN){
-    succ=1;
-    return;
+    succ=true;
   }  
 }
 
@@ -165,7 +164,7 @@ int main(const char *args) {
         default:mov=0;break;
       }
       update_snake(mov);
-      if(dead){
+      if(dead||succ){
         break;
       }
       if(food_eaten){
