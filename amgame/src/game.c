@@ -7,6 +7,9 @@ int edge[4][2];
 int food_1[2];
 int food_2[2];
 bool food_eaten=false;
+bool dead=false;
+bool succ=false;
+
 
 void init_edge(){
   edge[0][0]=0;edge[0][1]=0;            //左上
