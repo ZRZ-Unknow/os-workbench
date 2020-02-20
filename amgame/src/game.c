@@ -110,7 +110,7 @@ int main(const char *args) {
     unsigned long curr_time=uptime();
   
     while (true) {
-      while((curr_time=uptime())<last_time+1000){};
+      while((curr_time=uptime())<last_time+200){};
         last_time=curr_time;
         update_snake(0);
         splash();
