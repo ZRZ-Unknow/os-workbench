@@ -12,7 +12,6 @@ bool food_eaten=false;
 bool dead=false;
 bool succ=false;
 
-
 void init_edge(){
   edge[0][0]=0;edge[0][1]=0;            //左上
   edge[1][0]=0;edge[1][1]=(h/SIDE-1)*SIDE;    //左下
@@ -144,6 +143,7 @@ void update_snake(int mov){
 int main(const char *args) {
   _ioe_init();
   init();
+  printf("dddd\n");
   init_snake();
   init_edge();
   init_food();
