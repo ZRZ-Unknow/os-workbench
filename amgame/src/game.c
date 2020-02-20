@@ -6,6 +6,7 @@ struct Snake snake;
 int edge[4][2];
 int food_1[2];
 int food_2[2];
+int score=0;
 bool food_eaten=false;
 bool dead=false;
 bool succ=false;
@@ -79,6 +80,14 @@ void gen_food(){
     food_2[1]=y*SIDE;
   }
 }
+bool is_dead(int x,int y){
+  if(x==edge[0][0] || y==edge[0][1] || x==edge[3][0] || y==edge[3][1]) return true;
+  for(int i=0;i<snake.lenth;i++){
+    //TODO }
+    if(snake.node[i].x==x && snake.node[i].y==y) return true;
+  }
+  return false;
+}
 void update_snake(int mov){
   //计算头的位置
   struct Node head={.x=0,.y=0};
@@ -102,6 +111,10 @@ void update_snake(int mov){
   if(eat_food(head.x,head.y)){
     food_eaten=true;
   }
+  if(is_dead(head.x,head.y)){
+    dead=true;
+    return;
+  }
   //未碰到食物，向前移动 
   if(!food_eaten){
     for(int i=0;i<snake.lenth-1;i++){
@@ -118,6 +131,11 @@ void update_snake(int mov){
     snake.lenth++;
   }
   snake.dire=((mov==NONE)?snake.dire:mov); 
+  score=(snake.lenth-3)*100;
+  if(snake.lenth==MAX_LEN){
+    succ=1;
+    return;
+  }  
 }
 
 int main(const char *args) {
