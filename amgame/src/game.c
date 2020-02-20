@@ -84,7 +84,10 @@ void gen_food(){
 bool is_dead(int x,int y){
   if(x==edge[0][0] || y==edge[0][1] || x==edge[3][0] || y==edge[3][1]) return true;
   for(int i=0;i<snake.lenth;i++){
-    //TODO }
+    //首尾相接的情况在没吃到食物的时候不是死亡
+    if(i==0){
+      if(snake.node[i].x==x && snake.node[i].y==y && !food_eaten) return false;
+    }
     if(snake.node[i].x==x && snake.node[i].y==y) return true;
   }
   return false;
@@ -150,7 +153,6 @@ int main(const char *args) {
   while(true){
     unsigned long last_time=uptime();
     unsigned long curr_time=uptime();
-  
     while (true) {
       while((curr_time=uptime())<last_time+speed){};
       last_time=curr_time;
