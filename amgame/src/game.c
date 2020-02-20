@@ -16,19 +16,11 @@ void init_screen() {
   w = info.width;
   h = info.height;
 }
-void itoa(int a){
-  char ch[64]="";
-  int i=0;
-  while(a){
-    int b=a%10;
-    ch[i++]=b+'0';
-    a/=10;
-  }
-  ch[i]='\0';
-  for(int j=i-1;j>=0;j--){
-    _putc(ch[j]);
-  }
-  _putc('\n');
+void init_edge(){
+  edge[0][0]=0;edge[0][1]=0;            //左上
+  edge[1][0]=0;edge[1][1]=(h/SIDE-1)*SIDE;    //左下
+  edge[2][0]=(w/SIDE-1)*SIDE;edge[2][1]=0;      //右上
+  edge[3][0]=(w/SIDE-1)*SIDE;edge[3][1]=(h/SIDE-1)*SIDE; //右下
 }
 void init_snake(){
   snake.dire=UP;
