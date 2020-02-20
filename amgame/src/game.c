@@ -112,7 +112,17 @@ int main(const char *args) {
     while (true) {
       while((curr_time=uptime())<last_time+200){};
         last_time=curr_time;
-        update_snake(0);
+        int key=read_key();
+        if(key==1)_halt(0);
+        int mov=0;
+        switch (key){//w,s,a,d
+          case 30:mov=UP;break;
+          case 44:mov=DOWN;break;
+          case 43:mov=LEFT;break;
+          case 45:mov=RIGHT;break;
+          default:mov=0;break;
+        }
+        update_snake(mov);
         splash();
         draw_snake();
         draw_food();
