@@ -5,6 +5,8 @@ extern int edge[4][2];
 extern int food_1[2];
 extern int food_2[2];
 extern struct Snake snake;
+
+
 void init() {
   _DEV_VIDEO_INFO_t info = {0};
   _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
@@ -40,4 +42,8 @@ void draw_snake(){
     }
     draw_tile(snake.node[i].x,snake.node[i].y,SIDE,SIDE,PURPLE);
   }
+}
+void draw_food(){
+  draw_tile(food_1[0],food_1[1],SIDE,SIDE,RED);
+  draw_tile(food_2[0],food_2[1],SIDE,SIDE,RED);
 }

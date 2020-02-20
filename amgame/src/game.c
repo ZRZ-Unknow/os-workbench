@@ -44,6 +44,7 @@ int main(const char *args) {
   init_food();
   splash();
   draw_snake();
+  draw_food();
   while (1) {
     if(read_key()==1)_halt(0);
     //print_key();

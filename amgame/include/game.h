@@ -41,6 +41,10 @@ void splash();
 void print_key();
 void draw_snake();
 void init();
+void draw_food();
+
+
+
 static inline void puts(const char *s) {
   for (; *s; s++) _putc(*s);
 }
