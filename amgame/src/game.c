@@ -38,6 +38,9 @@ void draw_snake(){
     _draw(snake.node[i].x,snake.node[i].y,SIDE,SIDE,BLACK);
   }
 }
+void draw_edge(){
+
+}
 
 
 
