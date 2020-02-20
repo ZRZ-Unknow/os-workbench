@@ -7,6 +7,7 @@ int edge[4][2];
 int food_1[2];
 int food_2[2];
 int score=0;
+int speed=150;
 bool food_eaten=false;
 bool dead=false;
 bool succ=false;
@@ -151,10 +152,16 @@ int main(const char *args) {
     unsigned long curr_time=uptime();
   
     while (true) {
-      while((curr_time=uptime())<last_time+150){};
+      while((curr_time=uptime())<last_time+speed){};
       last_time=curr_time;
       int key=read_key();
       if(key==1)_halt(0);
+      switch (key){//1,2,3
+        case 15:speed=150;break;
+        case 16:speed=100;break;
+        case 17:speed=50;break;
+        default:break;
+      }
       int mov=0;
       switch (key){//w,s,a,d
         case 30:mov=UP;break;
