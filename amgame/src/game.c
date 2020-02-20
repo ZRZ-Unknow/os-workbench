@@ -105,9 +105,18 @@ int main(const char *args) {
   splash();
   draw_snake();
   draw_food();
-  while (1) {
-    if(read_key()==1)_halt(0);
-    //print_key();
+  while(true){
+    unsigned long last_time=uptime();
+    unsigned long curr_time=uptime();
+  
+    while (true) {
+      while((curr_time=uptime())<last_time){};
+        last_time=curr_time;
+        update_snake(0);
+        splash();
+        draw_snake();
+        draw_food();
+    }
   }
   return 0;
 }
