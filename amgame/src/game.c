@@ -179,7 +179,7 @@ int main(const char *args) {
       }
       draw_food();
     }
-    while((curr_time=uptime())<last_time+1000){};
+    while((curr_time=uptime())<last_time+500){};
     init_snake();
     init_food();
     food_eaten=0;
