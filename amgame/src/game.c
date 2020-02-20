@@ -52,7 +52,6 @@ int main(const char *args) {
 
   splash();
   draw_snake();
-  puts("Press any key to see its key code...\n");
   while (1) {
     if(read_key()==1)_halt(0);
     //print_key();
