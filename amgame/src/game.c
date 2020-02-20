@@ -191,6 +191,7 @@ int main(const char *args) {
     init_food();
     food_eaten=0;
     score=0;
+    speed=150;
     dead=false;
     succ=false;
     splash();
