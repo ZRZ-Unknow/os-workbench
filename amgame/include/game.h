@@ -2,6 +2,8 @@
 #include <amdev.h>
 #include <klib.h>
 
+
+
 #define MAX_LEN 100
 #define SIDE 16
 #define NONE 0
