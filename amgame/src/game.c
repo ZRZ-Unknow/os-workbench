@@ -31,6 +31,7 @@ void draw_edge(){
 
 int main(const char *args) {
   _ioe_init();
+  init();
   init_snake();
   puts("mainargs = \"");
   puts(args); // make run mainargs=xxx

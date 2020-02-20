@@ -5,7 +5,7 @@ extern int edge[4][2];
 extern int food_1[2];
 extern int food_2[2];
 extern struct Snake snake;
-static void init() {
+void init() {
   _DEV_VIDEO_INFO_t info = {0};
   _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
   w = info.width;
@@ -22,9 +22,6 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
     pixels[i] = color;
   }
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTRL, &event, sizeof(event));
-}
-void _draw(int x, int y, int w, int h, uint32_t color){
-  draw_tile(x, y, w, h,color);
 }
 void splash() {
   init();
