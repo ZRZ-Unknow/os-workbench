@@ -192,6 +192,7 @@ int main(const char *args) {
     }
     //死了或赢了后重启
     while((curr_time=uptime())<last_time+500){};
+    Log("RESTART");
     init_snake();
     init_food();
     food_eaten=0;
