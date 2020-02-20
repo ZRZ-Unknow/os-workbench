@@ -152,7 +152,7 @@ int main(const char *args) {
   while(true){
     unsigned long last_time=uptime();
     unsigned long curr_time=uptime();
-    Log("SCORE:%d",score);
+    Log("SCORE:%d,",score);
     while (true) {
       while((curr_time=uptime())<last_time+speed){};
       last_time=curr_time;
@@ -201,7 +201,7 @@ int main(const char *args) {
       }
     }
     //死了或赢了后重启
-    while((curr_time=uptime())<last_time+500){};
+    while((curr_time=uptime())<last_time+800){};
     Log("RESTART");
     init_snake();
     init_food();
