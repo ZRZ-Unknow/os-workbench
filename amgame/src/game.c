@@ -183,6 +183,7 @@ int main(const char *args) {
       }
       update_snake(mov);
       if(dead){
+        Log("Unfortunately You LOST The Game!");
         break;
       }
       if(food_eaten && !succ){
@@ -195,6 +196,7 @@ int main(const char *args) {
       draw_snake();
       if(succ){
         Log("SCORE:%d",score);
+        Log("Congratulations You WON The Game!");
         break;
       }
     }
