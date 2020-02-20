@@ -50,7 +50,32 @@ void init_food(){
   food_2[0]=x*SIDE;
   food_2[1]=y*SIDE;
 }
-
+bool eat_food(int x,int y){
+  if(food_1[0]-x>=0 && food_1[0]-x<SIDE && food_1[1]-y>=0 && food_1[1]-y<SIDE) return true;
+  if(food_2[0]-x>=0 && food_2[0]-x<SIDE && food_2[1]-y>=0 && food_2[1]-y<SIDE) return true;
+  return false;
+}
+/*void update_snake(int mov){
+  //计算头的位置
+  struct Node head={.x=0,.y=0};
+  switch (mov){
+    case NONE:
+      if(snake.dire==UP || snake.dire==DOWN){
+        head.y=snake.node[snake.lenth-1].y+SIDE*(snake.dire==UP?-1:1);
+        head.x=snake.node[snake.lenth-1].x;
+      }
+      else{
+        head.x=snake.node[snake.lenth-1].x+SIDE*(snake.dire==LEFT?-1:1);
+        head.y=snake.node[snake.lenth-1].y;
+      }
+      break;
+    case UP: head.y=snake.node[snake.lenth-1].y-SIDE;head.x=snake.node[snake.lenth-1].x;break;
+    case DOWN:head.y=snake.node[snake.lenth-1].y+SIDE;head.x=snake.node[snake.lenth-1].x; break;
+    case LEFT: head.x=snake.node[snake.lenth-1].x-SIDE;head.y=snake.node[snake.lenth-1].y;break;
+    case RIGHT:head.x=snake.node[snake.lenth-1].x+SIDE;head.y=snake.node[snake.lenth-1].y;break;
+    default:assert(0);break;
+  }
+}*/
 
 int main(const char *args) {
   _ioe_init();
