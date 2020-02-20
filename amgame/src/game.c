@@ -55,6 +55,27 @@ bool eat_food(int x,int y){
   if(food_2[0]-x>=0 && food_2[0]-x<SIDE && food_2[1]-y>=0 && food_2[1]-y<SIDE) return true;
   return false;
 }
+void gen_food(){
+  srand(uptime());
+  int x=rand()%(w/SIDE);
+  int y=rand()%(h/SIDE);
+  if(snake.node[snake.lenth-1].x==food_1[0] && snake.node[snake.lenth-1].y==food_1[1]){
+    while(collision(x,y,food_2[0],food_2[1])){
+      x=rand()%(w/SIDE);
+      y=rand()%(h/SIDE);
+    }
+    food_1[0]=x*SIDE;
+    food_1[1]=y*SIDE;
+  }
+  else if(snake.node[snake.lenth-1].x==food_2[0] && snake.node[snake.lenth-1].y==food_2[1]){
+    while(collision(x,y,food_1[0],food_1[1])){
+      x=rand()%(w/SIDE);
+      y=rand()%(h/SIDE);
+    }
+    food_2[0]=x*SIDE;
+    food_2[1]=y*SIDE;
+  }
+}
 void update_snake(int mov){
   //计算头的位置
   struct Node head={.x=0,.y=0};
@@ -124,6 +145,7 @@ int main(const char *args) {
         }
         update_snake(mov);
         if(food_eaten){
+          gen_food();
           food_eaten=false;
         }
         splash();
