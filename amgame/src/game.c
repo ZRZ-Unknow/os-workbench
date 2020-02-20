@@ -9,6 +9,20 @@ void init_screen() {
   w = info.width;
   h = info.height;
 }
+void itoa(int a){
+  char ch[64]="";
+  int i=0;
+  while(a){
+    int b=a%10;
+    ch[i++]=b+'0';
+    a/=10;
+  }
+  ch[i]='\0';
+  for(int j=i-1;j>=0;j--){
+    _putc(ch[j]);
+  }
+  _putc('\n');
+}
 void init_snake(){
   snake.dire=UP;
   snake.lenth=3;
