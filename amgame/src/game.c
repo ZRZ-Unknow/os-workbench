@@ -33,12 +33,20 @@ void init_food(){
   srand(uptime());
   int x=rand()%(w/SIDE);
   int y=rand()%(h/SIDE);
+  while(collision(x,y,-1,-1)){
+      x=rand()%(w/SIDE);
+      y=rand()%(h/SIDE);
+  }
   food_1[0]=x*SIDE;
   food_1[1]=y*SIDE;
 
   srand(uptime());
   x=rand()%(w/SIDE);
   y=rand()%(h/SIDE);
+  while(collision(x,y,food_1[0],food_1[1])){  
+    x=rand()%(w/SIDE);
+    y=rand()%(h/SIDE);
+  }
   food_2[0]=x*SIDE;
   food_2[1]=y*SIDE;
 }
