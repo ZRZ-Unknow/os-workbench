@@ -143,7 +143,6 @@ void update_snake(int mov){
 int main(const char *args) {
   _ioe_init();
   init();
-  printf("dddd\n");
   init_snake();
   init_edge();
   init_food();
