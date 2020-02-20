@@ -55,7 +55,7 @@ bool eat_food(int x,int y){
   if(food_2[0]-x>=0 && food_2[0]-x<SIDE && food_2[1]-y>=0 && food_2[1]-y<SIDE) return true;
   return false;
 }
-/*void update_snake(int mov){
+void update_snake(int mov){
   //计算头的位置
   struct Node head={.x=0,.y=0};
   switch (mov){
@@ -75,7 +75,25 @@ bool eat_food(int x,int y){
     case RIGHT:head.x=snake.node[snake.lenth-1].x+SIDE;head.y=snake.node[snake.lenth-1].y;break;
     default:assert(0);break;
   }
-}*/
+  if(eat_food(head.x,head.y)){
+    food_eaten=true;
+  }
+  //未碰到食物，向前移动 
+  if(!food_eaten){
+    for(int i=0;i<snake.lenth-1;i++){
+      snake.node[i].x=snake.node[i+1].x;
+      snake.node[i].y=snake.node[i+1].y;
+    }  
+    snake.node[snake.lenth-1].x=head.x;
+    snake.node[snake.lenth-1].y=head.y;
+  }
+  //碰到了食物，只需要更新头
+  else{
+    snake.node[snake.lenth].x=head.x;
+    snake.node[snake.lenth].y=head.y;
+    snake.lenth++;
+  }
+}
 
 int main(const char *args) {
   _ioe_init();
