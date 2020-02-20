@@ -15,7 +15,7 @@ void init() {
   char ch[64]="";
   sprintf(ch,"You Need To Get %d Score To Win The Game\n",(MAX_LEN-3)*100);
   printf("This Is A Gluttonous Snake Game\n");
-  printf("Press W,S,A,D To Control The Direction,Press 1,2,3 To Switch The Snake's Speed\n");
+  printf("Press W,S,A,D To Control The Direction\nPress P/C To Pause Or Continue The Game\nPress 1,2,3 To Switch The Snake's Speed\n");
   printf(ch);
   printf("Good Luck!\n");
 }

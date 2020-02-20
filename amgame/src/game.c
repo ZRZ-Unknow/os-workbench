@@ -152,7 +152,7 @@ int main(const char *args) {
   while(true){
     unsigned long last_time=uptime();
     unsigned long curr_time=uptime();
-    Log("SCORE:%d,",score);
+    Log("SCORE:%d",score);
     while (true) {
       while((curr_time=uptime())<last_time+speed){};
       last_time=curr_time;
