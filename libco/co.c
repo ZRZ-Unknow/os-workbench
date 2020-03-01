@@ -1,5 +1,17 @@
 #include "co.h"
 
+//static struct co *co_current=NULL;
+//static struct co *coroutines=NULL;
+static struct co *co_main=NULL;
+
+__attribute__((constructor)) void co_init() {
+  co_main=malloc(sizeof(struct co));
+  strcpy(co_main->name,"main");
+  co_main->status=CO_NEW;
+  co_main->next=NULL;
+  co_main->prev=NULL;
+}
+
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   return NULL;
 }
@@ -9,6 +21,8 @@ void co_wait(struct co *co) {
 
 void co_yield() {
 }
+
+
 static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
   asm volatile (
 #if __x86_64__
