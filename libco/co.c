@@ -13,6 +13,7 @@ __attribute__((constructor)) void co_init() {
 }
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
+  printf("%s\n",co_main->name);
   return NULL;
 }
 
