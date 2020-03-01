@@ -11,10 +11,12 @@ __attribute__((constructor)) void co_init() {
   co_main->next=NULL;
   co_main->prev=NULL;
 }
+struct co *co_generate(const char *name, void (*func)(void *), void *arg){
 
+}
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  if(co_main==NULL)printf("ddddddddd");
-  else printf("%s\n",co_main->name);
+  co_current=co_generate(name,func,arg);
+  
   return NULL;
 }
 
