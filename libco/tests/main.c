@@ -121,7 +121,6 @@ static void test_2() {
 int main() {
     setbuf(stdout, NULL);
 
-    //struct co *thd1=co_start(NULL,NULL,NULL);
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
 

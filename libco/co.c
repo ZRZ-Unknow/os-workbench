@@ -106,6 +106,7 @@ void co_delete(struct co *thd){
   prev->next=next;
 };
 void co_wait(struct co *co) {
+  Log("start wait");
   int val=setjmp(co_current->context);
   Log("cur %d,thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
