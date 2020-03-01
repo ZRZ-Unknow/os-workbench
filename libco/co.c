@@ -1,20 +1,10 @@
 #include "co.h"
-struct co {
-  char *name;
-  void (*func)(void *); // co_start 指定的入口地址和参数
-  void *arg;
 
-  enum co_status status;  // 协程的状态
-  jmp_buf        context; // 寄存器现场 (setjmp.h)
-  uint8_t        stack[STACK_SIZE]; // 协程的堆栈
-  struct co *next;
-  struct co *prev;
-};
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
 
-/*__attribute__((constructor)) void co_init() {
+__attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   strcpy(co_main->name,"main");
   printf("maind\n");
@@ -23,10 +13,11 @@ static struct co *co_main=NULL;
   memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->next=NULL;
   co_main->prev=NULL;
-}*/
+}
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  printf("%s\n",co_main->name);
+  if(co_main==NULL)printf("ddddddddd");
+  else printf("%s\n",co_main->name);
   return NULL;
 }
 
