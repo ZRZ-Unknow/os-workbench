@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <setjmp.h>
 #include "co-test.h"
 
 int g_count = 0;
