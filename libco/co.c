@@ -92,7 +92,7 @@ void co_wait(struct co *co) {
   if(val==0){
     while(co->status!=CO_DEAD){
       co_current=co;
-      if(co_current->status=CO_NEW){
+      if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
         stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         Log("a new co %s start to run\n",co_current->name);
