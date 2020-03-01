@@ -54,7 +54,6 @@ __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   co_main->id=0;
   co_main->status=CO_NEW;
-  co_main->func=main;
   co_main->arg=NULL;
   memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->stackptr=co_main->stack+sizeof(co_main->stack);
