@@ -115,11 +115,12 @@ void co_wait(struct co *co) {
       co_current=co;
       if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
-        stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         Log("a new co %d start to run\n",co_current->id);
-        co_current->func(co_current->arg);
+        stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+        Log("ddddddddddddddddddd");
       }
       else{
+        Log("long jmp to %d from wait",co_current->id);
         longjmp(co_current->context,1);
       }
       co_current->status=CO_DEAD;
@@ -135,12 +136,12 @@ void co_yield(){
     co_current=co_current->next;
     if(co_current->status==CO_NEW){
       co_current->status=CO_RUNNING;
-      stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       Log("a new co %d start to run\n",co_current->id);
-      co_current->func(co_current->arg);
+      stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
     }
     else{
+      Log("longjmp to %d from yield",co_current->id);
       longjmp(co_current->context,1);
     }
   }
