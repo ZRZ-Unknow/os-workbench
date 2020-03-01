@@ -83,7 +83,20 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   return co_generate(name,func,arg);
 }
-
+void co_delete(struct co *thd){
+  if (coroutines==NULL) return;
+  if(coroutines->next==coroutines && thd==coroutines){
+    free(coroutines);
+    coroutines=NULL;
+    return;
+  }
+  struct co *next=thd->next;
+  struct co *prev=thd->prev;
+  if(coroutines==thd) coroutines=next;
+  free(thd);
+  next->prev=prev;
+  prev->next=next;
+};
 void co_wait(struct co *co) {
   if(co_current==co) assert(0);
 
@@ -105,6 +118,7 @@ void co_wait(struct co *co) {
     }
   }
   Log("cur %s,co %s,delete",co_current->name,co->name);
+  co_delete(co);
 }
 
 void co_yield(){
