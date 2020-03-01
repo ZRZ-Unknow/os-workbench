@@ -7,7 +7,9 @@ static struct co *co_main=NULL;
 __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   strcpy(co_main->name,"main");
+  printf("maind\n");
   co_main->status=CO_NEW;
+  memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->next=NULL;
   co_main->prev=NULL;
 }
