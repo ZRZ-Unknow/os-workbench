@@ -12,7 +12,7 @@ __attribute__((constructor)) void co_init() {
   co_main->prev=NULL;
 }
 struct co *co_generate(const char *name, void (*func)(void *), void *arg){
-
+  return NULL;
 }
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   co_current=co_generate(name,func,arg);
