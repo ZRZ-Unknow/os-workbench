@@ -12,17 +12,6 @@ enum co_status {
   CO_WAITING, // 在 co_wait 上等待
   CO_DEAD,    // 已经结束，但还未释放资源
 };
-struct co {
-  char *name;
-  void (*func)(void *); // co_start 指定的入口地址和参数
-  void *arg;
-
-  enum co_status status;  // 协程的状态
-  jmp_buf        context; // 寄存器现场 (setjmp.h)
-  uint8_t        stack[STACK_SIZE]; // 协程的堆栈
-  struct co *next;
-  struct co *prev;
-};
 
 struct co* co_start(const char *name, void (*func)(void *), void *arg);
 void co_yield();
