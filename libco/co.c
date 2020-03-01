@@ -1,7 +1,7 @@
 #include "co.h"
 
-//static struct co *co_current=NULL;
-//static struct co *coroutines=NULL;
+static struct co *co_current=NULL;
+static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
 
 __attribute__((constructor)) void co_init() {
