@@ -41,9 +41,9 @@ struct co {
   void *stackptr;
   enum co_status status;  // 协程的状态
   jmp_buf context; // 寄存器现场 (setjmp.h)
-  uint8_t stack[STACK_SIZE] __attribute__((aligned(16)));// 协程的堆栈
   struct co *next;
   struct co *prev;
+  uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
