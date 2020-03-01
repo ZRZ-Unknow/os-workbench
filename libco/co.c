@@ -28,7 +28,7 @@ struct co {
   char *name;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
-
+  void *stackptr;
   enum co_status status;  // 协程的状态
   jmp_buf        context; // 寄存器现场 (setjmp.h)
   uint8_t        stack[STACK_SIZE]; // 协程的堆栈
@@ -43,6 +43,7 @@ __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   co_main->status=CO_NEW;
   memset(co_main->stack,0,sizeof(co_main->stack));
+  co_main->stackptr=co_main->stack+sizeof(co_main->stack);
   co_main->next=NULL;
   co_main->prev=NULL;
 }
@@ -50,6 +51,8 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   struct co *new_co=malloc(sizeof(struct co));
   new_co->status=CO_NEW;
   strcpy(new_co->name,name);
+  memset(new_co->stack,0,sizeof(new_co->stack));
+  new_co->stackptr=new_co->stack+sizeof(new_co->stack);
   new_co->func=func;
   new_co->arg=arg;
   if(coroutines==NULL){
@@ -74,7 +77,19 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
 void co_wait(struct co *co) {
 }
 
-void co_yield() {
+void co_yield(){
+  int val=setjmp(co_current->context);
+  if(val==0){
+    co_current=co_current->next;
+    if(co_current->status==CO_NEW){
+      co_current->status=CO_RUNNING;
+      stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+      co_current->func(co_current->arg);
+    }
+    else{
+      longjmp(co_current->context,1);
+    }
+  }
   Log("yield val!=0");
 }
 
