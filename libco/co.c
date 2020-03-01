@@ -109,13 +109,13 @@ void co_delete(struct co *thd){
 void co_wait(struct co *co) {
   Log("start wait");
   int val=setjmp(co_current->context);
-  Log("cur %d,thd %d,val:%d",co_current->id,co->id,val);
+  Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
     while(co->status!=CO_DEAD){
       co_current=co;
       if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
-        Log("a new co %d start to run\n",co_current->id);
+        Log("a new co %d start to run",co_current->id);
         stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         Log("ddddddddddddddddddd");
       }
@@ -136,7 +136,7 @@ void co_yield(){
     co_current=co_current->next;
     if(co_current->status==CO_NEW){
       co_current->status=CO_RUNNING;
-      Log("a new co %d start to run\n",co_current->id);
+      Log("a new co %d start to run",co_current->id);
       stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
     }
@@ -145,6 +145,6 @@ void co_yield(){
       longjmp(co_current->context,1);
     }
   }
-  Log("yield val!=0");
+  Log("yield finish");
 }
 
