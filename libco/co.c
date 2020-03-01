@@ -86,6 +86,7 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   return new_co; 
 }
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
+  Log("create");
   return co_generate(name,func,arg);
 }
 void co_delete(struct co *thd){
