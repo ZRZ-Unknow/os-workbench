@@ -7,7 +7,16 @@
 #include <stdlib.h>
 
 #define KB *1024
-#define STACK_SIZE 64 KB
+#define STACK_SIZE (64 KB)
+#define DEBUG
+
+#ifdef DEBUG
+#define Log(format, ...) \
+    printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
+        __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+#else
+#define Log(format,...)
+#endif
 
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
@@ -66,6 +75,7 @@ void co_wait(struct co *co) {
 }
 
 void co_yield() {
+  Log("yield val!=0");
 }
 
 
