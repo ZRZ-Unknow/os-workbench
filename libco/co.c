@@ -28,6 +28,7 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
   );
 }
 
+static int id=1;
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
   CO_RUNNING, // 已经执行过
@@ -35,7 +36,7 @@ enum co_status {
   CO_DEAD,    // 已经结束，但还未释放资源
 };
 struct co {
-  char *name;
+  int id;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
   void *stackptr;
@@ -43,7 +44,7 @@ struct co {
   jmp_buf context; // 寄存器现场 (setjmp.h)
   struct co *next;
   struct co *prev;
-  char stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
+  uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
@@ -51,6 +52,7 @@ static struct co *co_main=NULL;
 
 __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
+  co_main->id=0;
   co_main->status=CO_NEW;
   memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->stackptr=co_main->stack+sizeof(co_main->stack);
@@ -60,7 +62,8 @@ __attribute__((constructor)) void co_init() {
 struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   struct co *new_co=malloc(sizeof(struct co));
   new_co->status=CO_NEW;
-  strcpy(new_co->name,name);
+  //strcpy(new_co->name,name);
+  new_co->id=id++;
   memset(new_co->stack,0,sizeof(new_co->stack));
   new_co->stackptr=new_co->stack+sizeof(new_co->stack);
   new_co->func=func;
@@ -88,12 +91,14 @@ void co_delete(struct co *thd){
   if(coroutines->next==coroutines && thd==coroutines){
     free(coroutines);
     coroutines=NULL;
+    id--;
     return;
   }
   struct co *next=thd->next;
   struct co *prev=thd->prev;
   if(coroutines==thd) coroutines=next;
   free(thd);
+  id--;
   next->prev=prev;
   prev->next=next;
 };
@@ -101,14 +106,14 @@ void co_wait(struct co *co) {
   if(co_current==co) assert(0);
 
   int val=setjmp(co_current->context);
-  Log("cur %s,thd %s,val:%d",co_current->name,co->name,val);
+  Log("cur %d,thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
     while(co->status!=CO_DEAD){
       co_current=co;
       if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
         stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
-        Log("a new co %s start to run\n",co_current->name);
+        Log("a new co %d start to run\n",co_current->id);
         co_current->func(co_current->arg);
       }
       else{
@@ -117,7 +122,7 @@ void co_wait(struct co *co) {
       co_current->status=CO_DEAD;
     }
   }
-  Log("cur %s,co %s,delete",co_current->name,co->name);
+  Log("cur %d,co %d,delete",co_current->id,co->id);
   co_delete(co);
 }
 
@@ -128,7 +133,7 @@ void co_yield(){
     if(co_current->status==CO_NEW){
       co_current->status=CO_RUNNING;
       stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
-      Log("a new co %s start to run\n",co_current->name);
+      Log("a new co %d start to run\n",co_current->id);
       co_current->func(co_current->arg);
       co_current->status=CO_DEAD;
     }
