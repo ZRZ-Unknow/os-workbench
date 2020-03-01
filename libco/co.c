@@ -50,15 +50,18 @@ static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
 
-/*__attribute__((constructor)) void co_init() {
+__attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   co_main->id=0;
   co_main->status=CO_NEW;
+  co_main->func=main;
+  co_main->arg=NULL;
   memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->stackptr=co_main->stack+sizeof(co_main->stack);
   co_main->next=NULL;
   co_main->prev=NULL;
-}*/
+}
+
 struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   struct co *new_co=malloc(sizeof(struct co));
   new_co->status=CO_NEW;
