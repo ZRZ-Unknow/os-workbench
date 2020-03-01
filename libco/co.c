@@ -4,7 +4,7 @@ static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
 
-__attribute__((constructor)) void co_init() {
+/*__attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   strcpy(co_main->name,"main");
   printf("maind\n");
@@ -13,7 +13,7 @@ __attribute__((constructor)) void co_init() {
   memset(co_main->stack,0,sizeof(co_main->stack));
   co_main->next=NULL;
   co_main->prev=NULL;
-}
+}*/
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   printf("%s\n",co_main->name);
