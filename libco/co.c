@@ -44,7 +44,7 @@ struct co {
   uint8_t        stack[STACK_SIZE]; // 协程的堆栈
   struct co *next;
   struct co *prev;
-};
+}__attribute__((aligned(16)));
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
