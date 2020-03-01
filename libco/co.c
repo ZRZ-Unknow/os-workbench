@@ -18,6 +18,16 @@
 #define Log(format,...)
 #endif
 
+static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
+  asm volatile (
+#if __x86_64__
+    "movq %0, %%rsp; movq %2, %%rdi; jmp *%1" : : "b"((uintptr_t)sp),     "d"(entry), "a"(arg)
+#else
+    "movl %0, %%esp; movl %2, 4(%0); jmp *%1" : : "b"((uintptr_t)sp - 8), "d"(entry), "a"(arg)
+#endif
+  );
+}
+
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
   CO_RUNNING, // 已经执行过
@@ -75,6 +85,26 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
 }
 
 void co_wait(struct co *co) {
+  if(co_current==co) assert(0);
+
+  int val=setjmp(co_current->context);
+  Log("cur %s,thd %s,val:%d",co_current->name,co->name,val);
+  if(val==0){
+    while(co->status!=CO_DEAD){
+      co_current=co;
+      if(co_current->status=CO_NEW){
+        co_current->status=CO_RUNNING;
+        stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+        Log("a new co %s start to run\n",co_current->name);
+        co_current->func(co_current->arg);
+      }
+      else{
+        longjmp(co_current->context,1);
+      }
+      co_current->status=CO_DEAD;
+    }
+  }
+  Log("cur %s,co %s,delete",co_current->name,co->name);
 }
 
 void co_yield(){
@@ -84,7 +114,9 @@ void co_yield(){
     if(co_current->status==CO_NEW){
       co_current->status=CO_RUNNING;
       stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+      Log("a new co %s start to run\n",co_current->name);
       co_current->func(co_current->arg);
+      co_current->status=CO_DEAD;
     }
     else{
       longjmp(co_current->context,1);
@@ -93,13 +125,3 @@ void co_yield(){
   Log("yield val!=0");
 }
 
-
-static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
-  asm volatile (
-#if __x86_64__
-    "movq %0, %%rsp; movq %2, %%rdi; jmp *%1" : : "b"((uintptr_t)sp),     "d"(entry), "a"(arg)
-#else
-    "movl %0, %%esp; movl %2, 4(%0); jmp *%1" : : "b"((uintptr_t)sp - 8), "d"(entry), "a"(arg)
-#endif
-  );
-}
