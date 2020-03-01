@@ -43,7 +43,7 @@ struct co {
   jmp_buf context; // 寄存器现场 (setjmp.h)
   struct co *next;
   struct co *prev;
-  uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
+  char stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
