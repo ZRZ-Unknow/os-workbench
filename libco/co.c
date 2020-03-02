@@ -142,7 +142,7 @@ void co_wait(struct co *co) {
 }
 
 void co_yield(){
-  sleep(0.0001);
+  sleep(0.001);
   if(coroutines==NULL) return;
   int val=setjmp(co_current->context);
   if(val==0){
