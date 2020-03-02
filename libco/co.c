@@ -146,18 +146,18 @@ void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
     if(co_current==co_main){
-      struct co *next=coroutines;
-      if(next->status==CO_NEW){
-        next->status=CO_RUNNING;
-        Log("a new co %d start to run",next->id);
-        PU(co_current->stackptr,next->stackptr);
-        co_current=next;
+      //struct co *next=coroutines;
+      if(coroutines->status==CO_NEW){
+        coroutines->status=CO_RUNNING;
+        Log("a new co %d start to run",coroutines->id);
+        PU(co_current->stackptr,coroutines->stackptr);
+        co_current=coroutines;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
         longjmp(co_main->context,1);
       }
       else{
-        co_current=next;
+        co_current=coroutines;
         Log("longjmp to %d from yield",co_current->id);
         longjmp(co_current->context,1);
       }
