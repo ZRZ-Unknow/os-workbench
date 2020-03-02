@@ -145,6 +145,7 @@ void co_yield(){
       next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
       PUSH(co_current->stackptr);
+      co_current=next;
       stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
     }
