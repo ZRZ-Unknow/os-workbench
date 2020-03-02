@@ -119,6 +119,7 @@ void co_wait(struct co *co) {
   Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
     while(co->status!=CO_DEAD){
+      PUSH(co->stackptr);
       co_current=co;
       if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
