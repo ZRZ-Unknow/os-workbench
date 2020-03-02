@@ -27,9 +27,14 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
 #endif
   );
 }
+#if defined(__i386__)
+  #define SP "%%esp"
+#elif defined(__x86_64__)
+  #define SP "%%rsp"
+#endif
 #define PUSH(sp) \
   asm volatile("mov " SP ", %0": "=g"(sp)); 
-  
+
 static int id=1;
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
