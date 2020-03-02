@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #define KB *1024
-#define STACK_SIZE (64 KB)
+#define STACK_SIZE (1 KB)
 //#define DEBUG
 
 #ifdef DEBUG
