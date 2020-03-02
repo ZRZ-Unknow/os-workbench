@@ -16,7 +16,7 @@ static int get_count() {
 
 static void work_loop(void *arg) {
     const char *s = (const char*)arg;
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 100; ++i) {
         printf("%s%d  ", s, get_count());
         add_count();
         co_yield();
@@ -62,7 +62,7 @@ static void do_produce(Queue *queue) {
 
 static void producer(void *arg) {
     Queue *queue = (Queue*)arg;
-    for (int i = 0; i < 5; ) {
+    for (int i = 0; i < 100; ) {
         if (!q_is_full(queue)) {
             // co_yield();
             do_produce(queue);
@@ -122,9 +122,9 @@ int main() {
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
-    //co_yield();
-    //printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
-    //test_2();
+    co_yield();
+    printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
+    test_2();
 
     printf("\n\n");
 
