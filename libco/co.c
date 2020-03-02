@@ -146,8 +146,10 @@ void co_yield(){
   if(coroutines==NULL) return;
   int val=setjmp(co_current->context);
   if(val==0){
-    //if(co_current!=co_main){
-    struct co *next=(co_current==co_main)?coroutines:co_current->next;
+    struct co *next=NULL;
+    if(co_current==co_main) next=coroutines;
+    else next=co_current->next;
+    //struct co *next=(co_current==co_main)?coroutines:co_current->next;
     if(next->status==CO_NEW){
       next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
