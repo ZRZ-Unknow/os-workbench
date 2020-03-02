@@ -37,6 +37,7 @@ enum co_status {
 };
 struct co {
   int id;
+  char *name;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
   void *stackptr;
@@ -65,7 +66,7 @@ __attribute__((constructor)) void co_init() {
 struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   struct co *new_co=malloc(sizeof(struct co));
   new_co->status=CO_NEW;
-  //strcpy(new_co->name,name);
+  strcpy(new_co->name,name);
   new_co->id=id++;
   memset(new_co->stack,0,sizeof(new_co->stack));
   new_co->stackptr=new_co->stack+sizeof(new_co->stack);
