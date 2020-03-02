@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
+#include <unistd.h>
 #define KB *1024
 #define STACK_SIZE (64 KB)
 
