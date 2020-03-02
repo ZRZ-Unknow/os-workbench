@@ -34,6 +34,8 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
 #endif
 #define PUSH(sp) \
   asm volatile("mov " SP ", %0": "=g"(sp)); 
+#define PULL(newsp) \
+  asm volatile("mov %0,"SP:"=g"(newsp));
 
 static int id=1;
 enum co_status {
@@ -125,7 +127,9 @@ void co_wait(struct co *co) {
         co_current->status=CO_RUNNING;
         Log("a new co %d start to run",co_current->id);
         PUSH(co_main->stackptr);
-        stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+        PULL(co_current->stackptr);
+        co_current->func(co_current->arg);
+        //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         co_current->status=CO_DEAD;
         Log("ddddddddddddddddddd");
         longjmp(co_main->context,1);
@@ -149,8 +153,10 @@ void co_yield(){
       next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
       PUSH(co_current->stackptr);
+      PULL(next->stackptr);
       co_current=next;
-      stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
+      co_current->func(co_current->arg);
+      //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
       longjmp(co_main->context,1);
     }
