@@ -123,26 +123,19 @@ void co_wait(struct co *co) {
   int val=setjmp(co_current->context);
   Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
-    //while(co->status!=CO_DEAD){
-      //PUSH(co->stackptr);
       co_current=co;
       if(co_current->status==CO_NEW){
         co_current->status=CO_RUNNING;
         Log("a new co %d start to run",co_current->id);
-        //PUSH(co_main->stackptr);
-        //PULL(co_current->stackptr);
         PU(co_main->stackptr,co_current->stackptr);
         co_current->func(co_current->arg);
-        //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         co_current->status=CO_DEAD;
-        //Log("ddddddddddddddddddd");
         longjmp(co_main->context,1);
       }
       else{
         Log("long jmp to %d from wait",co_current->id);
         longjmp(co_current->context,1);
       }
-    //}
   }
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
@@ -157,12 +150,9 @@ void co_yield(){
     if(next->status==CO_NEW){
       next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
-      //PUSH(co_current->stackptr);
-      //PULL(next->stackptr);
       PU(co_current->stackptr,next->stackptr);
       co_current=next;
       co_current->func(co_current->arg);
-      //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
       longjmp(co_main->context,1);
     }
