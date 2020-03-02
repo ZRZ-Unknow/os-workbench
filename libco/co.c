@@ -59,6 +59,7 @@ __attribute__((constructor)) void co_init() {
   co_main->stackptr=co_main->stack+sizeof(co_main->stack);
   co_main->next=NULL;
   co_main->prev=NULL;
+  co_current=co_main;
 }
 
 struct co *co_generate(const char *name, void (*func)(void *), void *arg){
