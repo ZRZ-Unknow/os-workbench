@@ -21,7 +21,7 @@ static void work_loop(void *arg) {
         add_count();
         co_yield();
     }
-    printf("ddddddddddddddddddddddddddddddd\n");
+    //printf("ddddddddddddddddddddddddddddddd\n");
 }
 
 static void work(void *arg) {
