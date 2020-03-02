@@ -169,6 +169,7 @@ void co_yield(){
         next->status=CO_RUNNING;
         Log("a new co %d start to run",next->id);
         PU(co_current->stackptr,next->stackptr);
+        assert(next);
         printf("%d,%d",co_current->id,next->id);
         co_current=next;
         co_current->func(co_current->arg);
