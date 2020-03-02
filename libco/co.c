@@ -27,7 +27,9 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
 #endif
   );
 }
-
+#define PUSH(sp) \
+  asm volatile("mov " SP ", %0": "=g"(sp)); 
+  
 static int id=1;
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
@@ -87,7 +89,7 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   return new_co; 
 }
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  Log("create");
+  Log("create co %d",id);
   return co_generate(name,func,arg);
 }
 void co_delete(struct co *thd){
@@ -133,10 +135,11 @@ void co_wait(struct co *co) {
 void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
-    co_current=co_current->next;
-    if(co_current->status==CO_NEW){
-      co_current->status=CO_RUNNING;
+    struct co *next=co_current->next;
+    if(next->status==CO_NEW){
+      next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
+      PUSH(co_current->stackptr);
       stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
       co_current->status=CO_DEAD;
     }
