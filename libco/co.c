@@ -8,7 +8,7 @@
 
 #define KB *1024
 #define STACK_SIZE (64 KB)
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
@@ -35,7 +35,7 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
 #define PUSH(sp) \
   asm volatile("mov " SP ", %0": "=g"(sp)); 
 #define PULL(newsp) \
-  asm volatile("mov %0, " SP : "g"(newsp));
+  asm volatile("mov %0, " SP : "+g"(newsp));
 #define PU(sp,newsp)\
   asm volatile("mov " SP ", %0": "=g"(sp)); \
   asm volatile("mov %0, " SP : "+g"(newsp));
