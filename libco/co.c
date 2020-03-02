@@ -38,7 +38,7 @@ static inline void stack_switch_call(void *sp, void *entry, uintptr_t arg) {
   asm volatile("mov %0, " SP : "g"(newsp));
 #define PU(sp,newsp)\
   asm volatile("mov " SP ", %0": "=g"(sp)); \
-  asm volatile("mov %1, " SP : "g"(newsp));
+  asm volatile("mov %0, " SP : "g"(newsp));
 
 static int id=1;
 enum co_status {
