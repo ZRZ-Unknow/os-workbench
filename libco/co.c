@@ -130,6 +130,7 @@ void co_wait(struct co *co) {
         PU(co_main->stackptr,co_current->stackptr);
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
+        co_current=co_main;
         longjmp(co_main->context,1);
       }
       else{
@@ -155,6 +156,7 @@ void co_yield(){
         co_current=next;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
+        co_current=co_main;
         longjmp(co_main->context,1);
       }
       else{
@@ -172,6 +174,7 @@ void co_yield(){
         co_current=next;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
+        co_current=co_main;
         longjmp(co_main->context,1);
       }
       else{
