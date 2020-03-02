@@ -171,7 +171,7 @@ void co_yield(){
         Log("%d,%d",co_current->id,next->id);
         //assert(0);
         co_current=next;
-        assert(0)
+        assert(0);
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
         longjmp(co_main->context,1);
