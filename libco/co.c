@@ -169,7 +169,7 @@ void co_yield(){
         next->status=CO_RUNNING;
         Log("a new co %d start to run",co_current->id);
         PU(co_current->stackptr,next->stackptr);
-        if(co_current!=next) co_current=next;
+        co_current=next;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
         longjmp(co_main->context,1);
