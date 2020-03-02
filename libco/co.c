@@ -37,7 +37,6 @@ enum co_status {
 };
 struct co {
   int id;
-  char *name;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
   void *stackptr;
@@ -46,7 +45,8 @@ struct co {
   struct co *next;
   struct co *prev;
   uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
-}__attribute__ ((aligned(16)));
+};
+
 static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
