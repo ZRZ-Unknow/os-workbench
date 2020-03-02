@@ -146,25 +146,39 @@ void co_yield(){
   if(coroutines==NULL) return;
   int val=setjmp(co_current->context);
   if(val==0){
-    struct co *next=co_current->next;
-    if(co_current==co_main) next=coroutines;
-    //else next=co_current->next;
-    //struct co *next=(co_current==co_main)?coroutines:co_current->next;
-    if(next->status==CO_NEW){
-      next->status=CO_RUNNING;
-      Log("a new co %d start to run",co_current->id);
-      PU(co_current->stackptr,next->stackptr);
-      co_current=next;
-      co_current->func(co_current->arg);
-      co_current->status=CO_DEAD;
-      longjmp(co_main->context,1);
-    //}
-    //else if(co)
+    if(co_current==co_main){
+      struct co *next=coroutines;
+      if(next->status==CO_NEW){
+        next->status=CO_RUNNING;
+        Log("a new co %d start to run",co_current->id);
+        PU(co_current->stackptr,next->stackptr);
+        co_current=next;
+        co_current->func(co_current->arg);
+        co_current->status=CO_DEAD;
+        longjmp(co_main->context,1);
+      }
+      else{
+        co_current=next;
+        Log("longjmp to %d from yield",co_current->id);
+        longjmp(co_current->context,1);
+      }
     }
     else{
-      co_current=next;
-      Log("longjmp to %d from yield",co_current->id);
-      longjmp(co_current->context,1);
+      struct co *next=co_current->next;
+      if(next->status==CO_NEW){
+        next->status=CO_RUNNING;
+        Log("a new co %d start to run",co_current->id);
+        PU(co_current->stackptr,next->stackptr);
+        co_current=next;
+        co_current->func(co_current->arg);
+        co_current->status=CO_DEAD;
+        longjmp(co_main->context,1);
+      }
+      else{
+        co_current=next;
+        Log("longjmp to %d from yield",co_current->id);
+        longjmp(co_current->context,1);
+      }
     }
   }
   Log("yield finish");
