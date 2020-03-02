@@ -153,8 +153,8 @@ void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
     struct co *next;//=(co_current->next)?(co_current->next):(coroutines?coroutines:co_main);
-    if(co_current->next) next=co_current->next;
-    else if(coroutines) next=coroutines;
+    if(co_current->next!=NULL) next=co_current->next;
+    else if(coroutines!=NULL) next=coroutines;
     else next=co_main;
     if(next->status==CO_NEW){
       next->status=CO_RUNNING;
