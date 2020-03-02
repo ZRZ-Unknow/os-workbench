@@ -150,7 +150,7 @@ void co_yield(){
       struct co *next=coroutines;
       if(next->status==CO_NEW){
         next->status=CO_RUNNING;
-        Log("a new co %d start to run",co_current->id);
+        Log("a new co %d start to run",next->id);
         PU(co_current->stackptr,next->stackptr);
         co_current=next;
         co_current->func(co_current->arg);
@@ -167,7 +167,7 @@ void co_yield(){
       struct co *next=co_current->next;
       if(next->status==CO_NEW){
         next->status=CO_RUNNING;
-        Log("a new co %d start to run",co_current->id);
+        Log("a new co %d start to run",next->id);
         PU(co_current->stackptr,next->stackptr);
         co_current=next;
         co_current->func(co_current->arg);
