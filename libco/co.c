@@ -150,12 +150,10 @@ void co_wait(struct co *co) {
 }
 
 void co_yield(){
+  if(co_current==co_main) return;
   int val=setjmp(co_current->context);
   if(val==0){
-    struct co *next;//=(co_current->next)?(co_current->next):(coroutines?coroutines:co_main);
-    if(co_current->next!=NULL) next=co_current->next;
-    else if(coroutines!=NULL) next=coroutines;
-    else next=co_main;
+    struct co *next=co_current->next;
     if(next->status==CO_NEW){
       next->status=CO_RUNNING;
       Log("a new co %d start to run",co_current->id);
