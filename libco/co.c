@@ -142,11 +142,11 @@ void co_wait(struct co *co) {
 }
 
 void co_yield(){
+  sleep(1);
   if(coroutines==NULL) return;
   int val=setjmp(co_current->context);
   if(val==0){
     if(co_current==co_main){
-      //struct co *next=coroutines;
       if(coroutines->status==CO_NEW){
         coroutines->status=CO_RUNNING;
         Log("a new co %d start to run",coroutines->id);
@@ -163,15 +163,12 @@ void co_yield(){
       }
     }
     else{
-      //struct co *next=co_current->next;
       if(co_current->next->status==CO_NEW){
         co_current->next->status=CO_RUNNING;
         Log("a new co %d start to run",next->id);
         PU(co_current->stackptr,co_current->next->stackptr);
         Log("%d,%d",co_current->id,co_current->next->id);
-        //assert(0);
         co_current=co_current->next;
-        //printf("%d",co_current->id);
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
         longjmp(co_main->context,1);
