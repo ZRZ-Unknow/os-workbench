@@ -159,6 +159,7 @@ void co_yield(){
       //PUSH(co_current->stackptr);
       //PULL(next->stackptr);
       PU(co_current->stackptr,next->stackptr);
+      if(next==co_main) assert(0);
       co_current=next;
       co_current->func(co_current->arg);
       //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
