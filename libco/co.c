@@ -8,7 +8,7 @@
 
 #define KB *1024
 #define STACK_SIZE (1 KB)
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
