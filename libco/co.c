@@ -150,6 +150,7 @@ void co_yield(){
       co_current->status=CO_DEAD;
     }
     else{
+      co_current=next;
       Log("longjmp to %d from yield",co_current->id);
       longjmp(co_current->context,1);
     }
