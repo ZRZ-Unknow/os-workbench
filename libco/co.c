@@ -8,7 +8,6 @@
 
 #define KB *1024
 #define STACK_SIZE (64 KB)
-//#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
@@ -169,8 +168,8 @@ void co_yield(){
         next->status=CO_RUNNING;
         Log("a new co %d start to run",next->id);
         PU(co_current->stackptr,next->stackptr);
-        assert(next);
-        printf("%d,%d",co_current->id,next->id);
+        Log("%d,%d",co_current->id,next->id);
+        assert(0);
         co_current=next;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
