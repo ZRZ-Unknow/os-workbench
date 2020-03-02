@@ -87,8 +87,7 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
 }
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   Log("create");
-  co_current=co_generate(name,func,arg);
-  return co_current;
+  return co_generate(name,func,arg);
 }
 void co_delete(struct co *thd){
   if (coroutines==NULL) return;
