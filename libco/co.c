@@ -120,7 +120,7 @@ void co_wait(struct co *co) {
   int val=setjmp(co_current->context);
   Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
-    while(co->status!=CO_DEAD){
+    //while(co->status!=CO_DEAD){
       //PUSH(co->stackptr);
       co_current=co;
       if(co_current->status==CO_NEW){
@@ -138,7 +138,7 @@ void co_wait(struct co *co) {
         Log("long jmp to %d from wait",co_current->id);
         longjmp(co_current->context,1);
       }
-    }
+    //}
   }
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
