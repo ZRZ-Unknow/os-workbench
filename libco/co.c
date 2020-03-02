@@ -163,21 +163,21 @@ void co_yield(){
       }
     }
     else{
-      struct co *next=co_current->next;
-      if(next->status==CO_NEW){
-        next->status=CO_RUNNING;
+      //struct co *next=co_current->next;
+      if(co_current->next->status==CO_NEW){
+        co_current->next->status=CO_RUNNING;
         Log("a new co %d start to run",next->id);
-        PU(co_current->stackptr,next->stackptr);
-        Log("%d,%d",co_current->id,next->id);
+        PU(co_current->stackptr,co_current->next->stackptr);
+        Log("%d,%d",co_current->id,co_current->next->id);
         //assert(0);
-        co_current=next;
+        co_current=co_current->next;
         printf("%d",co_current->id);
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
         longjmp(co_main->context,1);
       }
       else{
-        co_current=next;
+        co_current=co_current->next;
         Log("longjmp to %d from yield",co_current->id);
         longjmp(co_current->context,1);
       }
