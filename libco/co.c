@@ -131,7 +131,7 @@ void co_wait(struct co *co) {
         co_current->func(co_current->arg);
         //stack_switch_call(co_current->stackptr,co_current->func,(uintptr_t)co_current->arg);
         co_current->status=CO_DEAD;
-        Log("ddddddddddddddddddd");
+        //Log("ddddddddddddddddddd");
         longjmp(co_main->context,1);
       }
       else{
