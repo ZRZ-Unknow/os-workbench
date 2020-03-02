@@ -28,10 +28,9 @@ static void work(void *arg) {
 }
 
 static void test_1() {
-
     struct co *thd1 = co_start("thread-1", work, "X");
     struct co *thd2 = co_start("thread-2", work, "Y");
-
+    co_yield();
     co_wait(thd1);
     co_yield();
     co_wait(thd2);
@@ -123,7 +122,7 @@ int main() {
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
-    //co_yield();
+    co_yield();
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();
 
