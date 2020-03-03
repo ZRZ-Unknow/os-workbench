@@ -141,7 +141,7 @@ int main() {
     co_yield();
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();*/
-    for(int i=0;i<30;i++){
+    for(int i=0;i<20;i++){
         test_3();
         g_running=1;
     }
