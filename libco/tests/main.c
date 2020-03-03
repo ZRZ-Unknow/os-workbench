@@ -118,7 +118,7 @@ static void test_2() {
     }
 
     q_free(queue);
-    //printf("down\n");
+    printf("down\n");
 }
 static void test_3(){
     Queue *queue=q_new();
@@ -144,7 +144,7 @@ int main() {
     //for(int i=0;i<100;i++)
       //  test_1();
     test_2();
-    //test_2();
+    test_2();
         //printf("\nover\n");
         //test_1();
     printf("\nover\n");
