@@ -99,16 +99,19 @@ static void test_2() {
 
     struct co *thd1 = co_start("producer-1", producer, queue);
     struct co *thd2 = co_start("producer-2", producer, queue);
+    struct co *thd5=co_start(NULL,producer,queue);
     struct co *thd3 = co_start("consumer-1", consumer, queue);
     struct co *thd4 = co_start("consumer-2", consumer, queue);
+    struct co *thd6=co_start(NULL,consumer,queue);
 
     co_wait(thd1);
     co_wait(thd2);
-
+    co_wait(thd5);
     g_running = 0;
 
     co_wait(thd3);
     co_wait(thd4);
+    co_wait(thd6);
 
     while (!q_is_empty(queue)) {
         do_consume(queue);
@@ -138,9 +141,9 @@ int main() {
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();*/
     //for(int i=0;i<100;i++)
-        test_3();
-        printf("\nover\n");
-        test_1();
+        test_2();
+        //printf("\nover\n");
+        //test_1();
     printf("\nover\n");
 
     return 0;
