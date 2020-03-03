@@ -118,7 +118,7 @@ static void test_2() {
     }
 
     q_free(queue);
-    printf("down\n");
+    //printf("down\n");
 }
 static void test_3(){
     Queue *queue=q_new();
