@@ -112,7 +112,7 @@ static void test_2() {
     co_wait(thd3);
     co_wait(thd4);
 //    co_wait(thd6);
-    //printf("wait down");
+    printf("wait down");
     while (!q_is_empty(queue)) {
         do_consume(queue);
     }
