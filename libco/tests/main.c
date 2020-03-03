@@ -116,16 +116,25 @@ static void test_2() {
 
     q_free(queue);
 }
+static void test_3(){
+    Queue *queue=q_new();
+    struct co *thd[127];
+    for(int i=0;i<63;i++) thd[i]=co_start(NULL,producer,queue);
+    for(int i=63;i<126;i++) thd[i]=co_start(NULL,consumer,queue);
+    for(int i=0;i<126;i++) co_wait(thd[i]);
+    while(!q_is_empty(queue)) do_consume(queue);
+    q_free(queue);
 
+}
 int main() {
     setbuf(stdout, NULL);  //取消了输出缓存
 
-    printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
+    /*printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
     co_yield();
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
-    test_2();
-
+    test_2();*/
+    test_3();
     printf("\n\n");
 
     return 0;
