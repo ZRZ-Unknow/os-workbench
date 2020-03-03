@@ -144,6 +144,7 @@ int main() {
     //for(int i=0;i<100;i++)
       //  test_1();
     test_2();
+    g_running=1;
     test_2();
         //printf("\nover\n");
         //test_1();
