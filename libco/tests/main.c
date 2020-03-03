@@ -143,7 +143,7 @@ int main() {
     //for(int i=0;i<100;i++)
       //  test_1();
     test_2();
-    test_2();
+    //test_2();
         //printf("\nover\n");
         //test_1();
     printf("\nover\n");
