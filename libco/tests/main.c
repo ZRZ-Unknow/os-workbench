@@ -140,7 +140,7 @@ int main() {
     //for(int i=0;i<100;i++)
         test_3();
         printf("\nover\n");
-        test_2();
+        test_1();
     printf("\nover\n");
 
     return 0;
