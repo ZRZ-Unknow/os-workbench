@@ -1,4 +1,4 @@
-//#define DEBUG
+#define DEBUG
 
 
 struct co* co_start(const char *name, void (*func)(void *), void *arg);
