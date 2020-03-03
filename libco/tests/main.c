@@ -139,6 +139,7 @@ int main() {
     test_2();*/
     //for(int i=0;i<100;i++)
         test_3();
+        test_3();
     printf("\nover\n");
 
     return 0;
