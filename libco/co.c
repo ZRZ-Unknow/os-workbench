@@ -164,7 +164,7 @@ void co_yield(){
     else{
       if(co_current->next->status==CO_NEW){
         co_current->next->status=CO_RUNNING;
-        Log("a new co %d start to run",next->id);
+        Log("a new co %d start to run",co_current->next->id);
         PU(co_current->stackptr,co_current->next->stackptr);
         Log("%d,%d",co_current->id,co_current->next->id);
         co_current=co_current->next;
