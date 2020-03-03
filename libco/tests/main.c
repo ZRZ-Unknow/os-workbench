@@ -112,13 +112,13 @@ static void test_2() {
     co_wait(thd3);
     co_wait(thd4);
 //    co_wait(thd6);
-    printf("wait down");
+    //printf("wait down");
     while (!q_is_empty(queue)) {
         do_consume(queue);
     }
 
     q_free(queue);
-    //printf("down\n");
+    printf("down\n");
 }
 static void test_3(){
     Queue *queue=q_new();
