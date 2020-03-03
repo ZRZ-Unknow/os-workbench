@@ -121,7 +121,10 @@ static void test_3(){
     struct co *thd[127];
     for(int i=0;i<63;i++) thd[i]=co_start(NULL,producer,queue);
     for(int i=63;i<126;i++) thd[i]=co_start(NULL,consumer,queue);
-    for(int i=0;i<126;i++) co_wait(thd[i]);
+    for(int i=0;i<126;i++) {
+        if(i==63) g_running=0;
+        co_wait(thd[i]);
+    }
     while(!q_is_empty(queue)) do_consume(queue);
     q_free(queue);
 
@@ -135,7 +138,7 @@ int main() {
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();*/
     test_3();
-    printf("\n\n");
+    printf("\nover\n");
 
     return 0;
 }
