@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
+
 #define KB *1024
 #define STACK_SIZE (64 KB)
 
@@ -48,6 +50,7 @@ enum co_status {
 };
 struct co {
   int id;
+  const char *name;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
   void *stackptr;
@@ -65,6 +68,7 @@ static struct co *co_main=NULL;
 __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   co_main->id=0;
+  co_main->name="main";
   co_main->status=CO_RUNNING;
   co_main->arg=NULL;
   memset(co_main->stack,0,sizeof(co_main->stack));
@@ -98,7 +102,7 @@ struct co *co_generate(const char *name, void (*func)(void *), void *arg){
   return new_co; 
 }
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  Log("create co %d",id);
+  Log("create co %d,%s",id,name);
   return co_generate(name,func,arg);
 }
 void co_delete(struct co *thd){
@@ -118,7 +122,7 @@ void co_delete(struct co *thd){
   prev->next=next;
 };
 void co_wait(struct co *co) {
-  Log("start wait");
+  /*Log("start wait");
   int val=setjmp(co_current->context);
   Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
@@ -138,7 +142,12 @@ void co_wait(struct co *co) {
   }
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
-  co_delete(co);
+  co_delete(co);*/
+  if(co->status=CO_DEAD){
+    co_delete(co);
+    return;
+  }
+  co_yield();
 }
 
 void co_yield(){
@@ -153,7 +162,7 @@ void co_yield(){
         co_current=coroutines;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
-        longjmp(co_main->context,1);
+        //longjmp(co_main->context,1);
       }
       else{
         co_current=coroutines;
