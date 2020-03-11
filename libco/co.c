@@ -143,7 +143,7 @@ void co_wait(struct co *co) {
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
   co_delete(co);*/
-  if(co->status=CO_DEAD){
+  if(co->status==CO_DEAD){
     co_delete(co);
     return;
   }
