@@ -122,7 +122,7 @@ void co_delete(struct co *thd){
   prev->next=next;
 };
 void co_wait(struct co *co) {
-  /*Log("start wait");
+  Log("start wait");
   int val=setjmp(co_current->context);
   Log("cur %d start wait for thd %d,val:%d",co_current->id,co->id,val);
   if(val==0){
@@ -142,12 +142,12 @@ void co_wait(struct co *co) {
   }
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
-  co_delete(co);*/
-  if(co->status==CO_DEAD){
+  co_delete(co);
+  /*if(co->status==CO_DEAD){
     co_delete(co);
     return;
   }
-  co_yield();
+  co_yield();*/
 }
 
 void co_yield(){
