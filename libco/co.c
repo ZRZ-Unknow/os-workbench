@@ -162,7 +162,7 @@ void co_yield(){
         co_current=coroutines;
         co_current->func(co_current->arg);
         co_current->status=CO_DEAD;
-        //longjmp(co_main->context,1);
+        longjmp(co_main->context,1);
       }
       else{
         co_current=coroutines;
