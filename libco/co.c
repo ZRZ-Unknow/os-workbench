@@ -58,6 +58,7 @@ struct co {
   jmp_buf context; // 寄存器现场 (setjmp.h)
   struct co *next;
   struct co *prev;
+  struct co *waiter;
   uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
 
@@ -65,7 +66,106 @@ static struct co *co_current=NULL;
 static struct co *coroutines=NULL;
 static struct co *co_main=NULL;
 
+void wrapper(struct co* co) {
+  co->status = CO_RUNNING;
+  co->func(co->arg);
+  co->status = CO_DEAD;
+  if (co->waiter) co->waiter->status = CO_RUNNING;
+  co_yield();
+}
+
 __attribute__((constructor)) void co_init() {
+  co_main=malloc(sizeof(struct co));
+  co_main->id=0;
+  co_main->name="main";
+  co_main->status=CO_RUNNING;
+  co_main->arg=NULL;
+  memset(co_main->stack,0,sizeof(co_main->stack));
+  co_main->stackptr=co_main->stack+sizeof(co_main->stack);
+  co_main->next=co_main;
+  co_main->prev=co_main;
+  co_current=co_main;
+  coroutines=co_main;
+  srand(time(NULL));
+}
+struct co *co_generate(const char *name, void (*func)(void *), void *arg){
+  struct co *new_co=malloc(sizeof(struct co));
+  new_co->status=CO_NEW;
+  new_co->id=id++;
+  new_co->name=name;
+  memset(new_co->stack,0,sizeof(new_co->stack));
+  new_co->stackptr=new_co->stack+sizeof(new_co->stack);
+  new_co->func=func;
+  new_co->arg=arg;
+  if(coroutines==NULL){
+    coroutines=new_co;
+    coroutines->next=coroutines;
+    coroutines->prev=coroutines;
+  }
+  else{
+    struct co* prev=coroutines->prev;
+    struct co* next=coroutines;
+    new_co->next=next;
+    next->prev=new_co;
+    new_co->prev=prev;
+    prev->next=new_co;
+  }
+  return new_co; 
+}
+struct co *co_start(const char *name, void (*func)(void *), void *arg) {
+  Log("create co %d,%s",id,name);
+  return co_generate(name,func,arg);
+}
+void co_delete(struct co *thd){
+  if (coroutines==NULL) return;
+  struct co *next=thd->next;
+  struct co *prev=thd->prev;
+  if(coroutines==thd) coroutines=next;
+  free(thd);
+  id--;
+  assert(next&&prev);
+  next->prev=prev;
+  prev->next=next;
+};
+void co_yield(){
+  int val=setjmp(co_current->context);
+  if(val==0){
+    int r=rand()%(id);
+    struct co *prev=co_current;
+    co_current=coroutines;
+    while(r>0 || co_current->status==CO_DEAD || co_current->status==CO_WAITING){
+      co_current=co_current->next;
+      r--;
+    }
+    if(co_current->status==CO_NEW){
+      stack_switch_call(co_current->stackptr,wrapper,NULL);
+    }
+    else{
+      Log("longjmp to %d %s from yield",co_current->id,co_current->name);
+      longjmp(co_current->context,1); 
+    }
+  }
+  Log("yield finish");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*__attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
   co_main->id=0;
   co_main->name="main";
@@ -143,11 +243,6 @@ void co_wait(struct co *co) {
   Log("cur %d,co %d,delete",co_current->id,co->id);
   co_current=co_main;
   co_delete(co);
-  /*if(co->status==CO_DEAD){
-    co_delete(co);
-    return;
-  }
-  co_yield();*/
 }
 
 void co_yield(){
@@ -189,5 +284,5 @@ void co_yield(){
     }
   }
   Log("yield finish");
-}
+}*/
 
