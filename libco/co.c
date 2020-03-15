@@ -138,7 +138,7 @@ void co_yield(){
       r--;
     }
     if(co_current->status==CO_NEW){
-      stack_switch_call(co_current->stackptr,wrapper,NULL);
+      stack_switch_call(co_current->stackptr,wrapper,(uintptr_t)NULL);
     }
     else{
       Log("longjmp to %d %s from yield",co_current->id,co_current->name);
