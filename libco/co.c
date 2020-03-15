@@ -118,11 +118,10 @@ void co_delete(struct co *thd){
 void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
-    int r=rand()%(id);
-    co_current=coroutines;
-    while(r>0 || co_current->status==CO_DEAD || co_current->status==CO_WAITING){
+    //int r=rand()%(id);
+    co_current=co_current->next;
+    while(co_current->status==CO_DEAD || co_current->status==CO_WAITING){
       co_current=co_current->next;
-      r--;
     }
     if(co_current->status==CO_NEW){
       Log("a new co %s %d start to run",co_current->name,co_current->id);
