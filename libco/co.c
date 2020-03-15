@@ -118,7 +118,6 @@ void co_delete(struct co *thd){
 void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
-    //int r=rand()%(id);
     co_current=co_current->next;
     while(co_current->status==CO_DEAD || co_current->status==CO_WAITING){
       co_current=co_current->next;
