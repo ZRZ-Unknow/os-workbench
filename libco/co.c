@@ -147,7 +147,16 @@ void co_yield(){
   }
   Log("yield finish");
 }
-
+void co_wait(struct co *co){
+  if(co->status==CO_DEAD){
+    co_delete(co);
+    return;
+  }
+  co->waiter=co_current;
+  co_current->status=CO_WAITING;
+  co_yield();
+  co_delete(co);
+}
 
 
 
