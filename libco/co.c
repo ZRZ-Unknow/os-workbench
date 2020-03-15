@@ -138,6 +138,7 @@ void co_yield(){
       r--;
     }
     if(co_current->status==CO_NEW){
+      Log("a new co %s %d start to run",co_current->name,co_current->id);
       stack_switch_call(co_current->stackptr,wrapper,(uintptr_t)NULL);
     }
     else{
@@ -148,6 +149,7 @@ void co_yield(){
   Log("yield finish");
 }
 void co_wait(struct co *co){
+  Log("co wait for %s %d",co->name,co->id);
   if(co->status==CO_DEAD){
     co_delete(co);
     return;
