@@ -8,7 +8,7 @@ static void os_run() {   //可以随意改动
   for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     _putc(*s == '*' ? '0' + _cpu() : *s);
   }
-  printf("hahaha\n");
+  TODO();
   while (1) ;
 }
 

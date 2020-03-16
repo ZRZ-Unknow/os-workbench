@@ -18,7 +18,6 @@ typedef struct spinlock{
 
 
 
-
 #define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
