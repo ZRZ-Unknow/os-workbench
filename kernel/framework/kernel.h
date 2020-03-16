@@ -14,6 +14,15 @@ MODULE(os) {
   void (*init)();
   void (*run)();
 };
+/*
+typedef struct mod_os_t mod_os_t;
+extern mod_os_t *mod;
+struct mod_os_t{
+  void (*init)();
+  void (*run)();
+}
+*/
+
 
 MODULE(pmm) {
   void  (*init)();
