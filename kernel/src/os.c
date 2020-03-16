@@ -7,8 +7,8 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     _putc(*s == '*' ? '0' + _cpu() : *s);
-    printf("hahaha\n");
   }
+  printf("hahaha\n");
   while (1) ;
 }
 
