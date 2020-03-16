@@ -138,6 +138,7 @@ int main() {
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
+    co_yield();
     printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();
     printf("\n\n");
