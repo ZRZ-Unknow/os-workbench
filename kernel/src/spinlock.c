@@ -9,3 +9,7 @@ void lock_init(spinlock *lk,char *name){
 void lock_acquire(spinlock *lk){
     TODO();
 }
+
+void lock_release(spinlock *lk){
+    TODO();
+}
