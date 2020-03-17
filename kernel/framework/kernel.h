@@ -1,4 +1,5 @@
 #include <am.h>
+#include <x86.h>
 
 #define MODULE(mod) \
   typedef struct mod_##mod##_t mod_##mod##_t; \

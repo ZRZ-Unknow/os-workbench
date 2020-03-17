@@ -1,15 +1,50 @@
 #include <common.h>
 
+
+int ncli[MAX_CPU]={};
+int intena[MAX_CPU]={};
+
 void lock_init(spinlock *lk,char *name){
     lk->name=name;
     lk->locked=0;
-    lk->_cpu=_cpu();
+    lk->cpu=-1;
 }
 
 void lock_acquire(spinlock *lk){
-    TODO();
+    pushcli();
+    if(holding(lk)) panic("acquire");
+    while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
+    __sync_synchronize();
+    lk->cpu=_cpu();
+    Log("cpu %d acquire lk %s",lk->cpu,lk->name);
 }
 
 void lock_release(spinlock *lk){
-    TODO();
+    if(!holding(lk)) panic("release");
+    lk->cpu=-1;
+    __sync_synchronize();
+    _atomic_xchg((intptr_t*)&lk->locked,0);
+    popcli();
+}
+
+int holding(spinlock *lk){
+    int r;
+    pushcli();
+    r=lk->locked && lk->cpu==_cpu();
+    popcli();
+    return r;
+}
+
+void pushcli(void){
+    uint32_t eflags;
+    eflags=get_efl();
+    cli();
+    if(ncli[_cpu()]==0) intena[_cpu()]= eflags & FL_IF;
+    ncli[_cpu()]+=1;
+}
+
+void popcli(void){
+    if(get_efl() & FL_IF) panic("popcli interruptible");
+    if(--ncli[_cpu()] <0 ) panic("popcli");
+    if(ncli-_cpu()==0 && intena[_cpu()]) sti();
 }
