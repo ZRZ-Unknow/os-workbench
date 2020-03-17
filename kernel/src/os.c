@@ -12,6 +12,7 @@ static void os_run() {   //可以随意改动
       _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     lock_release(&lk);
+    break;
   }
 }
 
