@@ -32,12 +32,14 @@ typedef struct list_head{
 }list_head;
 
 /*---------------------memory---------------------*/
-typedef union page {
+/*typedef union page {
   struct {
     spinlock_t lock; // 锁，用于串行化分配和并发的 free
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
-    void *addr;
-    list_head list;  // 属于同一个线程的页面的链表
+    int slab_size;
+    void *addr;      //首地址
+    //list_head list;  // 属于同一个线程的页面的链表
+    page_t *next;
   }; // 匿名结构体
   uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
-} __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
+} __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐*/
