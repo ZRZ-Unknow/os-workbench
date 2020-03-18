@@ -45,8 +45,10 @@ static void *slab_obj_find(page_t* page){
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
+      printf("pos:%d\n",pos);
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
+      break;
     }
   }
   return ret;
