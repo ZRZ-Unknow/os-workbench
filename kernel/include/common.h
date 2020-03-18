@@ -48,8 +48,8 @@ typedef union page {
     int obj_num;     //总对象数
     void *addr;      //首地址
     void *s_mem;     //slab中第一个对象的地址，其地址为: addr+HDR_SIZE; 对象的大小为 slab_size
-    uint8_t bitmap[1024];
     list_head list;  // 属于同一个线程的页面的链表
+    uint8_t bitmap;  //往后obj_num个字节都属于bitmap;
   }; // 匿名结构体
   uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
@@ -65,8 +65,8 @@ typedef struct A{
     int obj_num;
     void *addr;      //首地址
     void *s_mem;     //slab中第一个对象
-    uint8_t bitmap[1024];
     list_head list;  // 属于同一个线程的页面的链表
+    uint8_t bitmap;  
 }A; 
 
 typedef struct kmem_cache{
