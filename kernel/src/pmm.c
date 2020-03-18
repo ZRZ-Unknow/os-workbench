@@ -22,7 +22,10 @@ static void pmm_init() {
     cp->slab_size=rand()%32;
     cp->obj_cnt=rand()%3;
     cp->addr=(void*)cp;
-    cp+=1;
+    page_t *tmp=cp;
+    cp++;
+    tmp->list.next=&cp->list;
+    cp->list.prev=&tmp->list;
   }
   page_t *p=head;
   for(int i=0;i<10;i++){
