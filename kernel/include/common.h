@@ -26,22 +26,35 @@ int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
 
-/*-------------------------------------------------*/
 
 
+/*--------------------utils-------------------------*/
+#define list_entry(ptr, type, member) \
+  ((type *) \
+    ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
+  )
+
+
+/*---------------------memory---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;
 }list_head;
 
-/*---------------------memory---------------------*/
 typedef union page {
   struct {
-    spinlock_t lock; // 锁，用于串行化分配和并发的 free
+    spinlock_t lock; // 锁，用于串行化分配和并发的free
+    int slab_size;    //如果是0，则表示它不在缓存而在大内存中
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
-    int slab_size;
     void *addr;      //首地址
     list_head list;  // 属于同一个线程的页面的链表
-    //page_t *next;
   }; // 匿名结构体
   uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
+
+typedef struct kmem_cache{
+  int cpu;
+  int slab_num[3]; //free,full,partial
+  list_head free_slab;
+  list_head full_slab;
+  list_head partial_slab; 
+}kmem_cache;
