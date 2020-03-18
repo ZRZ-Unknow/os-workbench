@@ -4,13 +4,13 @@
 int ncli[MAX_CPU]={};
 int intena[MAX_CPU]={};
 
-void lock_init(spinlock *lk,char *name){
+void lock_init(spinlock_t *lk,char *name){
     lk->name=name;
     lk->locked=0;
     lk->cpu=-1;
 }
 
-void lock_acquire(spinlock *lk){
+void lock_acquire(spinlock_t *lk){
     pushcli();
     if(holding(lk)) panic("acquire");
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
@@ -19,7 +19,7 @@ void lock_acquire(spinlock *lk){
     Log("cpu %d acquire lk %s",lk->cpu,lk->name);
 }
 
-void lock_release(spinlock *lk){
+void lock_release(spinlock_t *lk){
     if(!holding(lk)) panic("release");
     lk->cpu=-1;
     __sync_synchronize();
@@ -27,7 +27,7 @@ void lock_release(spinlock *lk){
     popcli();
 }
 
-int holding(spinlock *lk){
+int holding(spinlock_t *lk){
     int r;
     pushcli();
     r=lk->locked && lk->cpu==_cpu();

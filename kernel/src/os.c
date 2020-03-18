@@ -1,5 +1,5 @@
 #include <common.h>
-spinlock lk;
+spinlock_t lk;
 static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
   lock_init(&lk,"test");
@@ -12,7 +12,6 @@ static void os_run() {   //可以随意改动
       _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     lock_release(&lk);
-    break;
   }
 }
 
