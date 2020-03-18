@@ -23,6 +23,7 @@ static void pmm_init() {
     cp->obj_cnt=rand()%3;
     cp->addr=(void*)cp;
     page_t *tmp=cp;
+    printf("%p,\n",&cp->list);
     cp++;
     tmp->list.next=&cp->list;
     cp->list.prev=&tmp->list;
