@@ -67,7 +67,7 @@ static void pmm_init() {
     //printf("%d,%d,%p,%p,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,&p->list,p->list.prev,p->list.next);
     //page_t *task=list_entry(&p->list,page_t,list);
   
-  panic("%d",sizeof(slab_obj));
+  panic("%d,%d",sizeof(slab_obj),sizeof(A));
 }
 
 MODULE_DEF(pmm) = {

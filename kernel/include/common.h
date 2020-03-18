@@ -55,6 +55,15 @@ typedef union page {
 typedef struct slab_obj{
   bool free;
 }slab_obj;
+ typedef struct A{
+    spinlock_t lock; // 锁，用于串行化分配和并发的free
+    int slab_size;    //如果是0，则表示它不在缓存而在大内存中
+    int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
+    void *addr;      //首地址
+    void *s_mem;     //slab中第一个对象
+    list_head list;  // 属于同一个线程的页面的链表
+  }A; 
+
 typedef struct kmem_cache{
   int cpu;
   int slab_num[3]; //free,full,partial
