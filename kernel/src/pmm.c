@@ -32,7 +32,7 @@ static void pmm_init() {
   }
   page_t *p=head;
   for(int i=0;i<10;i++){
-    printf("%d,%d,%p,%p,%p",p->slab_size,p->obj_cnt,p,p->addr,p->next);
+    printf("%d,%d,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,p->next);
     p++;
   }
   panic("ddd");
