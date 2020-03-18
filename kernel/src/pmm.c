@@ -65,7 +65,9 @@ static void pmm_init() {
     kmc[i].partial_slab.prev=NULL;
     for(int j=0;j<5;j++){
       page_t *new_page=get_free_page(1,SLAB_SIZE[j]);
-      kmc[i].free_slab.next=&new_page->list;
+      list_head *p=&kmc[i].free_slab;
+      while(p->next!=NULL) p=p->next;
+      p->next=&new_page->list;
     }
   }
   debug_print();
