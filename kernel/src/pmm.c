@@ -36,7 +36,17 @@ page_t *get_free_page(int num){
   }
   return first_page;
 }
+void debug_print(){
+  for(int i=0;i<_ncpu();i++){
+    printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);
+    for(list_head *p=&kmc[i].free_slab;p->next!=NULL;p=p->next){
+      page_t *page=list_entry(p,page_t,list);
+      printf("lock:%d,slab_size:%d,obj_cnt:%d,addr:%p,prev:%p,next:%p\n",page->lock.locked,
+        page->slab_size,page->obj_cnt,page->addr,page->list.prev,page->list.next);
+    }
 
+  }
+}
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
   printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
