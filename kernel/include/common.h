@@ -38,7 +38,7 @@ typedef union page {
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     int slab_size;
     void *addr;      //首地址
-    list_head *list;  // 属于同一个线程的页面的链表
+    list_head list;  // 属于同一个线程的页面的链表
     //page_t *next;
   }; // 匿名结构体
   uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
