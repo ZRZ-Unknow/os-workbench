@@ -62,6 +62,7 @@ static void pmm_init() {
     page_t *new_page=get_free_page(3);
     kmc[i].free_slab.next=&new_page->list;
   }
+  debug_print();
     //p本身指向page的首地址，p->addr也是；p->list是page中member list的首地址，p->list.prev指向上一个page的list的首地址
     //printf("%d,%d,%p,%p,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,&p->list,p->list.prev,p->list.next);
     //page_t *task=list_entry(&p->list,page_t,list);
