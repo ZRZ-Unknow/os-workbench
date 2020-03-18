@@ -8,13 +8,24 @@ struct a{
   spinlock_t lk;
   int a;
 };
+
+page_t page1;
+page_t *page=&page1;
+
+
 static void os_run() {   //可以随意改动
+  page->lock.locked=0;
+page->obj_cnt=1;
+page->addr=_heap.start;
+//page->list->next=page->list;
+//page->list->prev=page->list;
   while(1){
     lock_acquire(&lk);
     for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
       _putc(*s == '*' ? '0' + _cpu() : *s);
     }
-    printf("%d,%d,%d\n",sizeof(struct a),sizeof(spinlock_t),sizeof(int));
+    printf("%d,%d,%p",page->lock.locked,page->obj_cnt,page->addr);
+    //printf("%d,%d,%d\n",sizeof(struct a),sizeof(spinlock_t),sizeof(int));
     lock_release(&lk);
   }
 }

@@ -7,7 +7,7 @@
 #define KB *1024
 #define MB KB*1024
 #define PAGE_SIZE (8 KB)
-#define HDR_SIZE 64
+#define HDR_SIZE 128
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/
@@ -24,13 +24,20 @@ int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
 
+/*-------------------------------------------------*/
+
+
+typedef struct list_head{
+  struct list_head *next,*prev;
+}list_head;
 
 /*---------------------memory---------------------*/
 typedef union page {
   struct {
     spinlock_t lock; // 锁，用于串行化分配和并发的 free
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
-    //list_head list;  // 属于同一个线程的页面的链表
+    void *addr;
+    list_head list;  // 属于同一个线程的页面的链表
   }; // 匿名结构体
   uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
-} __attribute__((packed)) page_t;
+} __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
