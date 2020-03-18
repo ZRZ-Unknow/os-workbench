@@ -25,6 +25,7 @@ page_t *get_free_page(int num,int slab_size){
       mp->addr=mp;
       mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
+      mp->bitmap[0]=1;
       if(first_page==NULL){
         first_page=mp;
       }
