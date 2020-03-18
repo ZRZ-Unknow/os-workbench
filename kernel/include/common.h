@@ -49,7 +49,7 @@ typedef union page {
     void *s_mem;     //slab中第一个对象，其地址为: addr+HDR_SIZE; 对象的大小为 2^(log2(slab_size)+1)
     list_head list;  // 属于同一个线程的页面的链表
   }; // 匿名结构体
-  uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
+  uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
 
 typedef struct slab_obj{
