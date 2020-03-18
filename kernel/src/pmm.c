@@ -39,6 +39,19 @@ page_t *get_free_page(int num,int slab_size){
   }
   return first_page;
 }
+
+static void *slab_obj_find(page_t* page){
+  int pos=0;
+  void *ret=NULL;
+  for(;pos<page->obj_num;pos++){
+    if(page->bitmap[pos]==0){
+      int offset=pos*page->slab_size;
+      ret=page->s_mem+offset;
+    }
+  }
+  return ret;
+}
+
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
     printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);
@@ -46,6 +59,8 @@ void debug_print(){
       page_t *page=list_entry(p,page_t,list);
       printf("lock:%d,slab_size:%d,obj_cnt:%d,obj_num:%d,addr:%p,s_mem:%p,self:%p,prev:%p,next:%p\n",page->lock.locked,
         page->slab_size,page->obj_cnt,page->obj_num,page->addr,page->s_mem,&page->list,page->list.prev,page->list.next);
+      void *ret=slab_obj_find(page);
+      printf("%p\n",ret);
     }
 
   }
@@ -75,7 +90,6 @@ static void pmm_init() {
     //p本身指向page的首地址，p->addr也是；p->list是page中member list的首地址，p->list.prev指向上一个page的list的首地址
     //printf("%d,%d,%p,%p,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,&p->list,p->list.prev,p->list.next);
     //page_t *task=list_entry(&p->list,page_t,list);
-  
   panic("%d,%d",sizeof(slab_obj),sizeof(A));
 }
 
