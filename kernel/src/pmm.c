@@ -35,6 +35,7 @@ static void pmm_init() {
     printf("%d,%d,%p,%p,%p",p->slab_size,p->obj_cnt,p,p->addr,p->next);
     p++;
   }
+  panic("ddd");
 }
 
 MODULE_DEF(pmm) = {
