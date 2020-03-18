@@ -8,7 +8,7 @@
 #define MB KB*1024
 #define MEM_SIZE (126 MB)
 #define PAGE_SIZE (8 KB)
-#define HDR_SIZE 128
+#define HDR_SIZE 1024
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
@@ -47,9 +47,9 @@ typedef union page {
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     int obj_num;     //总对象数
     void *addr;      //首地址
-    void *s_mem;     //slab中第一个对象的地址，其地址为: addr+HDR_SIZE; 对象的大小为 slab_size
+    void *s_mem;     //slab中第一个对象的地址，其地址为: addr+(80+obj_num); 对象的大小为 slab_size
     list_head list;  // 属于同一个线程的页面的链表
-    uint8_t bitmap;  //往后obj_num个字节都属于bitmap;
+    uint8_t bitmap[512];  //往后obj_num个字节都属于bitmap;
   }; // 匿名结构体
   uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
@@ -66,7 +66,7 @@ typedef struct A{
     void *addr;      //首地址
     void *s_mem;     //slab中第一个对象
     list_head list;  // 属于同一个线程的页面的链表
-    uint8_t bitmap;  
+    uint8_t bitmap[512];
 }A; 
 
 typedef struct kmem_cache{
