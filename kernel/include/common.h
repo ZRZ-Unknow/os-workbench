@@ -6,8 +6,10 @@
 
 #define KB *1024
 #define MB KB*1024
+#define MEM_SIZE (126 MB)
 #define PAGE_SIZE (8 KB)
 #define HDR_SIZE 128
+#define PAGE_NUM MEM_SIZE/PAGE_SIZE
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/

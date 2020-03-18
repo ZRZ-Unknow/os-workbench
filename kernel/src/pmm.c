@@ -43,7 +43,7 @@ static void pmm_init() {
     printf("%p\n",task);
     p++;
   }
-  panic("ddd");
+  panic("%d",PAGE_NUM);
 }
 
 MODULE_DEF(pmm) = {
