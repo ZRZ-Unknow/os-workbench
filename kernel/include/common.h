@@ -46,7 +46,7 @@ typedef union page {
     int slab_size;    //如果是0，则表示它不在缓存而在大内存中
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     void *addr;      //首地址
-    void *s_mem;     //slab中第一个对象
+    void *s_mem;     //slab中第一个对象，其地址为: addr+HDR_SIZE; 对象的大小为 2^(log2(slab_size)+1)
     list_head list;  // 属于同一个线程的页面的链表
   }; // 匿名结构体
   uint8_t header[HDR_SIZE], data[PAGE_SIZE - HDR_SIZE];
@@ -55,14 +55,15 @@ typedef union page {
 typedef struct slab_obj{
   bool free;
 }slab_obj;
- typedef struct A{
+
+typedef struct A{
     spinlock_t lock; // 锁，用于串行化分配和并发的free
-    int slab_size;    //如果是0，则表示它不在缓存而在大内存中
+    int slab_size;    //如果是0，则表示它不在缓存而在大内存中,包括了header的大小
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     void *addr;      //首地址
     void *s_mem;     //slab中第一个对象
     list_head list;  // 属于同一个线程的页面的链表
-  }A; 
+}A; 
 
 typedef struct kmem_cache{
   int cpu;
@@ -71,3 +72,9 @@ typedef struct kmem_cache{
   list_head full_slab;
   list_head partial_slab; 
 }kmem_cache;
+
+static inline int align_size(int size){
+  int ret=1;
+  while(ret<size) ret<<=1;
+  return ret;
+} 

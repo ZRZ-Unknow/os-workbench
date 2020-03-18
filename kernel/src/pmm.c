@@ -11,16 +11,18 @@ static void kfree(void *ptr) {
 
 static page_t *mem_start=NULL;
 static kmem_cache kmc[MAX_CPU];
-
-page_t *get_free_page(int num){
+static int SLAB_SIZE[5]={8,32,64,128,256};
+page_t *get_free_page(int num,int slab_size){
   page_t *mp=mem_start;
   page_t *first_page=NULL;
   int i=0;
   while(i<num){
     if(mp->slab_size==0){
       i++;
-      mp->slab_size=64;
+      mp->slab_size=slab_size;
+      mp->obj_cnt=0;
       mp->addr=mp;
+      mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
       if(first_page==NULL){
         first_page=mp;
@@ -47,20 +49,24 @@ void debug_print(){
 
   }
 }
+
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
   printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *)_heap.start;
+  printf("%d\n",sizeof(page_t));
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i+1;
-    kmc[i].slab_num[0]=3;
+    kmc[i].slab_num[0]=5;   //8,32,64,128,256
     kmc[i].slab_num[1]=0;
     kmc[i].slab_num[2]=0;
     kmc[i].free_slab.prev=NULL;
     kmc[i].full_slab.prev=NULL;
     kmc[i].partial_slab.prev=NULL;
-    page_t *new_page=get_free_page(3);
-    kmc[i].free_slab.next=&new_page->list;
+    for(int j=0;i<5;j++){
+      page_t *new_page=get_free_page(1,SLAB_SIZE[j]);
+      kmc[i].free_slab.next=&new_page->list;
+    }
   }
   debug_print();
     //p本身指向page的首地址，p->addr也是；p->list是page中member list的首地址，p->list.prev指向上一个page的list的首地址
