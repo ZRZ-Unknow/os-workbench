@@ -103,15 +103,37 @@ static void pmm_init() {
     //debug_slab_print(new_page);
   }
   //debug_print();
+  //panic("test");
 }
 
 
 
 static void *kalloc(size_t size) {
   size=align_size(size);
-  Log("start alloc size %l",size); 
-  
-  return NULL;
+  Log("start alloc size %lu",size); 
+  int cpu=_cpu();
+  void *ret=NULL;
+  if(kmc[cpu].free_slab.next!=NULL){
+    list_head *lh=kmc[cpu].free_slab.next;
+    page_t *page=list_entry(lh,page_t,list);
+    while(page->slab_size<size){
+      lh=lh->next;
+      if(lh==NULL) break;
+      page=list_entry(lh,page_t,list);
+    }
+    if(lh==NULL){
+      TODO();
+    }
+    else{
+      lock_acquire(&page->lock);
+      ret=get_free_obj(page);
+      lock_release(&page->lock);
+    }
+  }
+  else{
+    TODO();
+  } 
+  return ret;
 }
 
 static void kfree(void *ptr) {
