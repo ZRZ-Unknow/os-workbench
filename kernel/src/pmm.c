@@ -108,8 +108,6 @@ static void pmm_init() {
   //panic("test");
 }
 
-
-
 static void *kalloc(size_t size) {
   size=align_size(size);
   lock_acquire(&lk);
@@ -136,7 +134,8 @@ static void *kalloc(size_t size) {
   }
   else{
     TODO();
-  } 
+  }
+  assert( !(((intptr_t)ret)%size)); 
   return ret;
 }
 
