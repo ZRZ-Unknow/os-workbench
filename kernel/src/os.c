@@ -14,7 +14,7 @@ static void os_run() {   //可以随意改动
   //lock_release(&lk);
   void *ret=pmm->alloc(40);
   lock_acquire(&lk);
-  printf("cpu %d alloc [%p,%p)",ret,ret+40);
+  printf("cpu %d alloc [%p,%p)",_cpu(),ret,ret+40);
   lock_release(&lk);
   while(1);
 }
