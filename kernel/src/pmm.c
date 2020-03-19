@@ -125,6 +125,7 @@ static void *kalloc(size_t size) {
 
 static void kfree(void *ptr) {
   page_t *page=get_head_addr(ptr);
+  assert(page);
   lock_acquire(&page->lock);
   int pos=(ptr-page->s_mem)/page->slab_size;
   page->obj_cnt--;
