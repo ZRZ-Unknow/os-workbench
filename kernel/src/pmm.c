@@ -1,11 +1,9 @@
 #include <common.h>
 
-#define NUM 7
-
 static page_t *mem_start=NULL;
 static kmem_cache kmc[MAX_CPU];
 static spinlock_t lock_global;
-static int SLAB_SIZE[NUM]={16,32,64,128,256,512,4096};
+static int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
 
 //调用前先上锁
 void *get_free_obj(page_t* page){
@@ -13,7 +11,7 @@ void *get_free_obj(page_t* page){
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
-      Log("find free pos:%d",pos);
+      //Log("find free pos:%d",pos);
       page->bitmap[pos]=1;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
@@ -37,7 +35,6 @@ page_t *get_free_page(int num,int slab_size){
       mp->addr=mp;
       mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
-      mp->bitmap[0]=1;
       lock_init(&mp->lock,"");
       if(first_page==NULL){
         first_page=mp;
@@ -56,8 +53,8 @@ page_t *get_free_page(int num,int slab_size){
   return first_page;
 }
 
-static page_t *page_init(int num){
-  int i=0;
+/*page_t *page_init(int num){
+  int i=0,j=0;
   page_t *mp=mem_start;
   page_t *first_page=NULL;
   while(i<num){
@@ -82,7 +79,7 @@ static page_t *page_init(int num){
     mp++;
   }
   return first_page;
-}
+}*/
 
 static void pmm_init() {
   //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
@@ -91,22 +88,19 @@ static void pmm_init() {
   lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
-    kmc[i].slab_num[0]=NUM;   
-    kmc[i].slab_num[1]=0;
-    kmc[i].slab_num[2]=0;
-    kmc[i].free_slab.prev=NULL;
-    kmc[i].full_slab.prev=NULL;
-    kmc[i].partial_slab.prev=NULL;
-    page_t *new_page=page_init(NUM);
-    kmc[i].free_slab.next=&new_page->list;
+    for(int j=0;j<SLAB_TYPE_NUM;j++){
+      page_t *new_page=get_free_page(5,SLAB_SIZE[j]);
+      kmc[i].slab_list[j].next=&new_page->list;
+      kmc[i].free_num[j]=5;
+    }
     //debug_slab_print(new_page);
   }
-  //debug_print();
+  debug_print();
   //panic("test");
 }
 
 static void *kalloc(size_t size) {
-  size=align_size(size);
+  /*size=align_size(size);
   Log("start alloc size %d",size); 
   int cpu=_cpu();
   void *ret=NULL;
@@ -131,7 +125,7 @@ static void *kalloc(size_t size) {
     TODO();
   }
   assert( !(((intptr_t)ret)%size));  //align */
-  return ret;
+  return NULL;
 }
 
 static void kfree(void *ptr) {
@@ -152,13 +146,14 @@ MODULE_DEF(pmm) = {
 /*---------------------------debug-------------------------*/
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
-    printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);
-    for(list_head *p=kmc[i].free_slab.next;p!=NULL;p=p->next){
-      page_t *page=list_entry(p,page_t,list);
-      printf("lock:%d,slab_size:%d,obj_cnt:%d,obj_num:%d,addr:%p,s_mem:%p,self:%p,prev:%p,next:%p\n",page->lock.locked,
-        page->slab_size,page->obj_cnt,page->obj_num,page->addr,page->s_mem,&page->list,page->list.prev,page->list.next);
+    for(int j=0;j<SLAB_TYPE_NUM;j++){
+      printf("cpu:%d,free_num:%d\n",kmc[i].cpu,kmc[i].free_num[j]);
+      for(list_head *p=kmc[i].slab_list[j].next;p!=NULL;p=p->next){
+        page_t *page=list_entry(p,page_t,list);
+        printf("lock:%d,slab_size:%d,obj_cnt:%d,obj_num:%d,addr:%p,s_mem:%p,self:%p,prev:%p,next:%p\n",page->lock.locked,
+          page->slab_size,page->obj_cnt,page->obj_num,page->addr,page->s_mem,&page->list,page->list.prev,page->list.next);
+      }
     }
-
   }
 }
 void debug_slab_print(page_t *page){

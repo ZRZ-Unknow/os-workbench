@@ -8,6 +8,9 @@
 #define PAGE_SIZE (8 KB)
 #define HDR_SIZE 1024
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE
+#define SLAB_TYPE_NUM 8
+#define SLAB_LIMIT 6
+
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/
@@ -44,10 +47,8 @@ typedef union page {
 
 typedef struct kmem_cache{
   int cpu;
-  int slab_num[3]; //free,full,partial
-  list_head free_slab;
-  list_head full_slab;
-  list_head partial_slab; 
+  int free_num[SLAB_TYPE_NUM]; //free,full,partial
+  list_head slab_list[SLAB_TYPE_NUM];
 }kmem_cache;
 
 /*--------------------pmm---------------------------*/

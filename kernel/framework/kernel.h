@@ -24,7 +24,6 @@ struct mod_os_t{
 }
 */
 
-
 MODULE(pmm) {
   void  (*init)();
   void *(*alloc)(size_t size);

@@ -3,9 +3,9 @@
 spinlock_t lk;
 
 static void os_init() {  //必须在这里完成所有必要的初始化
-  pmm->init();
   srand(uptime());
   lock_init(&lk,"printf_lock");
+  pmm->init();
 }
 
 static void os_run() {   //可以随意改动

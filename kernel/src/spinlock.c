@@ -10,7 +10,9 @@ void lock_init(spinlock_t *lk,char *name){
 }
 
 void lock_acquire(spinlock_t *lk){
-    //pushcli();
+    #ifdef INTERRUPT   //当无中断时在native执行cli,sti指令会segmentation fault
+    pushcli();
+    #endif
     if(holding(lk)) Spanic("acquire");
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
     __sync_synchronize();
@@ -23,14 +25,20 @@ void lock_release(spinlock_t *lk){
     lk->cpu=-1;
     __sync_synchronize();
     _atomic_xchg((intptr_t*)&lk->locked,0);
-    //popcli();
+    #ifdef INTERRUPT
+    popcli();
+    #endif
 }
 
 int holding(spinlock_t *lk){
     int r;
-    //pushcli();
+    #ifdef INTERRUPT
+    pushcli();
+    #endif
     r=lk->locked && lk->cpu==_cpu();
-    //popcli();
+    #ifdef INTERRUPT
+    popcli();
+    #endif
     return r;
 }
 
