@@ -135,7 +135,7 @@ static void *kalloc(size_t size) {
   else{
     TODO();
   }
-  assert( !(((intptr_t)ret)&size)); 
+  assert( !(((intptr_t)ret)%size));  //align 
   return ret;
 }
 
