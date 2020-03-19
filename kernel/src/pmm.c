@@ -128,9 +128,14 @@ static void kfree(void *ptr) {
   lock_acquire(&page->lock);
   int pos=(ptr-page->s_mem)/page->slab_size;
   page->obj_cnt--;
-  assert(page->bitmap[pos]==1);
+  Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab->size,page->slab->size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
+  /*if(page->obj_cnt==0){
+    TODO();
+    list_head *lh=page->list.prev;
+    while(lh->prev!=NULL) lh=lh->prev;
+  }*/
   lock_release(&page->lock);
 }
 

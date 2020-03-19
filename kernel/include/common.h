@@ -7,7 +7,7 @@
 #define MEM_SIZE (126 MB)
 #define PAGE_SIZE (8 KB)
 #define HDR_SIZE 1024
-#define PAGE_NUM MEM_SIZE/PAGE_SIZE
+#define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
 #define SLAB_TYPE_NUM 8
 #define SLAB_LIMIT 6
 
@@ -122,4 +122,11 @@ extern spinlock_t lk;
     } \
   } while (0)
 
+#define Assert(cond,format,...) \
+  do{ \
+    if(!(cond)) { \
+      panic("format,..."); \
+    }  \
+  }while(0)
+  
 #define TODO() panic("please implement me")
