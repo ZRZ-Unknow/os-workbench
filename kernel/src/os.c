@@ -20,6 +20,7 @@ static void os_run() {   //可以随意改动
       //while(!size);
       lock_acquire(&lk);
       //printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
+      lock_release(&lk);
     //}
   }
   printf("ddd\n");
