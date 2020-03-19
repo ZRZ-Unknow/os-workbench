@@ -74,7 +74,7 @@ page_t *page_init(int num){
 }
 
 
-static void *slab_obj_find(page_t* page){
+void *slab_obj_find(page_t* page){
   int pos=0;
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
@@ -96,8 +96,6 @@ void debug_print(){
       page_t *page=list_entry(p,page_t,list);
       printf("lock:%d,slab_size:%d,obj_cnt:%d,obj_num:%d,addr:%p,s_mem:%p,self:%p,prev:%p,next:%p\n",page->lock.locked,
         page->slab_size,page->obj_cnt,page->obj_num,page->addr,page->s_mem,&page->list,page->list.prev,page->list.next);
-      void *ret=slab_obj_find(page);
-      printf("%p\n",ret);
     }
 
   }
