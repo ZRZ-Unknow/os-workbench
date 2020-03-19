@@ -28,7 +28,7 @@ void lock_release(spinlock_t *lk){
 
 int holding(spinlock_t *lk){
     int r;
-    pushcli();
+    //pushcli();
     r=lk->locked && lk->cpu==_cpu();
     popcli();
     return r;
