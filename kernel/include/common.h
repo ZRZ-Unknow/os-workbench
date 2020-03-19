@@ -125,8 +125,8 @@ extern spinlock_t lk;
 #define Assert(cond,format,...) \
   do{ \
     if(!(cond)) { \
-      panic("format,..."); \
+      panic(format); \
     }  \
   }while(0)
-  
+
 #define TODO() panic("please implement me")
