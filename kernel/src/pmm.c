@@ -111,7 +111,8 @@ void debug_slab_print(page_t *page){
     void *ret=page->s_mem+offset;
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",pos,page->bitmap[pos],ret,ret+page->slab_size);
     int p=get_obj_pos(ret);
-    printf("%p,%d\n",p,p);
+    void *addr=ret-p;
+    printf("%p,%p\n",p,addr);
   }
 
 }
