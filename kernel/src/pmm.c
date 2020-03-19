@@ -53,33 +53,6 @@ page_t *get_free_page(int num,int slab_size){
   return first_page;
 }
 
-/*page_t *page_init(int num){
-  int i=0,j=0;
-  page_t *mp=mem_start;
-  page_t *first_page=NULL;
-  while(i<num){
-    if(mp->slab_size==0){
-      mp->slab_size=SLAB_SIZE[i++];
-      mp->obj_cnt=0;
-      mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
-      mp->addr=mp;
-      mp->s_mem=mp->addr+HDR_SIZE;
-      mp->list.next=NULL;
-      lock_init(&mp->lock,"");
-      if(first_page==NULL){
-        first_page=mp;
-      }
-      else{
-        list_head *p=&first_page->list;
-        while(p->next!=NULL) p=p->next;
-        p->next=&mp->list;
-        mp->list.prev=p;
-      }
-    }
-    mp++;
-  }
-  return first_page;
-}*/
 
 static void pmm_init() {
   //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
@@ -166,3 +139,38 @@ void debug_slab_print(page_t *page){
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",p,page->bitmap[pos],ret,ret+page->slab_size);
   }
 }
+
+
+
+
+
+
+
+/*----------------------------waste----------------------*/  //may be useful someday
+/*page_t *page_init(int num){
+  int i=0,j=0;
+  page_t *mp=mem_start;
+  page_t *first_page=NULL;
+  while(i<num){
+    if(mp->slab_size==0){
+      mp->slab_size=SLAB_SIZE[i++];
+      mp->obj_cnt=0;
+      mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
+      mp->addr=mp;
+      mp->s_mem=mp->addr+HDR_SIZE;
+      mp->list.next=NULL;
+      lock_init(&mp->lock,"");
+      if(first_page==NULL){
+        first_page=mp;
+      }
+      else{
+        list_head *p=&first_page->list;
+        while(p->next!=NULL) p=p->next;
+        p->next=&mp->list;
+        mp->list.prev=p;
+      }
+    }
+    mp++;
+  }
+  return first_page;
+}*/
