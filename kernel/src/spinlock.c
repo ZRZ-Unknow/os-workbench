@@ -30,6 +30,7 @@ int holding(spinlock_t *lk){
     int r;
     pushcli();
     r=lk->locked && lk->cpu==_cpu();
+    printf("dd\n");
     popcli();
     return r;
 }
