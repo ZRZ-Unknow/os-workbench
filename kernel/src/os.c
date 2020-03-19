@@ -1,7 +1,7 @@
 #include <common.h>
 
 spinlock_t lk;
-
+int count=0;
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
   lock_init(&lk,"printf_lock");
@@ -13,7 +13,11 @@ static void os_run() {   //可以随意改动
     //for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
-      assert(ret);
+      count++;
+      if(!ret){
+        printf("alloc num:%d\n",count);
+        assert(0);
+      }
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
