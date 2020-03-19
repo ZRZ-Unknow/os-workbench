@@ -11,6 +11,9 @@ static void kfree(void *ptr) {
 
 static page_t *mem_start=NULL;
 static kmem_cache kmc[MAX_CPU];
+static spinlock_t lock_global;
+
+
 static int SLAB_SIZE[5]={16,32,64,128,256};
 page_t *get_free_page(int num,int slab_size){
   page_t *mp=mem_start;
@@ -41,12 +44,42 @@ page_t *get_free_page(int num,int slab_size){
   return first_page;
 }
 
+page_t *page_init(int num){
+  int i=0;
+  page_t *mp=mem_start;
+  page_t *first_page=NULL;
+  while(i<num){
+    if(mp->slab_size==0){
+      mp->slab_size=SLAB_SIZE[i++];
+      mp->obj_cnt=0;
+      mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
+      mp->addr=mp;
+      mp->s_mem=mp->addr+HDR_SIZE;
+      mp->list.next=NULL;
+      mp->bitmap[0]=1;
+      lock_init(&mp->lock,"");
+      if(first_page==NULL){
+        first_page=mp;
+      }
+      else{
+        list_head *p=&first_page->list;
+        while(p->next!=NULL) p=p->next;
+        p->next=&mp->list;
+        mp->list.prev=p;
+      }
+    }
+    mp++;
+  }
+  return first_page;
+}
+
+
 static void *slab_obj_find(page_t* page){
   int pos=0;
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
-      printf("pos:%d\n",pos);
+      Log("pos:%d\n",pos);
       page->bitmap[pos]=1;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
@@ -74,7 +107,8 @@ static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
   printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *)_heap.start;
-  printf("%d\n",sizeof(page_t));
+  Log("%d\n",sizeof(page_t));
+  lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i+1;
     kmc[i].slab_num[0]=5;   //8,32,64,128,256
@@ -84,7 +118,7 @@ static void pmm_init() {
     kmc[i].full_slab.prev=NULL;
     kmc[i].partial_slab.prev=NULL;
     for(int j=0;j<5;j++){
-      page_t *new_page=get_free_page(1,SLAB_SIZE[j]);
+      page_t *new_page=page_init(5);
       list_head *p=&kmc[i].free_slab;
       while(p->next!=NULL) p=p->next;
       p->next=&new_page->list;
