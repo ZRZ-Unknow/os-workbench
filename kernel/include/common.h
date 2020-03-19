@@ -26,9 +26,6 @@ int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
 
-
-
-
 /*---------------------memory---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;
@@ -48,21 +45,6 @@ typedef union page {
   uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
 
-typedef struct slab_obj{
-  bool free;
-}slab_obj;
-
-typedef struct A{
-    spinlock_t lock; // 锁，用于串行化分配和并发的free
-    int slab_size;    //如果是0，则表示它不在缓存而在大内存中,包括了header的大小
-    int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
-    int obj_num;
-    void *addr;      //首地址
-    void *s_mem;     //slab中第一个对象
-    list_head list;  // 属于同一个线程的页面的链表
-    uint8_t bitmap[512];
-}A; 
-
 typedef struct kmem_cache{
   int cpu;
   int slab_num[3]; //free,full,partial
@@ -71,11 +53,6 @@ typedef struct kmem_cache{
   list_head partial_slab; 
 }kmem_cache;
 
-static inline int align_size(int size){
-  int ret=1;
-  while(ret<size) ret<<=1;
-  return ret;
-}
 
 
 /*--------------------utils-------------------------*/
@@ -90,4 +67,10 @@ static inline int get_obj_pos(void *addr){
   page_t *page=get_head_addr(addr);
   int pos=(addr-page->s_mem)/page->slab_size;
   return pos;
+}
+
+static inline int align_size(int size){
+  int ret=1;
+  while(ret<size) ret<<=1;
+  return ret;
 }
