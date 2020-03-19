@@ -107,7 +107,7 @@ static void pmm_init() {
 
 static void *kalloc(size_t size) {
   size=align_size(size);
-  Log("start alloc size %d",size); 
+  //Log("start alloc size %d",size); 
   int cpu=_cpu();
   void *ret=NULL;
   if(kmc[cpu].free_slab.next!=NULL){
