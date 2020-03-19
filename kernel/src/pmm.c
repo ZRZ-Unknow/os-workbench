@@ -14,7 +14,7 @@ void *get_free_obj(page_t* page){
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
-      Log("fine free pos:%d\n",pos);
+      Log("find free pos:%d\n",pos);
       page->bitmap[pos]=1;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
@@ -91,7 +91,7 @@ static void pmm_init() {
   mem_start=(page_t *) _heap.start;
   lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
-    kmc[i].cpu=i+1;
+    kmc[i].cpu=i;
     kmc[i].slab_num[0]=NUM;   
     kmc[i].slab_num[1]=0;
     kmc[i].slab_num[2]=0;
