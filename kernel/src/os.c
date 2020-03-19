@@ -3,8 +3,8 @@
 spinlock_t lk;
 int count=0;
 int cnt[8]={0,0,0,0,0,0,0,0};
-void *ptr[1<<20];
-int _size[1<<20];
+void *ptr[20];
+int _size[20];
 int j=0;
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
