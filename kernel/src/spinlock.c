@@ -10,7 +10,7 @@ void lock_init(spinlock_t *lk,char *name){
 }
 
 void lock_acquire(spinlock_t *lk){
-    pushcli();
+    //pushcli();
     if(holding(lk)) Spanic("acquire");
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
     __sync_synchronize();
@@ -28,22 +28,21 @@ void lock_release(spinlock_t *lk){
 
 int holding(spinlock_t *lk){
     int r;
-    pushcli();
+    //pushcli();
     r=lk->locked && lk->cpu==_cpu();
-    printf("dd\n");
-    popcli();
+    //popcli();
     return r;
 }
 
 void pushcli(void){
     uint32_t eflags=get_efl();
-    //cli();
+    cli();
     if(ncli[_cpu()]==0) intena[_cpu()]= eflags & FL_IF;
     ncli[_cpu()]+=1;
 }
 
 void popcli(void){
-    //if(get_efl() & FL_IF) Spanic("popcli interruptible");
+    if(get_efl() & FL_IF) Spanic("popcli interruptible");
     if(--ncli[_cpu()] <0 ) Spanic("popcli");
-    if(ncli[_cpu()]==0 && intena[_cpu()]) ;//sti();
+    if(ncli[_cpu()]==0 && intena[_cpu()]) sti();
 }
