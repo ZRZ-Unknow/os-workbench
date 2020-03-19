@@ -12,15 +12,15 @@ void lock_init(spinlock_t *lk,char *name){
 
 void lock_acquire(spinlock_t *lk){
     pushcli();
-    if(holding(lk)) panic("acquire");
+    if(holding(lk)) Spanic("acquire");
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
     __sync_synchronize();
     lk->cpu=_cpu();
-    //Log("cpu %d acquire lk \"%s\"",lk->cpu,lk->name);
+    //SLog("cpu %d acquire lk \"%s\"",lk->cpu,lk->name);
 }
 
 void lock_release(spinlock_t *lk){
-    if(!holding(lk)) panic("release");
+    if(!holding(lk)) Spanic("release");
     lk->cpu=-1;
     __sync_synchronize();
     _atomic_xchg((intptr_t*)&lk->locked,0);
@@ -44,7 +44,7 @@ void pushcli(void){
 }
 
 void popcli(void){
-    if(get_efl() & FL_IF) panic("popcli interruptible");
-    if(--ncli[_cpu()] <0 ) panic("popcli");
+    if(get_efl() & FL_IF) Spanic("popcli interruptible");
+    if(--ncli[_cpu()] <0 ) Spanic("popcli");
     if(ncli-_cpu()==0 && intena[_cpu()]) sti();
 }

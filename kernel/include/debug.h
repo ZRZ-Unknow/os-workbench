@@ -7,6 +7,16 @@
 #define Log(format,...)
 #endif
 
+#define SLog(format,...) \
+  printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
+      __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+#define Spanic(format,...) \
+  do { \
+    SLog("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
+    _halt(1); \
+  } while (0)
+
+
 #ifdef assert
 # undef assert
 #endif
