@@ -43,7 +43,7 @@ void pushcli(void){
 }
 
 void popcli(void){
-    if(get_efl() & FL_IF) Spanic("popcli interruptible");
+    //if(get_efl() & FL_IF) Spanic("popcli interruptible");
     if(--ncli[_cpu()] <0 ) Spanic("popcli");
     if(ncli-_cpu()==0 && intena[_cpu()]) sti();
 }
