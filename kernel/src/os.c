@@ -10,14 +10,14 @@ struct a{
 };
 
 static void os_run() {   //可以随意改动
-  while(1){
+  //while(1){
     lock_acquire(&lk);
     for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
       _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     //printf("%d,%d,%d\n",sizeof(struct a),sizeof(spinlock_t),sizeof(int));
     lock_release(&lk);
-  }
+  //}
 }
 
 MODULE_DEF(os) = {
