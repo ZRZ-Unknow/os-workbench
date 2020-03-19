@@ -13,7 +13,7 @@ static void os_run() {   //可以随意改动
     //for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
-      while(!size);
+      assert(ret);
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
