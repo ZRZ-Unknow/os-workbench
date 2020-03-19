@@ -72,7 +72,6 @@ page_t *page_init(int num){
   return first_page;
 }
 
-
 void *slab_obj_find(page_t* page){
   int pos=0;
   void *ret=NULL;
@@ -88,17 +87,6 @@ void *slab_obj_find(page_t* page){
   return ret;
 }
 
-int get_obj_pos(void *addr){
-    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
-  page_t *page=get_head_addr(addr);
-  int pos=(addr-page->s_mem)/page->slab_size;
-  return pos;
-}
-
-/*void *get_head_addr(void *addr){
-  int pos=get_obj_pos(addr);
-  return addr-pos;
-}*/
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
     printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);

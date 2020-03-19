@@ -28,13 +28,6 @@ void popcli(void);
 
 
 
-/*--------------------utils-------------------------*/
-#define list_entry(ptr, type, member) \
-  ((type *) \
-    ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
-  )
-#define get_obj(addr) (((intptr_t)(addr))&(PAGE_SIZE-1)) 
-#define get_head_addr(addr) (addr-get_obj(addr)) 
 
 /*---------------------memory---------------------*/
 typedef struct list_head{
@@ -82,4 +75,19 @@ static inline int align_size(int size){
   int ret=1;
   while(ret<size) ret<<=1;
   return ret;
-} 
+}
+
+
+/*--------------------utils-------------------------*/
+#define list_entry(ptr, type, member) \
+  ((type *) \
+    ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
+  )
+#define get_head_addr(addr) (addr-(((intptr_t)(addr))&(PAGE_SIZE-1)))     
+   //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
+
+static inline int get_obj_pos(void *addr){
+  page_t *page=get_head_addr(addr);
+  int pos=(addr-page->s_mem)/page->slab_size;
+  return pos;
+}
