@@ -14,9 +14,9 @@ void *get_free_obj(page_t* page){
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
-      //lock_acquire(&lk);
+      lock_acquire(&lk);
       Log("find free pos:%d\n",pos);
-      //lock_release(&lk);
+      lock_release(&lk);
       page->bitmap[pos]=1;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
@@ -110,9 +110,9 @@ static void pmm_init() {
 
 static void *kalloc(size_t size) {
   size=align_size(size);
-  //lock_acquire(&lk);
+  lock_acquire(&lk);
   Log("start alloc size %d\n",size); 
-  //lock_release(&lk);
+  lock_release(&lk);
   int cpu=_cpu();
   void *ret=NULL;
   if(kmc[cpu].free_slab.next!=NULL){
@@ -135,7 +135,7 @@ static void *kalloc(size_t size) {
   else{
     TODO();
   }
-  assert( !(((intptr_t)ret)%size)); 
+  assert( !(((intptr_t)ret)&size)); 
   return ret;
 }
 
