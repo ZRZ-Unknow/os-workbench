@@ -13,6 +13,7 @@ void *get_free_obj(page_t* page){
     if(page->bitmap[pos]==0){
       //Log("find free pos:%d",pos);
       page->bitmap[pos]=1;
+      page->obj_cnt+=1;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
       break;
@@ -73,32 +74,52 @@ static void pmm_init() {
 }
 
 static void *kalloc(size_t size) {
-  /*size=align_size(size);
+  size=align_size(size);
   Log("start alloc size %d",size); 
   int cpu=_cpu();
   void *ret=NULL;
-  if(kmc[cpu].free_slab.next!=NULL){
-    list_head *lh=kmc[cpu].free_slab.next;
+  int sl_pos=0;  //slablist_pos
+  for(;sl_pos<SLAB_TYPE_NUM;sl_pos++){
+    if(size<=SLAB_SIZE[sl_pos]) break;
+  }
+  assert(sl_pos<=SLAB_TYPE_NUM);
+  if(kmc[cpu].slab_list[sl_pos].next!=NULL){
+    list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     page_t *page=list_entry(lh,page_t,list);
-    while(page->slab_size<size){
+    assert(page->obj_cnt<=page->obj_num);
+    while(page->obj_cnt==page->obj_num && lh->next!=NULL){  //已分配对象数小于总对象数时才可分配
       lh=lh->next;
-      if(lh==NULL) break;
       page=list_entry(lh,page_t,list);
+      assert(page->obj_cnt<=page->obj_num);
     }
-    if(lh==NULL){
-      TODO();
-    }
-    else{
+    if(lh!=NULL){
       lock_acquire(&page->lock);
+      assert(page->obj_cnt<=page->obj_num);
       ret=get_free_obj(page);
       lock_release(&page->lock);
     }
   }
-  else{
-    TODO();
+  else assert(0);  //should never happen
+  if(!ret){  //需要从_heap中分配，加一把大锁
+    lock_acquire(&lock_global);
+    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos]);
+    if(!page){
+      lock_release(&lock_global);
+      return NULL;
+    }
+    list_head *lh=&kmc[cpu].slab_list[sl_pos];
+    while(lh->next!=NULL) lh=lh->next;
+    assert(lh);
+    lh->next=&page->list;
+    page->list.prev=lh;
+    page->list.next=NULL;
+    page->bitmap[0]=1;
+    page->obj_cnt+=1;
+    ret=page->s_mem;
+    lock_release(&lock_global);
   }
-  assert( !(((intptr_t)ret)%size));  //align */
-  return NULL;
+  assert( !(((intptr_t)ret)%size));  //align 
+  return ret;
 }
 
 static void kfree(void *ptr) {
@@ -112,11 +133,12 @@ MODULE_DEF(pmm) = {
 };
 
 
+
+/*---------------------------debug-------------------------*/
+
 //p本身指向page的首地址，p->addr也是；p->list是page中member list的首地址，p->list.prev指向上一个page的list的首地址
 //printf("%d,%d,%p,%p,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,&p->list,p->list.prev,p->list.next);
 //page_t *task=list_entry(&p->list,page_t,list)
-
-/*---------------------------debug-------------------------*/
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
     for(int j=0;j<SLAB_TYPE_NUM;j++){
