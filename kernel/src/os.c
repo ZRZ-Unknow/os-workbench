@@ -10,11 +10,11 @@ struct a{
 };
 
 static void os_run() {   //可以随意改动
+  //lock_acquire(&lk);
+  //lock_release(&lk);
+  void *ret=pmm->alloc(40);
   lock_acquire(&lk);
-  for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
-    _putc(*s == '*' ? '0' + _cpu() : *s);
-  }
-    //printf("%d,%d,%d\n",sizeof(struct a),sizeof(spinlock_t),sizeof(int));
+  printf("cpu %d alloc [%p,%p)",ret,ret+40);
   lock_release(&lk);
   while(1);
 }
