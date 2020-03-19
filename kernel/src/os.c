@@ -5,24 +5,21 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
   lock_init(&lk,"printf_lock");
 }
-struct a{
-  spinlock_t lk;
-  int a;
-};
 
 static void os_run() {   //可以随意改动
   //lock_acquire(&lk);
   //lock_release(&lk);
   //while(1){
-    for(int i=0;i<10;i++){
+    /*for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
       while(!ret);
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
-    }
+    }*/
   //}
+  printf("ddd\n");
   while(1);
 }
 
