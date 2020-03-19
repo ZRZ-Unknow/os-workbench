@@ -14,12 +14,9 @@ static void os_run() {   //可以随意改动
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
       count++;
-      if(!ret){
-        printf("alloc num:%d\n",count);
-        assert(0);
-      }
+      assert(ret);
       lock_acquire(&lk);
-      printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
+      printf("cpu %d alloc [%p,%p),size:%d,count:%d\n",_cpu(),ret,ret+size,size,count);
       lock_release(&lk);
     //}
   }
