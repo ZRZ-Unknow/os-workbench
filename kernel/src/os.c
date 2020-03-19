@@ -25,7 +25,7 @@ static void os_run() {   //可以随意改动
       lock_release(&lk);
       if(rand()%5==0){
         if(j>=count) continue;
-        pmm->free(ptr[j]);
+        pmm->free(ptr[0]);
         lock_acquire(&lk);
         printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[j],ptr[j]+_size[j],_size[j],j);
         lock_release(&lk);
