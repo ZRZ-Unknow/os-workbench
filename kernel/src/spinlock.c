@@ -36,8 +36,7 @@ int holding(spinlock_t *lk){
 }
 
 void pushcli(void){
-    uint32_t eflags;
-    eflags=get_efl();
+    uint32_t eflags=get_efl();
     //cli();
     if(ncli[_cpu()]==0) intena[_cpu()]= eflags & FL_IF;
     ncli[_cpu()]+=1;
@@ -46,5 +45,5 @@ void pushcli(void){
 void popcli(void){
     //if(get_efl() & FL_IF) Spanic("popcli interruptible");
     if(--ncli[_cpu()] <0 ) Spanic("popcli");
-    if(ncli-_cpu()==0 && intena[_cpu()]) sti();
+    if(ncli[_cpu()]==0 && intena[_cpu()]) sti();
 }
