@@ -113,7 +113,7 @@ static void pmm_init() {
 static void *kalloc(size_t size) {
   size=align_size(size);
   lock_acquire(&lk);
-  Log("start alloc size %lu\n",size); 
+  Log("start alloc size %d\n",size); 
   lock_release(&lk);
   int cpu=_cpu();
   void *ret=NULL;
