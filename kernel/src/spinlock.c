@@ -1,6 +1,5 @@
 #include <common.h>
 
-
 int ncli[MAX_CPU]={};
 int intena[MAX_CPU]={};
 

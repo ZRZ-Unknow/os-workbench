@@ -1,8 +1,6 @@
 #include <kernel.h>
 #include <klib.h>
 #include <klib-macros.h>
-#include <debug.h>
-
 
 #define KB *1024
 #define MB KB*1024
@@ -79,3 +77,49 @@ static inline size_t align_size(size_t size){
   while(ret<size) ret<<=1;
   return ret;
 }
+
+/*-----------------------debug------------------------*/
+extern spinlock_t lk;
+#define DEBUG
+
+#ifdef DEBUG
+#define Log(format, ...) \
+  lock_acquire(&lk); \
+  printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
+      __FILE__, __LINE__, __func__, ## __VA_ARGS__); \
+  lock_release(&lk); 
+#else
+#define Log(format,...)
+#endif
+
+#define SLog(format,...) \
+  printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
+      __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+#define Spanic(format,...) \
+  do { \
+    SLog("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
+    _halt(1); \
+  } while (0)
+
+
+#ifdef assert
+# undef assert
+#endif
+#ifdef panic
+# undef panic
+#endif
+
+#define panic(format, ...) \
+  do { \
+    Log("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
+    _halt(1); \
+  } while (0)
+
+#define assert(cond) \
+  do { \
+    if (!(cond)) { \
+      panic("Assertion failed: %s", #cond); \
+    } \
+  } while (0)
+
+#define TODO() panic("please implement me")
