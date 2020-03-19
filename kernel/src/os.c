@@ -13,7 +13,7 @@ struct a{
 static void os_run() {   //可以随意改动
   //lock_acquire(&lk);
   //lock_release(&lk);
-  while(1){
+  //while(1){
     for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
@@ -22,7 +22,8 @@ static void os_run() {   //可以随意改动
       printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
     }
-  }
+  //}
+  while(1);
 }
 
 MODULE_DEF(os) = {
