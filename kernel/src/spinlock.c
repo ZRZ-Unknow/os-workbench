@@ -23,7 +23,7 @@ void lock_release(spinlock_t *lk){
     lk->cpu=-1;
     __sync_synchronize();
     _atomic_xchg((intptr_t*)&lk->locked,0);
-    popcli();
+    //popcli();
 }
 
 int holding(spinlock_t *lk){
