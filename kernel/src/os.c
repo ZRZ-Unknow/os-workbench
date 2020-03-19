@@ -1,6 +1,8 @@
 #include <common.h>
 
 spinlock_t lk;
+
+spinlock_t test_lk;
 int count=0;
 int cnt[8]={0,0,0,0,0,0,0,0};
 void *ptr[20];
@@ -9,6 +11,7 @@ int j=0;
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
   lock_init(&lk,"printf_lock");
+  lock_init(&test_lk,"test_lk");
   pmm->init();
 }
 
@@ -17,19 +20,23 @@ static void os_run() {   //可以随意改动
       size_t size=rand()%512;
       void *ret=pmm->alloc(size);
       cnt[_cpu()]++;
+      lock_acquire(&test_lk);
       ptr[count]=ret;
       _size[count++]=size;
+      lock_release(&test_lk);
       assert(ret);
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size,cnt[_cpu()],count);
       lock_release(&lk);
       if(rand()%5==0){
+        lock_acquire(&test_lk);
         if(j>=count) continue;
         pmm->free(ptr[0]);
         lock_acquire(&lk);
         printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[j],ptr[j]+_size[j],_size[j],j);
         lock_release(&lk);
         j++;
+        lock_release(&test_lk);
       }
   }
 }
