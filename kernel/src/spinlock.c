@@ -16,7 +16,7 @@ void lock_acquire(spinlock_t *lk){
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
     __sync_synchronize();
     lk->cpu=_cpu();
-    Log("cpu %d acquire lk %s",lk->cpu,lk->name);
+    Log("cpu %d acquire lk \"%s\"",lk->cpu,lk->name);
 }
 
 void lock_release(spinlock_t *lk){
