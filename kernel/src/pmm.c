@@ -126,7 +126,7 @@ static void pmm_init() {
     kmc[i].free_slab.prev=NULL;
     kmc[i].full_slab.prev=NULL;
     kmc[i].partial_slab.prev=NULL;
-    page_t *new_page=page_init(5);
+    page_t *new_page=page_init(7);
     kmc[i].free_slab.next=&new_page->list;
     //debug_slab_print(new_page);
   }
