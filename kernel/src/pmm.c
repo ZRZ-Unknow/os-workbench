@@ -21,9 +21,8 @@ void *get_free_obj(page_t* page){
   }
   return ret;
 }
-
+//调用前先上锁
 page_t *get_free_page(int num,int slab_size){
-  lock_acquire(&lock_global);
   page_t *mp=mem_start;
   page_t *first_page=NULL;
   int i=0;
@@ -50,7 +49,6 @@ page_t *get_free_page(int num,int slab_size){
     mp++;
     assert(((void*)mp)<_heap.end);
   }
-  lock_release(&lock_global);
   return first_page;
 }
 
