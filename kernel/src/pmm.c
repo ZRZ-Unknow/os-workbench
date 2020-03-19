@@ -14,7 +14,7 @@ static kmem_cache kmc[MAX_CPU];
 static spinlock_t lock_global;
 
 
-static int SLAB_SIZE[5]={16,32,64,128,256};
+static int SLAB_SIZE[7]={16,32,64,128,256,512,4096};
 page_t *get_free_page(int num,int slab_size){
   page_t *mp=mem_start;
   page_t *first_page=NULL;
@@ -29,6 +29,7 @@ page_t *get_free_page(int num,int slab_size){
       mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
       mp->bitmap[0]=1;
+      lock_init(&mp->lock,"");
       if(first_page==NULL){
         first_page=mp;
       }
@@ -40,6 +41,7 @@ page_t *get_free_page(int num,int slab_size){
       }
     }
     mp++;
+    assert(((void*)mp)<_heap.end);
   }
   return first_page;
 }
