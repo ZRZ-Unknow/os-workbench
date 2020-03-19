@@ -106,7 +106,7 @@ static void pmm_init() {
 }
 
 static void *kalloc(size_t size) {
-  /*size=align_size(size);
+  size=align_size(size);
   //Log("start alloc size %d",size); 
   int cpu=_cpu();
   void *ret=NULL;
@@ -122,16 +122,16 @@ static void *kalloc(size_t size) {
       TODO();
     }
     else{
-      lock_acquire(&page->lock);
+      //lock_acquire(&page->lock);
       ret=get_free_obj(page);
-      lock_release(&page->lock);
+      //lock_release(&page->lock);
     }
   }
   else{
     TODO();
   }
   assert( !(((intptr_t)ret)%size));  //align */
-  return NULL;
+  return ret;
 }
 
 static void kfree(void *ptr) {
