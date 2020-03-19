@@ -100,7 +100,15 @@ void debug_print(){
 
   }
 }
+void debug_slab_print(page_t *page){
+  int pos=0;
+  for(;pos<page->obj_num;pos++){
+    int offset=pos*page->slab_size;
+    void *ret=page->s_mem+offset;
+    printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",pos,page->bitmap[pos],ret,ret+page->slab_size);
+  }
 
+}
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
   printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
@@ -117,8 +125,9 @@ static void pmm_init() {
     kmc[i].partial_slab.prev=NULL;
     page_t *new_page=page_init(5);
     kmc[i].free_slab.next=&new_page->list;
+    slab_obj_find(new_page);
   }
-  debug_print();
+  //debug_print();
     //p本身指向page的首地址，p->addr也是；p->list是page中member list的首地址，p->list.prev指向上一个page的list的首地址
     //printf("%d,%d,%p,%p,%p,%p,%p\n",p->slab_size,p->obj_cnt,p,p->addr,&p->list,p->list.prev,p->list.next);
     //page_t *task=list_entry(&p->list,page_t,list);
