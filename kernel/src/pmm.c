@@ -124,6 +124,7 @@ static void *kalloc(size_t size) {
 }
 
 static void kfree(void *ptr) {
+  Log("free:%p",ptr);
   page_t *page=get_head_addr(ptr);
   assert(page);
   lock_acquire(&page->lock);
