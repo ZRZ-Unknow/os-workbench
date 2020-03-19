@@ -88,10 +88,12 @@ void *slab_obj_find(page_t* page){
   return ret;
 }
 
-/*int get_obj_pos(void *addr){
-  int pos=((intptr_t)(addr))&(PAGE_SIZE-1);    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
+int get_obj_pos(void *addr){
+    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
+  page_t *page=get_head_addr(addr);
+  int pos=(addr-page->s_mem)/page->slab_size;
   return pos;
-}*/
+}
 
 /*void *get_head_addr(void *addr){
   int pos=get_obj_pos(addr);
