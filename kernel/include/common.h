@@ -53,7 +53,12 @@ typedef struct kmem_cache{
   list_head partial_slab; 
 }kmem_cache;
 
+/*--------------------pmm---------------------------*/
 
+void debug_print();
+void debug_slab_print(page_t *page);
+void *get_free_obj(page_t* page);
+page_t *get_free_page(int num,int slab_size);
 
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
