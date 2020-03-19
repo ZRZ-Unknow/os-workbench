@@ -12,6 +12,7 @@ void *get_free_obj(page_t* page){
   for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
       //Log("find free pos:%d",pos);
+      assert(page->bitmap[pos]==0);
       page->bitmap[pos]=1;
       page->obj_cnt+=1;
       int offset=pos*page->slab_size;
@@ -29,6 +30,7 @@ page_t *get_free_page(int num,int slab_size){
   while(i<num){
     if(mp->slab_size==0){
       i++;
+      assert(mp->slab_size==0);
       mp->slab_size=slab_size;
       mp->obj_cnt=0;
       mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
@@ -111,6 +113,7 @@ static void *kalloc(size_t size) {
     lh->next=&page->list;
     page->list.prev=lh;
     page->list.next=NULL;
+    assert(page->bitmap[0]==0);
     page->bitmap[0]=1;
     page->obj_cnt+=1;
     ret=page->s_mem;
@@ -121,6 +124,14 @@ static void *kalloc(size_t size) {
 }
 
 static void kfree(void *ptr) {
+  page_t *page=get_head_addr(ptr);
+  lock_acquire(&page->lock);
+  int pos=(ptr-page->s_mem)/page->slab_size;
+  page->obj_cnt--;
+  assert(page->bitmap[pos]==1);
+  page->bitmap[pos]=0;
+  memset(ptr,0,page->slab_size);
+  lock_release(&page->lock);
 }
 
 
