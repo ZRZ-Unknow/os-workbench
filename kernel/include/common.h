@@ -25,7 +25,7 @@ void lock_release(spinlock_t *lk);
 int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
-
+spinlock_t lk;
 /*---------------------memory---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;
@@ -74,8 +74,8 @@ static inline int get_obj_pos(void *addr){
   return pos;
 }
 
-static inline int align_size(int size){
-  int ret=1;
+static inline size_t align_size(size_t size){
+  size_t ret=1;
   while(ret<size) ret<<=1;
   return ret;
 }

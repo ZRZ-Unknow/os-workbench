@@ -1,8 +1,8 @@
 #include <common.h>
-spinlock_t lk;
+
 static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
-  lock_init(&lk,"test");
+  lock_init(&lk,"printf_lock");
 }
 struct a{
   spinlock_t lk;
@@ -14,7 +14,7 @@ static void os_run() {   //可以随意改动
   //lock_release(&lk);
   void *ret=pmm->alloc(40);
   lock_acquire(&lk);
-  printf("cpu %d alloc [%p,%p)",_cpu(),ret,ret+40);
+  printf("cpu %d alloc [%p,%p)\n",_cpu(),ret,ret+40);
   lock_release(&lk);
   while(1);
 }
