@@ -23,7 +23,6 @@ void lock_release(spinlock_t *lk);
 int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
-spinlock_t lk;
 /*---------------------memory---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;

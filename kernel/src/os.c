@@ -1,6 +1,6 @@
 #include <common.h>
 
-extern spinlock_t lk;
+spinlock_t lk;
 
 static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
