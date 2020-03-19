@@ -30,14 +30,17 @@ static void os_run() {   //可以随意改动
       lock_release(&lk);
       if(rand()%5==0){
         lock_acquire(&test_lk);
-        if(j>=count) {
-          lock_release(&test_lk);
+        int jj=j;
+        int cc=count;
+        lock_release(&test_lk);
+        if(jj>=cc) {
           continue;
         }
         lock_acquire(&lk);
-        printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[j],ptr[j]+_size[j],_size[j],j);
+        printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[jj],ptr[jj]+_size[jj],_size[jj],jj);
         lock_release(&lk);
-        pmm->free(ptr[j]);
+        pmm->free(ptr[jj]);
+        lock_acquire(&test_lk);
         j++;
         lock_release(&test_lk);
       }
