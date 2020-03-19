@@ -3,6 +3,8 @@
 spinlock_t lk;
 int count=0;
 int cnt[8]={0,0,0,0,0,0,0,0};
+void *ptr[1<<20];
+int j=0;
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
   lock_init(&lk,"printf_lock");
@@ -11,19 +13,19 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 
 static void os_run() {   //可以随意改动
   while(1){
-    //for(int i=0;i<10;i++){
-      size_t size=rand()%128;
+      size_t size=rand()%512;
       void *ret=pmm->alloc(size);
-      count++;
       cnt[_cpu()]++;
+      ptr[count++]=ret;
       assert(ret);
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size,cnt[_cpu()],count);
       lock_release(&lk);
-    //}
+      if(rand()%10==0){
+        if(j>=count) continue;
+        pmm->free(ptr[j++]);
+      }
   }
-  printf("ddd\n");
-  while(1);
 }
 
 MODULE_DEF(os) = {
