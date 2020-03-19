@@ -9,7 +9,8 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   //lock_acquire(&lk);
   //lock_release(&lk);
-  //while(1){
+  while(1){
+    printf("dddddddd\n");
     /*for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
@@ -18,7 +19,7 @@ static void os_run() {   //可以随意改动
       printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
     }*/
-  //}
+  }
   printf("ddd\n");
   while(1);
 }
