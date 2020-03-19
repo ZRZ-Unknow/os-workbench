@@ -13,7 +13,7 @@ void lock_acquire(spinlock_t *lk){
     pushcli();
     //if(holding(lk)) Spanic("acquire");
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
-    __sync_synchronize();
+    //__sync_synchronize();
     lk->cpu=_cpu();
     //SLog("cpu %d acquire lk \"%s\"",lk->cpu,lk->name);
 }
