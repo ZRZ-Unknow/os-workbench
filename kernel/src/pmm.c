@@ -89,9 +89,13 @@ void *slab_obj_find(page_t* page){
 }
 
 int get_obj_pos(void *addr){
-  int ret=((intptr_t)(addr))&(PAGE_SIZE-1);    //intptr_t位数为平台位数，
-  //printf("%p\n",ret);
-  return ret;
+  int pos=((intptr_t)(addr))&(PAGE_SIZE-1);    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
+  return pos;
+}
+
+void *get_head_addr(void *addr){
+  int pos=get_obj_pos(addr);
+  return addr-pos;
 }
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
@@ -110,9 +114,8 @@ void debug_slab_print(page_t *page){
     int offset=pos*page->slab_size;
     void *ret=page->s_mem+offset;
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",pos,page->bitmap[pos],ret,ret+page->slab_size);
-    int p=get_obj_pos(ret);
-    void *addr=ret-p;
-    printf("%p,%p\n",p,addr);
+    void *addr=get_head_addr(ret);
+    printf("%p\n",addr);
   }
 
 }
