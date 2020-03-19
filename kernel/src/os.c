@@ -12,11 +12,13 @@ struct a{
 static void os_run() {   //可以随意改动
   //lock_acquire(&lk);
   //lock_release(&lk);
-  void *ret=pmm->alloc(40);
-  lock_acquire(&lk);
-  printf("cpu %d alloc [%p,%p)\n",_cpu(),ret,ret+40);
-  lock_release(&lk);
-  while(1);
+  while(1){
+    size_t size=rand()%128;
+    void *ret=pmm->alloc(size);
+    lock_acquire(&lk);
+    printf("cpu %d alloc [%p,%p),size:%d.\n",_cpu(),ret,ret+size,size);
+    lock_release(&lk);
+  }
 }
 
 MODULE_DEF(os) = {
