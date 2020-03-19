@@ -10,7 +10,7 @@ static void os_run() {   //可以随意改动
   //lock_acquire(&lk);
   //lock_release(&lk);
   while(1){
-    printf("dddddddd\n");
+    printf("dddddddd,%d\n",_cpu());
     /*for(int i=0;i<10;i++){
       size_t size=rand()%128;
       void *ret=pmm->alloc(size);
