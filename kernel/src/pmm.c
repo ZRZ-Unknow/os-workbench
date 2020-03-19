@@ -88,15 +88,15 @@ void *slab_obj_find(page_t* page){
   return ret;
 }
 
-int get_obj_pos(void *addr){
+/*int get_obj_pos(void *addr){
   int pos=((intptr_t)(addr))&(PAGE_SIZE-1);    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
   return pos;
-}
+}*/
 
-void *get_head_addr(void *addr){
+/*void *get_head_addr(void *addr){
   int pos=get_obj_pos(addr);
   return addr-pos;
-}
+}*/
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
     printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);
@@ -114,8 +114,9 @@ void debug_slab_print(page_t *page){
     int offset=pos*page->slab_size;
     void *ret=page->s_mem+offset;
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",pos,page->bitmap[pos],ret,ret+page->slab_size);
+    int pos=get_obj_pos(ret);
     void *addr=get_head_addr(ret);
-    printf("%p\n",addr);
+    printf("%d,%p\n",pos,addr);
   }
 
 }

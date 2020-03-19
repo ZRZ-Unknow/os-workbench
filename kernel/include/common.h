@@ -33,7 +33,8 @@ void popcli(void);
   ((type *) \
     ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
   )
-
+#define get_obj_pos(addr) (((intptr_t)(addr))&(PAGE_SIZE-1)) 
+#define get_head_addr(addr) (addr-get_obj_pos(addr)) 
 
 /*---------------------memory---------------------*/
 typedef struct list_head{
