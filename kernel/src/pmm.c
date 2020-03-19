@@ -128,7 +128,7 @@ static void kfree(void *ptr) {
   lock_acquire(&page->lock);
   int pos=(ptr-page->s_mem)/page->slab_size;
   page->obj_cnt--;
-  Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab->size,page->slab->size);
+  Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
   /*if(page->obj_cnt==0){
