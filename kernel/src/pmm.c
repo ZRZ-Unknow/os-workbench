@@ -56,7 +56,6 @@ page_t *page_init(int num){
       mp->addr=mp;
       mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
-      mp->bitmap[0]=1;
       lock_init(&mp->lock,"");
       if(first_page==NULL){
         first_page=mp;
@@ -89,6 +88,11 @@ void *slab_obj_find(page_t* page){
   return ret;
 }
 
+int get_obj_pos(void *addr){
+  int ret=((intptr_t)(addr))&(PAGE_SIZE-1);    //intptr_t位数为平台位数，
+  //printf("%p\n",ret);
+  return ret;
+}
 void debug_print(){
   for(int i=0;i<_ncpu();i++){
     printf("cpu:%d,free_num:%d,full_num:%d,partial_num:%d\n",kmc[i].cpu,kmc[i].slab_num[0],kmc[i].slab_num[1],kmc[i].slab_num[2]);
@@ -102,10 +106,12 @@ void debug_print(){
 }
 void debug_slab_print(page_t *page){
   int pos=0;
-  for(;pos<page->obj_num;pos++){
+  for(;pos<3;pos++){
     int offset=pos*page->slab_size;
     void *ret=page->s_mem+offset;
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",pos,page->bitmap[pos],ret,ret+page->slab_size);
+    int p=get_obj_pos(ret);
+    printf("%p,%d\n",p,p);
   }
 
 }
