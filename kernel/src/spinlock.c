@@ -13,7 +13,7 @@ void lock_acquire(spinlock_t *lk){
     #ifdef INTERRUPT   //当无中断时在native执行cli,sti指令会segmentation fault
     pushcli();
     #endif
-    if(holding(lk)) Spanic("acquire,name:%s",lk->name);
+    if(holding(lk)) Spanic("acquire,name:%s",lk->name); //当lk为1且cpu为当前cpu时，即禁止重入
     while(_atomic_xchg((intptr_t*)&lk->locked,1)!=0);
     __sync_synchronize();
     lk->cpu=_cpu();
@@ -21,7 +21,7 @@ void lock_acquire(spinlock_t *lk){
 }
 
 void lock_release(spinlock_t *lk){
-    if(!holding(lk)) Spanic("release,name:%s",lk->name);
+    if(!holding(lk)) Spanic("release,name:%s",lk->name);  //当lk为0或者 lk的cpu不为当前cpu
     lk->cpu=-1;
     __sync_synchronize();
     _atomic_xchg((intptr_t*)&lk->locked,0);
