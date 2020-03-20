@@ -39,9 +39,10 @@ static void os_run() {   //可以随意改动
         lock_acquire(&lk);
         printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[jj],ptr[jj]+_size[jj],_size[jj],jj);
         lock_release(&lk);
-        pmm->free(ptr[jj]);
+;
         lock_acquire(&test_lk);
         j++;
+        pmm->free(ptr[jj]);
         lock_release(&test_lk);
       }
   }
