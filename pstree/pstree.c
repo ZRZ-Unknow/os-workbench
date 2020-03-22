@@ -167,11 +167,11 @@ void printTree(struct process *proc){
     if(proc->children==NULL){
       printf("%s(%d)",proc->name,proc->pid);
     }
-    else printf("%s--",proc->name);
+    else printf("%s(%d)--",proc->name,proc->pid);
   }
   else{
     if(proc->children==NULL){
-      printf("%s(%d)",proc->name,proc->pid);
+      printf("%s",proc->name);
     }
     else printf("%s--",proc->name);
   }
