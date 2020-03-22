@@ -85,7 +85,7 @@ static void pmm_init() {
     }
     //debug_slab_print(new_page);
   }
-  //debug_print();
+  debug_print();
   //panic("test");
 }
 
@@ -151,11 +151,9 @@ static void kfree(void *ptr) {
   memset(ptr,0,page->slab_size);
   //if(page->obj_cnt==0){
     int n=get_slab_pos(page->slab_size);
-    printf("dddddddd%d\n",n);
     list_head *lh=page->list.prev;
     assert(lh);
     while(lh->prev!=NULL) lh=lh->prev;
-    printf("ddddddddddddddddddddddddddddddddddddddddddd\n");
     kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
     printf("dddddddddddddddddd\n");
     Log("cpu:%d,n:%d,free_num:%d",kc->cpu,n,kc->free_num[n]);
