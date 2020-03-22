@@ -85,7 +85,7 @@ static void pmm_init() {
     }
     //debug_slab_print(new_page);
   }
-  debug_print();
+  //debug_print();
   //panic("test");
 }
 
