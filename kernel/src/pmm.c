@@ -136,6 +136,8 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
+  int n=get_slab_pos(page->slab_size);
+  printf("%d\n",n);
   if(page->obj_cnt==0){
     int n=get_slab_pos(page->slab_size);
     printf("%d\n",n);
