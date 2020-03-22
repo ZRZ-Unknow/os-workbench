@@ -149,7 +149,7 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
-  if(page->obj_cnt==0){
+  //if(page->obj_cnt==0){
     int n=get_slab_pos(page->slab_size);
     list_head *lh=page->list.prev;
     while(lh->prev!=NULL) lh=lh->prev;
@@ -159,7 +159,7 @@ static void kfree(void *ptr) {
     if(kc->free_num[n]>=32){  //归还页面
       TODO();
     }
-  }
+  //}
   lock_release(&page->lock);
 }
 
