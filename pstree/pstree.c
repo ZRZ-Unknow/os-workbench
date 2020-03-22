@@ -84,7 +84,7 @@ void search(struct process *proc){
   //printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
   fclose(fp);
    // 打开thread,thread是没有孩子的
-  DIR *taskdir=opendir(threadpath);
+  /*DIR *taskdir=opendir(threadpath);
   struct dirent* entry;
   while((entry=readdir(taskdir))!=NULL){
     if(strspn(entry->d_name,"0123456789")==strlen(entry->d_name)){
@@ -99,7 +99,7 @@ void search(struct process *proc){
       }
     }
   }
-  closedir(taskdir);
+  closedir(taskdir);*/
   //递归寻找孩子
   fp=fopen(childpath,"r");
   pid_t child_id;
@@ -116,7 +116,7 @@ void search(struct process *proc){
 }
 
 //扫描/proc文件夹，将不在树中的进程加入进去
-void scan(){
+/*void scan(){
   DIR *procdir=opendir("/proc");
   struct dirent *entry;
   while((entry=readdir(procdir))!=NULL){
@@ -138,13 +138,13 @@ void scan(){
     }
   }
   closedir(procdir);
-}
+}*/
 int len(pid_t p){
   int i=0;
   while(p){i++;p=p/10;}
   return i;
 }
-void printBackup(struct process *proc){
+/*void printBackup(struct process *proc){
   if(proc->parent!=NULL) printBackup(proc->parent);
   int print_len;
   if(HAV_P) print_len=(int)strlen(proc->name)+2+len(proc->pid);
@@ -161,7 +161,7 @@ void printTree(struct process *proc){
       printTree(p->child);
     }
   }
-}
+}*/
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
@@ -183,8 +183,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   search(root);
-  scan();
-  //debugprint(root);
-  printTree(root);
+  debugprint(root);
+  //printTree(root);
   return 0;
 }
