@@ -32,10 +32,10 @@ void *get_free_obj(page_t* page){
       if(page->obj_cnt==0){  //改变cpu的free_num值
         int cpu=page->cpu;
         int n=get_slab_pos(page->slab_size);
-        kmc[cpu].free_num[n]-=1;
+        kmc[cpu].free_num[n]--;
       }
       page->bitmap[pos]=1;
-      page->obj_cnt+=1;
+      page->obj_cnt++;
       int offset=pos*page->slab_size;
       ret=page->s_mem+offset;
       break;
@@ -146,7 +146,7 @@ static void *kalloc(size_t size) {
     page->list.next=NULL;
     assert(page->bitmap[0]==0);
     page->bitmap[0]=1;
-    page->obj_cnt+=1;    //这个时候cpu的free_num是不变的：加了一个并不free的page
+    page->obj_cnt++;    //这个时候cpu的free_num是不变的：加了一个并不free的page
     ret=page->s_mem;
     lock_release(&lock_global);
   }
