@@ -116,7 +116,7 @@ void search(struct process *proc){
 }
 
 //扫描/proc文件夹，将不在树中的进程加入进去
-/*void scan(){
+void scan(){
   DIR *procdir=opendir("/proc");
   struct dirent *entry;
   while((entry=readdir(procdir))!=NULL){
@@ -138,7 +138,7 @@ void search(struct process *proc){
     }
   }
   closedir(procdir);
-}*/
+}
 int len(pid_t p){
   int i=0;
   while(p){i++;p=p/10;}
@@ -183,6 +183,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   search(root);
+  scan();
   debugprint(root);
   //printTree(root);
   return 0;
