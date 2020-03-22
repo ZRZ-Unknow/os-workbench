@@ -153,6 +153,7 @@ static void kfree(void *ptr) {
     int n=get_slab_pos(page->slab_size);
     printf("dddddddd%d\n",n);
     list_head *lh=page->list.prev;
+    assert(lh);
     while(lh->prev!=NULL) lh=lh->prev;
     printf("ddddddddddddddddddddddddddddddddddddddddddd\n");
     kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
