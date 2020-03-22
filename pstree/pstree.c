@@ -81,25 +81,7 @@ void search(struct process *proc){
   FILE *fp=fopen(statpath,"r");
   fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
   proc->name[strlen(proc->name)-1]='\0';
-  //printf("root:%d %d %s %c\n",proc->pid,proc->ppid,proc->name,proc->state);
   fclose(fp);
-   // 打开thread,thread是没有孩子的
-  /*DIR *taskdir=opendir(threadpath);
-  struct dirent* entry;
-  while((entry=readdir(taskdir))!=NULL){
-    if(strspn(entry->d_name,"0123456789")==strlen(entry->d_name)){
-      if(atoi(entry->d_name)!=proc->pid){
-        struct process *thread=malloc(sizeof(struct process));
-        thread->pid=atoi(entry->d_name); thread->ppid=proc->pid; thread->state=proc->state; thread->parent=proc; thread->children=NULL;
-        sprintf(thread->name,"{%.16s}",proc->name);//thread显示名字要加花括号 
-        //printf("thread:%d %d %s %c\n",thread->pid,thread->ppid,thread->name,thread->state);
-        struct ChildList *thread_child=malloc(sizeof(struct ChildList));
-        thread_child->child=thread;
-        insert(proc,thread_child);
-      }
-    }
-  }
-  closedir(taskdir);*/
   //递归寻找孩子
   fp=fopen(childpath,"r");
   pid_t child_id;
@@ -109,59 +91,11 @@ void search(struct process *proc){
     struct ChildList *_child=malloc(sizeof(struct ChildList));
     _child->child=child;
     insert(proc,_child); 
-    //printf("proc:%d %d \n",child->pid,child->ppid);
     search(child);
   }
   fclose(fp);
 }
 
-//扫描/proc文件夹，将不在树中的进程加入进去
-/*void scan(){
-  DIR *procdir=opendir("/proc");
-  struct dirent *entry;
-  while((entry=readdir(procdir))!=NULL){
-    if(strspn(entry->d_name,"0123456789")==strlen(entry->d_name)){  //是否是数字
-      pid_t proc_pid=atoi(entry->d_name);
-      char statpath[64]="";
-      sprintf(statpath,"/proc/%d/stat",proc_pid);
-      struct process *proc=malloc(sizeof(struct process));
-      proc->children=NULL;proc->parent=NULL;
-      FILE *fp=fopen(statpath,"r");
-      fscanf(fp,"%d (%s %c %d",&proc->pid,proc->name,&proc->state,&proc->ppid);
-      proc->name[strlen(proc->name)-1]='\0';
-      fclose(fp);
-      //看这个进程是否在树中:它本身在树中或者它的父母不在树中(进程的父母编号要比孩子小，这保证了若它的父母不应在树中则它也不应在树中)
-      if(proc->ppid==0 || proc_find(proc_pid,root)!=NULL || proc_find(proc->ppid,root)==NULL){  
-        free(proc);
-        continue;
-      }
-    }
-  }
-  closedir(procdir);
-}*/
-int len(pid_t p){
-  int i=0;
-  while(p){i++;p=p/10;}
-  return i;
-}
-/*void printBackup(struct process *proc){
-  if(proc->parent!=NULL) printBackup(proc->parent);
-  int print_len;
-  if(HAV_P) print_len=(int)strlen(proc->name)+2+len(proc->pid);
-  else print_len=(int)strlen(proc->name);
-  printf("%s%*s",(proc==root?"":(proc->children->next?" | ":"   ")),print_len,"");
-}
-void printTree(struct process *proc){
-  if(HAV_P) printf("%s%s(%d)%s",(proc==&root_proc?"":(proc==proc->parent->children->child ? "-+-":" |-" )),proc->name,proc->pid,proc->children?"":"\n");
-  else printf("%s%s%s",(proc==root?"":(proc==proc->parent->children->child ? "-+-":" |-" )),proc->name,proc->children?"":"\n");
-  for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
-    if(p->child->parent->children==p) printTree(p->child);
-    else{
-      printBackup(p->child->parent);
-      printTree(p->child);
-    }
-  }
-}*/
 void printTree(struct process *proc){
   if(HAV_P){
     if(proc->children==NULL){
