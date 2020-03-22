@@ -6,7 +6,20 @@ static spinlock_t lock_global;
 static int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
 
 int get_slab_pos(int size){
-  return 1;
+  int pos=-1;
+  switch (size){
+    case 16: pos=0;break;
+    case 32: pos=1;break;
+    case 64: pos=2;break;
+    case 128: pos=3;break;
+    case 256: pos=4;break;
+    case 512: pos=5;break;
+    case 1024: pos=6;break;
+    case 4096: pos=7;break;
+    default:break;
+  }
+  assert(pos!=-1);
+  return pos;
 }
 //调用前先上锁
 void *get_free_obj(page_t* page){
@@ -136,14 +149,16 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
-  int n=get_slab_pos(page->slab_size);
-  printf("%d\n",n);
   if(page->obj_cnt==0){
     int n=get_slab_pos(page->slab_size);
-    printf("%d\n",n);
     list_head *lh=page->list.prev;
     while(lh->prev!=NULL) lh=lh->prev;
-
+    kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
+    Log("cpu:%d,n:%d,free_num:%d",kc->cpu,n,kc->free_num[n]);
+    kc->free_num[n]+=1;
+    if(kc->free_num[n]>=32){  //归还页面
+      TODO();
+    }
   }
   lock_release(&page->lock);
 }
