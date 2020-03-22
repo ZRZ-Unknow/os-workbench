@@ -30,7 +30,7 @@ void *get_free_obj(page_t* page){
       //Log("find free pos:%d",pos);
       assert(page->bitmap[pos]==0);
       if(page->obj_cnt==0){  //改变cpu的free_num值
-        int cpu=_cpu();
+        int cpu=page->cpu;
         int n=get_slab_pos(page->slab_size);
         kmc[cpu].free_num[n]-=1;
       }
@@ -44,7 +44,7 @@ void *get_free_obj(page_t* page){
   return ret;
 }
 //调用前先上锁
-page_t *get_free_page(int num,int slab_size){
+page_t *get_free_page(int num,int slab_size,int cpu){
   page_t *mp=mem_start;
   page_t *first_page=NULL;
   int i=0;
@@ -52,6 +52,7 @@ page_t *get_free_page(int num,int slab_size){
     if(mp->slab_size==0){
       i++;
       assert(mp->slab_size==0);
+      mp->cpu=cpu;
       mp->slab_size=slab_size;
       mp->obj_cnt=0;
       mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
@@ -83,12 +84,11 @@ static void pmm_init() {
   lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
-    char tmp[5]="";
-    sprintf(&tmp[0],"cpu%d",i);
-    lock_init(&kmc[i].lock,&tmp[0]);
-    printf("%s\n",kmc[i].lock.name);
+    char name[5]="";
+    sprintf(&name[0],"cpu%d",i);
+    lock_init(&kmc[i].lock,&name[0]);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
-      page_t *new_page=get_free_page(5,SLAB_SIZE[j]);
+      page_t *new_page=get_free_page(5,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
       kmc[i].free_num[j]=5;
@@ -115,10 +115,12 @@ static void *kalloc(size_t size) {
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     page_t *page=list_entry(lh,page_t,list);
     assert(page->obj_cnt<=page->obj_num);
+    assert(page->cpu==cpu);
     while(page->obj_cnt==page->obj_num && lh->next!=NULL){  //已分配对象数小于总对象数时才可分配
       lh=lh->next;
       page=list_entry(lh,page_t,list);
       assert(page->obj_cnt<=page->obj_num);
+      assert(page->cpu==cpu);
     }
     if(lh!=NULL){
       lock_acquire(&page->lock);
@@ -130,11 +132,12 @@ static void *kalloc(size_t size) {
   else assert(0);  //should never happen
   if(!ret){  //需要从_heap中分配，加一把大锁
     lock_acquire(&lock_global);
-    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos]);
+    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
     if(!page){
       lock_release(&lock_global);
       return NULL;
     }
+    assert(page->cpu==cpu);
     list_head *lh=&kmc[cpu].slab_list[sl_pos];
     while(lh->next!=NULL) lh=lh->next;
     assert(lh);
@@ -143,7 +146,7 @@ static void *kalloc(size_t size) {
     page->list.next=NULL;
     assert(page->bitmap[0]==0);
     page->bitmap[0]=1;
-    page->obj_cnt+=1;
+    page->obj_cnt+=1;    //这个时候cpu的free_num是不变的：加了一个并不free的page
     ret=page->s_mem;
     lock_release(&lock_global);
   }
@@ -164,16 +167,15 @@ static void kfree(void *ptr) {
   memset(ptr,0,page->slab_size);
   if(page->obj_cnt==0){
     //需要对cpu上锁
+    int cpu=page->cpu;
+    lock_acquire(&kmc[cpu].lock);
     int n=get_slab_pos(page->slab_size);
-    list_head *lh=page->list.prev;
-    assert(lh);   //lh should never be null
-    while(lh->prev!=NULL) lh=lh->prev;
-    kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
-    Log("cpu:%d,slab_type:%d,free_page_num:%d",kc->cpu,n,kc->free_num[n]);
-    kc->free_num[n]+=1;
-    if(kc->free_num[n]>=32){  //归还页面
+    Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
+    kmc[cpu].free_num[n]+=1;
+    if(kmc[cpu].free_num[n]>=SLAB_LIMIT){  //归还页面
       TODO();
     }
+    lock_release(&kmc[cpu].lock);
   }
   lock_release(&page->lock);
 }

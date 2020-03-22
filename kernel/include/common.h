@@ -9,7 +9,7 @@
 #define HDR_SIZE 1024
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
 #define SLAB_TYPE_NUM 8
-#define SLAB_LIMIT 6
+#define SLAB_LIMIT 16
 
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
@@ -34,6 +34,7 @@ typedef struct list_head{
 typedef union page {
   struct {
     spinlock_t lock; // 锁，用于串行化分配和并发的free
+    int cpu;          //位于哪个cpu中
     int slab_size;    //如果是0，则表示它不在缓存而在大内存中
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     int obj_num;     //总对象数
@@ -57,7 +58,7 @@ typedef struct kmem_cache{
 void debug_print();
 void debug_slab_print(page_t *page);
 void *get_free_obj(page_t* page);
-page_t *get_free_page(int num,int slab_size);
+page_t *get_free_page(int num,int slab_size,int cpu);
 
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
