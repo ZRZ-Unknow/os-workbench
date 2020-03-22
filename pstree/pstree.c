@@ -177,7 +177,7 @@ void printTree(struct process *proc){
   }
   for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
     printTree(p->child);
-    print("\n");
+    printf("\n");
   }
 }
 int main(int argc, char *argv[]) {
