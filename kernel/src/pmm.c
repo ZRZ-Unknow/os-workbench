@@ -81,6 +81,7 @@ static void pmm_init() {
     for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(5,SLAB_SIZE[j]);
       kmc[i].slab_list[j].next=&new_page->list;
+      new_page->list.prev=&kmc[i].slab_list[j];
       kmc[i].free_num[j]=5;
     }
     //debug_slab_print(new_page);
