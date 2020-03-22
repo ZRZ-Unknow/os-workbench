@@ -5,6 +5,9 @@ static kmem_cache kmc[MAX_CPU];
 static spinlock_t lock_global;
 static int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
 
+int get_slab_pos(int size){
+  return 1;
+}
 //调用前先上锁
 void *get_free_obj(page_t* page){
   int pos=0;
@@ -133,11 +136,13 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
-  /*if(page->obj_cnt==0){
-    TODO();
+  if(page->obj_cnt==0){
+    int n=get_slab_pos(page->slab_size);
+    printf("%d\n",n);
     list_head *lh=page->list.prev;
     while(lh->prev!=NULL) lh=lh->prev;
-  }*/
+
+  }
   lock_release(&page->lock);
 }
 

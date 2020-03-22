@@ -47,7 +47,7 @@ typedef union page {
 
 typedef struct kmem_cache{
   int cpu;
-  int free_num[SLAB_TYPE_NUM]; //free,full,partial
+  int free_num[SLAB_TYPE_NUM]; 
   list_head slab_list[SLAB_TYPE_NUM];
 }kmem_cache;
 
