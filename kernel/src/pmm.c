@@ -83,7 +83,9 @@ static void pmm_init() {
   lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
-    lock_init(&kmc[i].lock,i+"0");
+    char tmp[5]="";
+    sprintf(&tmp[0],"cpu%d",i);
+    lock_init(&kmc[i].lock,&tmp[0]);
     printf("%s\n",kmc[i].lock.name);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(5,SLAB_SIZE[j]);
