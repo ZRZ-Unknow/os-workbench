@@ -28,7 +28,7 @@ static void os_run() {   //可以随意改动
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size,cnt[_cpu()],count);
       lock_release(&lk);
-      if(rand()%5==0){
+      if(rand()%3==0){
         lock_acquire(&test_lk);
         int jj=j;
         int cc=count;
