@@ -150,19 +150,18 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
-  //if(page->obj_cnt==0){
+  if(page->obj_cnt==0){
     int n=get_slab_pos(page->slab_size);
     list_head *lh=page->list.prev;
-    assert(lh);
+    assert(lh);   //lh should never be null
     while(lh->prev!=NULL) lh=lh->prev;
     kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
-    printf("dddddddddddddddddd\n");
-    Log("cpu:%d,n:%d,free_num:%d",kc->cpu,n,kc->free_num[n]);
+    Log("cpu:%d,slab_type:%d,free_page_num:%d",kc->cpu,n,kc->free_num[n]);
     kc->free_num[n]+=1;
     if(kc->free_num[n]>=32){  //归还页面
       TODO();
     }
-  //}
+  }
   lock_release(&page->lock);
 }
 
