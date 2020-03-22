@@ -116,7 +116,7 @@ void search(struct process *proc){
 }
 
 //扫描/proc文件夹，将不在树中的进程加入进去
-void scan(){
+/*void scan(){
   DIR *procdir=opendir("/proc");
   struct dirent *entry;
   while((entry=readdir(procdir))!=NULL){
@@ -138,7 +138,7 @@ void scan(){
     }
   }
   closedir(procdir);
-}
+}*/
 int len(pid_t p){
   int i=0;
   while(p){i++;p=p/10;}
@@ -162,6 +162,24 @@ void printTree(struct process *proc){
     }
   }
 }*/
+void printTree(struct process *proc){
+  if(HAV_P){
+    if(proc->children==NULL){
+      printf("%s(%d)",proc->name,proc->pid);
+    }
+    else printf("%s--",proc->name);
+  }
+  else{
+    if(proc->children==NULL){
+      printf("%s(%d)",proc->name,proc->pid);
+    }
+    else printf("%s--",proc->name);
+  }
+  for(struct ChildList *p=proc->children;p!=NULL;p=p->next){
+    printTree(p->child);
+    print("\n");
+  }
+}
 int main(int argc, char *argv[]) {
   int i;
   for (i = 1; i < argc; i++) {
@@ -183,8 +201,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   search(root);
-  scan();
-  debugprint(root);
-  //printTree(root);
+  //debugprint(root);
+  printTree(root);
   return 0;
 }
