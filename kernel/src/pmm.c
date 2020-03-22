@@ -173,7 +173,17 @@ static void kfree(void *ptr) {
     Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
     kmc[cpu].free_num[n]+=1;
     if(kmc[cpu].free_num[n]>=SLAB_LIMIT){  //归还页面
-      TODO();
+      lock_acquire(&lock_global);
+      page->cpu=-1;
+      page->slab_size=0;
+      page->obj_num=0;
+      page->s_mem=NULL;
+      list_head *prev=page->list.prev;
+      list_head *next=page->list.next;
+      prev->next=next;
+      if(next) next->prev=prev;
+      lock_release(&lock_global);
+      kmc[cpu].free_num[n]--;
     }
     lock_release(&kmc[cpu].lock);
   }
