@@ -154,6 +154,7 @@ static void kfree(void *ptr) {
     list_head *lh=page->list.prev;
     while(lh->prev!=NULL) lh=lh->prev;
     kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
+    printf("dddddddddddddddddd\n");
     Log("cpu:%d,n:%d,free_num:%d",kc->cpu,n,kc->free_num[n]);
     kc->free_num[n]+=1;
     if(kc->free_num[n]>=32){  //归还页面
