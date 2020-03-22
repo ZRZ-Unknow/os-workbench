@@ -154,6 +154,7 @@ static void kfree(void *ptr) {
     printf("dddddddd%d\n",n);
     list_head *lh=page->list.prev;
     while(lh->prev!=NULL) lh=lh->prev;
+    printf("ddddddddddddddddddddddddddddddddddddddddddd\n");
     kmem_cache *kc=list_entry(lh,kmem_cache,slab_list[n]);
     printf("dddddddddddddddddd\n");
     Log("cpu:%d,n:%d,free_num:%d",kc->cpu,n,kc->free_num[n]);
