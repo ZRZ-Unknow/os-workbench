@@ -29,6 +29,11 @@ void *get_free_obj(page_t* page){
     if(page->bitmap[pos]==0){
       //Log("find free pos:%d",pos);
       assert(page->bitmap[pos]==0);
+      if(page->obj_cnt==0){  //改变cpu的free_num值
+        int cpu=_cpu();
+        int n=get_slab_pos(page->slab_size);
+        kmc[cpu].free_num[n]-=1;
+      }
       page->bitmap[pos]=1;
       page->obj_cnt+=1;
       int offset=pos*page->slab_size;
@@ -78,6 +83,8 @@ static void pmm_init() {
   lock_init(&lock_global,"lock_global");
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
+    lock_init(&kmc[i].lock,i+"0");
+    printf("%s\n",kmc[i].lock.name);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(5,SLAB_SIZE[j]);
       kmc[i].slab_list[j].next=&new_page->list;
@@ -86,7 +93,7 @@ static void pmm_init() {
     }
     //debug_slab_print(new_page);
   }
-  debug_print();
+  //debug_print();
   //panic("test");
 }
 
@@ -100,6 +107,8 @@ static void *kalloc(size_t size) {
     if(size<=SLAB_SIZE[sl_pos]) break;
   }
   assert(sl_pos<=SLAB_TYPE_NUM);
+  //这里是否需要锁cpu?先锁一个试试
+  lock_acquire(&kmc[cpu].lock);
   if(kmc[cpu].slab_list[sl_pos].next!=NULL){
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     page_t *page=list_entry(lh,page_t,list);
@@ -112,7 +121,7 @@ static void *kalloc(size_t size) {
     if(lh!=NULL){
       lock_acquire(&page->lock);
       assert(page->obj_cnt<=page->obj_num);
-      ret=get_free_obj(page);
+      ret=get_free_obj(page);   //这里需要有cpu的free_num的改变：一个完全free的page被分配，对应的free_num要-1
       lock_release(&page->lock);
     }
   }
@@ -136,6 +145,7 @@ static void *kalloc(size_t size) {
     ret=page->s_mem;
     lock_release(&lock_global);
   }
+  lock_release(&kmc[cpu].lock);
   assert( !(((intptr_t)ret)%size));  //align 
   return ret;
 }
@@ -151,6 +161,7 @@ static void kfree(void *ptr) {
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
   if(page->obj_cnt==0){
+    //需要对cpu上锁
     int n=get_slab_pos(page->slab_size);
     list_head *lh=page->list.prev;
     assert(lh);   //lh should never be null

@@ -47,6 +47,7 @@ typedef union page {
 
 typedef struct kmem_cache{
   int cpu;
+  spinlock_t lock;
   int free_num[SLAB_TYPE_NUM]; 
   list_head slab_list[SLAB_TYPE_NUM];
 }kmem_cache;
