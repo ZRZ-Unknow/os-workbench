@@ -18,7 +18,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     for(int i=0;i<10000;i++){
-      size_t size=rand()%256;
+      size_t size=rand()%64;
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
       ptr[i+cpu*10000]=ret;
