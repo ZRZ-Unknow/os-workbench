@@ -5,7 +5,7 @@ spinlock_t lk;
 spinlock_t test_lk;
 int count=0;
 int cnt[8]={0,0,0,0,0,0,0,0};
-void *ptr[4000];
+void *ptr[40000];
 int _size[20];
 int j=0;
 static void os_init() {  //必须在这里完成所有必要的初始化
@@ -17,7 +17,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 
 static void os_run() {   //可以随意改动
   while(1){
-    for(int i=0;i<1000;i++){
+    for(int i=0;i<10000;i++){
       size_t size=rand()%256;
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
@@ -48,11 +48,11 @@ static void os_run() {   //可以随意改动
         pmm->free(ptr[jj]);
         lock_release(&test_lk);
       }*/
-    for(int j=0;j<1000;j++){
+    for(int j=0;j<10000;j++){
       int cpu=_cpu();
       pmm->free(ptr[j*(cpu+1)]);
       lock_acquire(&lk);
-      printf("cpu %d free [%p,?)\n",cpu,ptr[j*cpu]);
+      printf("cpu %d free [%p,?)\n",cpu,ptr[j*(cpu+1)]);
       lock_release(&lk);
     }
   }
