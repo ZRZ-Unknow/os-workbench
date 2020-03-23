@@ -7,6 +7,7 @@ spinlock_t lk;
 spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[80000];
+int N=2000;
 
 struct workload {
   int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
@@ -36,7 +37,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     #ifdef TEST_MEM
-    for(int i=0;i<1000;i++){
+    for(int i=0;i<N;i++){
       int choice=rand()%workload->sum;
       int n=0,sum=0;
       for(int j=0;j<SLAB_TYPE_NUM;j++){
@@ -49,17 +50,17 @@ static void os_run() {   //可以随意改动
       size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
-      ptr[i+cpu*10000]=ret;
+      ptr[i+cpu*N]=ret;
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
     }
-    for(int j=0;j<10000;j++){
+    for(int j=0;j<N;j++){
       int cpu=_cpu();
       int n=_ncpu();
-      pmm->free(ptr[j+(n-cpu-1)*10000]);
+      pmm->free(ptr[j+(n-cpu-1)*N]);
       lock_acquire(&lk);
-      printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*10000]);
+      printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
       lock_release(&lk);
     }
     #endif
