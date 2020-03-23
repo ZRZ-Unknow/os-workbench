@@ -171,8 +171,9 @@ static void kfree(void *ptr) {
     lock_acquire(&kmc[cpu].lock);
     int n=get_slab_pos(page->slab_size);
     Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
-    kmc[cpu].free_num[n]+=1;
+    kmc[cpu].free_num[n]++;
     if(kmc[cpu].free_num[n]>=SLAB_LIMIT){  //归还页面
+      Log("cpu%d,slab_type:%d,free_page_num:%d,return page to _heap",cpu,n,kmc[cpu].free_num[n]);
       lock_acquire(&lock_global);
       page->cpu=-1;
       page->slab_size=0;
