@@ -36,7 +36,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     #ifdef TEST_MEM
-    for(int i=0;i<10000;i++){
+    for(int i=0;i<1000;i++){
       int choice=rand()%workload->sum;
       int n=0,sum=0;
       for(int j=0;j<SLAB_TYPE_NUM;j++){
