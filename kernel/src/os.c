@@ -8,12 +8,28 @@ int cnt[8]={0,0,0,0,0,0,0,0};
 void *ptr[80000];
 int _size[20];
 int j=0;
+
+
+struct workload {
+  int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
+};
+
+struct workload
+  wl_typical = {.prob = {10,20,40,30,10,10,5,1},.sum=0 },
+  wl_stress  = {.prob = {0,0,0,400,200,100,1,1},.sum=0 },
+  wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
+;
+static struct workload *workload = &wl_typical;
+
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
   lock_init(&lk,"printf_lock");
   lock_init(&test_lk,"test_lk");
   pmm->init();
+  for(int i=0;i<SLAB_TYPE_NUM;i++) 
+    workload->sum+=workload->prob[i];
 }
+     
 
 static void os_run() {   //可以随意改动
   while(1){
