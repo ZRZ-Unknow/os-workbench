@@ -47,7 +47,7 @@ static void os_run() {   //可以随意改动
       int cpu=_cpu();
       ptr[i+cpu*10000]=ret;
       lock_acquire(&lk);
-      printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size);
+      printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
     }  /*if(rand()%3==0){
         lock_acquire(&test_lk);
