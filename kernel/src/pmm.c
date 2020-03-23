@@ -56,7 +56,8 @@ page_t *get_free_page(int num,int slab_size,int cpu){
       mp->obj_cnt=0;
       mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
       mp->addr=mp;
-      mp->s_mem=mp->addr+HDR_SIZE;
+      if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
+      else mp->s_mem=mp->addr+HDR_SIZE;
       mp->list.next=NULL;
       lock_init(&mp->lock,"");
       if(first_page==NULL){
