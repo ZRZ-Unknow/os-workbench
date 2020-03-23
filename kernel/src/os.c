@@ -18,7 +18,7 @@ struct workload
   wl_stress  = {.prob = {0,0,0,400,200,100,2,1},.sum=0 },
   wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
 ;
-static struct workload *workload = &wl_page;
+static struct workload *workload = &wl_typical;
 #endif
 
 static void os_init() {  //必须在这里完成所有必要的初始化
