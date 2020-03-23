@@ -28,6 +28,9 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
     workload->sum+=workload->prob[i];
+
+  printf("%d\n",workload->sum);
+  panic();
 }
      
 
