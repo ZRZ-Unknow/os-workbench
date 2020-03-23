@@ -88,10 +88,10 @@ static void pmm_init() {
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
-      page_t *new_page=get_free_page(5,SLAB_SIZE[j],i);
+      page_t *new_page=get_free_page(10,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
-      kmc[i].free_num[j]=5;
+      kmc[i].free_num[j]=10;
     }
     //debug_slab_print(new_page);
   }
