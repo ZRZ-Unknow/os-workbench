@@ -150,6 +150,7 @@ static void *kalloc(size_t size) {
     lock_release(&lock_global);
   }
   lock_release(&kmc[cpu].lock);
+  Log("alloc %p",ret);
   assert( !(((intptr_t)ret)%size));  //align 
   return ret;
 }
