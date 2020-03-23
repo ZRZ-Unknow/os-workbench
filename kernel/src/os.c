@@ -19,12 +19,12 @@ static void os_run() {   //可以随意改动
   while(1){
       size_t size=rand()%256;
       void *ret=pmm->alloc(size);
-      cnt[_cpu()]++;
+      /*cnt[_cpu()]++;
       lock_acquire(&test_lk);
       ptr[count]=ret;
       _size[count++]=size;
       lock_release(&test_lk);
-      assert(ret);
+      assert(ret);*/
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size,cnt[_cpu()],count);
       lock_release(&lk);
