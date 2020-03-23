@@ -1,11 +1,11 @@
 //#define DEBUG
-#ifdef DEBUG
+/*#ifdef DEBUG
 #define Log(format, ...) \
   printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
       __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-#else
+#else*/
 #define Log(format,...)
-#endif
+//#endif
 
 #define SLog(format,...) \
   printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
