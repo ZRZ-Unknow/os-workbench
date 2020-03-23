@@ -1,6 +1,9 @@
 #include <common.h>
 
+//#define TEST_MEM
 spinlock_t lk;
+
+#ifdef TEST_MEM
 spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[80000];
@@ -15,19 +18,24 @@ struct workload
   wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
 ;
 static struct workload *workload = &wl_page;
+#endif
 
 static void os_init() {  //必须在这里完成所有必要的初始化
-  srand(uptime());
   lock_init(&lk,"printf_lock");
-  lock_init(&test_lk,"test_lk");
   pmm->init();
+  
+  #ifdef TEST_MEM
+  srand(uptime());
+  lock_init(&test_lk,"test_lk");
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
     workload->sum+=workload->prob[i];
+  #endif
 }
      
 
 static void os_run() {   //可以随意改动
   while(1){
+    #ifdef TEST_MEM
     for(int i=0;i<10000;i++){
       int choice=rand()%workload->sum;
       int n=0,sum=0;
@@ -54,6 +62,7 @@ static void os_run() {   //可以随意改动
       printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*10000]);
       lock_release(&lk);
     }
+    #endif
   }
 }
 
