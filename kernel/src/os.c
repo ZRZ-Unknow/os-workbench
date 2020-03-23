@@ -21,7 +21,7 @@ static void os_run() {   //可以随意改动
       size_t size=rand()%256;
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
-      ptr[i*cpu]=ret;
+      ptr[i*(cpu+1)]=ret;
       /*cnt[_cpu()]++;
       lock_acquire(&test_lk);
       ptr[count]=ret;
@@ -50,7 +50,7 @@ static void os_run() {   //可以随意改动
       }*/
     for(int j=0;j<1000;j++){
       int cpu=_cpu();
-      pmm->free(ptr[j*cpu]);
+      pmm->free(ptr[j*(cpu+1)]);
       lock_acquire(&lk);
       printf("cpu %d free [%p,?)\n",cpu,ptr[j*cpu]);
       lock_release(&lk);
