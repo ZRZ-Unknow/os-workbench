@@ -17,7 +17,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 
 static void os_run() {   //可以随意改动
   while(1){
-      size_t size=rand()%512;
+      size_t size=rand()%256;
       void *ret=pmm->alloc(size);
       cnt[_cpu()]++;
       lock_acquire(&test_lk);
@@ -28,7 +28,7 @@ static void os_run() {   //可以随意改动
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size,cnt[_cpu()],count);
       lock_release(&lk);
-      if(rand()%3==0){
+      /*if(rand()%3==0){
         lock_acquire(&test_lk);
         int jj=j;
         int cc=count;
@@ -44,7 +44,7 @@ static void os_run() {   //可以随意改动
         j++;
         pmm->free(ptr[jj]);
         lock_release(&test_lk);
-      }
+      }*/
   }
 }
 
