@@ -1,7 +1,7 @@
 #include <common.h>
 
 spinlock_t lk;
-
+extern int SLAB_SIZE[SLAB_TYPE_NUM];
 spinlock_t test_lk;
 
 void *ptr[80000];
