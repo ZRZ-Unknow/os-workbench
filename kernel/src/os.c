@@ -1,12 +1,9 @@
 #include <common.h>
 
 spinlock_t lk;
-extern int SLAB_SIZE[SLAB_TYPE_NUM];
 spinlock_t test_lk;
-
+extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[80000];
-int j=0;
-
 
 struct workload {
   int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
@@ -17,7 +14,7 @@ struct workload
   wl_stress  = {.prob = {0,0,0,400,200,100,2,1},.sum=0 },
   wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
 ;
-static struct workload *workload = &wl_typical;
+static struct workload *workload = &wl_stress;
 
 static void os_init() {  //必须在这里完成所有必要的初始化
   srand(uptime());
@@ -32,7 +29,6 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     for(int i=0;i<10000;i++){
-
       int choice=rand()%workload->sum;
       int n=0,sum=0;
       for(int j=0;j<SLAB_TYPE_NUM;j++){
@@ -49,23 +45,7 @@ static void os_run() {   //可以随意改动
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
-    }  /*if(rand()%3==0){
-        lock_acquire(&test_lk);
-        int jj=j;
-        int cc=count;
-        lock_release(&test_lk);
-        if(jj>=cc) {
-          continue;
-        }
-        lock_acquire(&lk);
-        printf("cpu %d free [%p,%p),size:%d,j:%d\n",_cpu(),ptr[jj],ptr[jj]+_size[jj],_size[jj],jj);
-        lock_release(&lk);
-;
-        lock_acquire(&test_lk);
-        j++;
-        pmm->free(ptr[jj]);
-        lock_release(&test_lk);
-      }*/
+    }
     for(int j=0;j<10000;j++){
       int cpu=_cpu();
       int n=_ncpu();
