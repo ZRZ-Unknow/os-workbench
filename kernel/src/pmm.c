@@ -96,7 +96,7 @@ static void pmm_init() {
     //debug_slab_print(new_page);
   }
   //debug_print();
-  panic("test");
+  //panic("test");
 }
 
 static void *kalloc(size_t size) {
