@@ -3,10 +3,8 @@
 spinlock_t lk;
 
 spinlock_t test_lk;
-int count=0;
-int cnt[8]={0,0,0,0,0,0,0,0};
+
 void *ptr[80000];
-int _size[20];
 int j=0;
 
 
@@ -15,8 +13,8 @@ struct workload {
 };
 
 struct workload
-  wl_typical = {.prob = {10,20,40,30,10,10,5,1},.sum=0 },
-  wl_stress  = {.prob = {0,0,0,400,200,100,1,1},.sum=0 },
+  wl_typical = {.prob = {10,20,40,50,15,5,2,1},.sum=0 },
+  wl_stress  = {.prob = {0,0,0,400,200,100,2,1},.sum=0 },
   wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
 ;
 static struct workload *workload = &wl_typical;
@@ -28,25 +26,26 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
     workload->sum+=workload->prob[i];
-
-  printf("%d\n",workload->sum);
-  panic();
 }
      
 
 static void os_run() {   //可以随意改动
   while(1){
     for(int i=0;i<10000;i++){
-      size_t size=rand()%64;
+
+      int choice=rand()%workload->sum;
+      int n=0,sum=0;
+      for(int j=0;j<SLAB_TYPE_NUM;j++){
+        if(choice>=sum && choice<sum+workload->prob[j]){
+          n=j;
+          break;
+        }
+        sum+=workload->prob[j];
+      }
+      size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
       ptr[i+cpu*10000]=ret;
-      /*cnt[_cpu()]++;
-      lock_acquire(&test_lk);
-      ptr[count]=ret;
-      _size[count++]=size;
-      lock_release(&test_lk);
-      assert(ret);*/
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d,cnt:%d,all_count:%d\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);

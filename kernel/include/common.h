@@ -11,6 +11,8 @@
 #define SLAB_TYPE_NUM 8
 #define SLAB_LIMIT 16
 
+int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
+
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/

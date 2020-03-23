@@ -3,7 +3,6 @@
 static page_t *mem_start=NULL;
 static kmem_cache kmc[MAX_CPU];
 static spinlock_t lock_global;
-static int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
 
 int get_slab_pos(int size){
   int pos=-1;
