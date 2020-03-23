@@ -4,7 +4,7 @@
   printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
       __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 #else*/
-#define Log(format,...)
+//#define Log(format,...)
 //#endif
 
 #define SLog(format,...) \
