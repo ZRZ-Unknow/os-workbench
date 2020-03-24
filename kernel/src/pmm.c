@@ -91,7 +91,11 @@ static void heap_init(){
     p++;
     i++;
   }
-  printf("%p,%p,%d,%p\n",prev,p,i,(void*)prev+PAGE_SIZE);
+  prev->list.next->next=NULL;
+  page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
+  for(;pp!=NULL;pp++){
+    printf("%p\n",(void*)pp);
+  }
   panic();
 }
 static void pmm_init() {
