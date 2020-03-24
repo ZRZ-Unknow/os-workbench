@@ -47,7 +47,6 @@ void *get_free_obj(page_t* page){
 page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&heap_free_mem.lock_global);
   if(heap_free_mem.num<num){
-    printf("dddd\n");
     //assert(0);
     lock_release(&heap_free_mem.lock_global);
     return NULL;
@@ -139,10 +138,10 @@ static void pmm_init() {
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
-      page_t *new_page=get_free_page(15,SLAB_SIZE[j],i);
+      page_t *new_page=get_free_page(4,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
-      kmc[i].free_num[j]=15;
+      kmc[i].free_num[j]=4;
     }
     //debug_slab_print(new_page);
   }
@@ -170,17 +169,9 @@ static void *kalloc(size_t size) {
     page_t *page=list_entry(lh,page_t,list);
     assert(page->obj_cnt<=page->obj_num);
     assert(page->cpu==cpu);
-    int cnt=0;
     while(page->obj_cnt==page->obj_num && lh->next!=NULL){  //已分配对象数小于总对象数时才可分配
       lh=lh->next;
       page=list_entry(lh,page_t,list);
-      assert(page->obj_cnt<=page->obj_num);
-      cnt++;
-      //Log("ddd%d,%p,%d,%d",cnt,page,page->obj_cnt,page->obj_num);
-      //if(page->cpu!=cpu){
-      //  Log("%d,%d,%p",page->cpu,cpu);
-      //  assert(0);
-      //}
       Assert(page->cpu==cpu,"%d,%d",page->cpu,cpu);
     }
     if(lh!=NULL){
@@ -192,7 +183,8 @@ static void *kalloc(size_t size) {
   }
   else assert(0);  //should never happen
   if(!ret){  //需要从_heap中分配，加一把大锁
-    page_t *page=get_free_page(5,SLAB_SIZE[sl_pos],cpu); //ddddddd
+    int n=(size>=1024)?3:1;
+    page_t *page=get_free_page(n,SLAB_SIZE[sl_pos],cpu); //ddddddd
     if(!page){
       lock_release(&kmc[cpu].lock);
       return NULL;
