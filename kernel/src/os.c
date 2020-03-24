@@ -48,7 +48,6 @@ static void os_run() {   //可以随意改动
         sum+=workload->prob[j];
       }
       size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
-      size=4096;
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
       ptr[i+cpu*N]=ret;
