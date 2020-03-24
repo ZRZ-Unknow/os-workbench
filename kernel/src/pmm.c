@@ -86,8 +86,10 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   //fix list
   assert(((void*)mp)<_heap.end);
   assert(mp!=NULL);
+  page_t *tmp=list_entry(mp->list.prev,page_t,list);
   heap_free_mem.freepage_list.next=&mp->list;
   mp->list.prev=&heap_free_mem.freepage_list;
+  tmp->list.next=NULL;
 
   lock_release(&heap_free_mem.lock_global);
   return first_page;
