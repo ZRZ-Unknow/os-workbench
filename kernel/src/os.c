@@ -64,6 +64,7 @@ static void os_run() {   //可以随意改动
       lock_release(&lk);
     }
     #endif
+    printf("hello\n");
   }
 }
 
