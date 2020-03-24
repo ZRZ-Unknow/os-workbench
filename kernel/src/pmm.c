@@ -148,13 +148,13 @@ static void pmm_init() {
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
   //page_t *prev=p;
-  while((void*)p<_heap.end){
+  //while((void*)p<_heap.end){
     if(prev==NULL) prev=mem_start;
     prev->list.next=&p->list;
     p->list.prev=&prev->list;
     prev++;
     p++;
-  }
+  //}
   prev->list.next->next=NULL; 
   
   for(int i=0;i<_ncpu();i++){
