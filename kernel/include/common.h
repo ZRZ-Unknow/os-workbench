@@ -10,7 +10,7 @@
 #define HDR_SIZE 1024
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
 #define SLAB_TYPE_NUM 8
-#define SLAB_LIMIT 32
+#define SLAB_LIMIT 16
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/
