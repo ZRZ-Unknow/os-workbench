@@ -44,6 +44,7 @@ void *get_free_obj(page_t* page){
   return ret;
 }
 //调用前先上锁
+/*
 page_t *get_free_page(int num,int slab_size,int cpu){
   page_t *mp=mem_start;
   page_t *first_page=NULL;
@@ -75,8 +76,37 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     assert(((void*)mp)<_heap.end);
   }
   return first_page;
+}*/
+page_t *get_free_page(int num,int slab_size,int cpu){
+  if(heap_free_mem.freepage_list.next==NULL) assert(0);
+  page_t *first_page=list_entry(heap_free_mem.freepage_list.next,page_t,list);
+  page_t *mp=first_page;
+  int i=0;
+  while(i<num){
+    assert(mp->slab_size==0);
+    mp->cpu=cpu;
+    mp->slab_size=slab_size;
+    mp->obj_cnt=0;
+    mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
+    mp->addr=mp;
+    if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
+    else mp->s_mem=mp->addr+HDR_SIZE;
+    lock_init(&mp->lock,"");
+    if(mp->list.next==NULL || (void*)mp>=_heap.end){
+      assert(0);
+    }
+    if(i==num-1)
+      mp->list.next=NULL;
+    mp++;
+    i++;
+  }
+  //fix list
+  assert(((void*)mp)<_heap.end);
+  heap_free_mem.freepage_list.next=&mp->list;
+  mp->list.prev=&heap_free_mem.freepage_list;
+  
+  return first_page;
 }
-
 void heap_init(){
   page_t *p=mem_start;
   page_t *prev=mem_start;
@@ -84,13 +114,11 @@ void heap_init(){
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
-  int i=1;
-  while(i<PAGE_NUM){
+  while((void*)p<_heap.end){
     prev->list.next=&p->list;
     p->list.prev=&prev->list;
     prev++;
     p++;
-    i++;
   }
   prev->list.next->next=NULL;
   /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
@@ -111,22 +139,22 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
-  //heap_init();
+  heap_init();
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
-    /*for(int j=0;j<SLAB_TYPE_NUM;j++){
+    for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(30,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
       kmc[i].free_num[j]=30;
-    }*/
+    }
     //debug_slab_print(new_page);
   }
-  //debug_print();
-  //panic("test");
+  debug_print();
+  panic("test");
 }
 
 static void *kalloc(size_t size) {
