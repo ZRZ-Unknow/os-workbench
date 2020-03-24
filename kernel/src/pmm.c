@@ -136,8 +136,9 @@ void heap_init(){
   panic();
 }
 static void pmm_init() {
-  //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
-  //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
+  uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
+  printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
+  panic();
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
   heap_init();
