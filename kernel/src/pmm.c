@@ -152,6 +152,7 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   heap_init();
+  memset(mem_start,0,MEM_SIZE);
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
