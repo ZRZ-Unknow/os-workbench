@@ -153,7 +153,7 @@ static void pmm_init() {
     }
     //debug_slab_print(new_page);
   }
-  debug_print();
+  //debug_print();
   panic("test");
 }
 
@@ -190,7 +190,7 @@ static void *kalloc(size_t size) {
   else assert(0);  //should never happen
   if(!ret){  //需要从_heap中分配，加一把大锁
     lock_acquire(&heap_free_mem.lock_global);
-    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
+    page_t *page=get_free_page(2,SLAB_SIZE[sl_pos],cpu); //ddddddd
     if(!page){
       lock_release(&heap_free_mem.lock_global);
       return NULL;
@@ -204,7 +204,8 @@ static void *kalloc(size_t size) {
     page->list.next=NULL;
     assert(page->bitmap[0]==0);
     page->bitmap[0]=1;
-    page->obj_cnt++;    //这个时候cpu的free_num是不变的：加了一个并不free的page
+    page->obj_cnt++;    //误：这个时候cpu的free_num是不变的：加了一个并不free的page
+    kmc[cpu].free_num[sl_pos]+=1;     //dddddddddddd
     ret=page->s_mem;
     lock_release(&heap_free_mem.lock_global);
   }
