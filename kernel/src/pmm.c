@@ -78,7 +78,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   return first_page;
 }*/
 page_t *get_free_page(int num,int slab_size,int cpu){
-  if(heap_free_mem.freepage_list.next==NULL) assert(0);
+  if(heap_free_mem.freepage_list.next==NULL) return NULL;
   page_t *first_page=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   page_t *mp=first_page;
   int i=0;
