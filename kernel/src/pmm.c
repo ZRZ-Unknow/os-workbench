@@ -174,12 +174,12 @@ static void *kalloc(size_t size) {
       page=list_entry(lh,page_t,list);
       assert(page->obj_cnt<=page->obj_num);
       cnt++;
-      Log("ddd%d,%p,%d,%d",cnt,page,page->obj_cnt,page->obj_num);
+      //Log("ddd%d,%p,%d,%d",cnt,page,page->obj_cnt,page->obj_num);
       //if(page->cpu!=cpu){
       //  Log("%d,%d,%p",page->cpu,cpu);
       //  assert(0);
       //}
-      //Assert(page->cpu==cpu,"%d,%d",page->cpu,cpu);
+      Assert(page->cpu==cpu,"%d,%d",page->cpu,cpu);
     }
     if(lh!=NULL){
       lock_acquire(&page->lock);
