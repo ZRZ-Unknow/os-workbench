@@ -103,7 +103,7 @@ static void heap_init(){
     if(pp->list.prev->prev==NULL) break;
     pp=list_entry(pp->list.prev,page_t,list);
   }
-  panic();
+  //panic();
 }
 static void pmm_init() {
   //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
