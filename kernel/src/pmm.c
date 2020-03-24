@@ -140,7 +140,22 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
-  heap_init();
+  //heap_init();
+  page_t *p=(page_t*)_heap.start;
+  page_t *prev=(page_t *)_heap.start;
+  heap_free_mem.freepage_list.prev=NULL;
+  heap_free_mem.freepage_list.next=&p->list;
+  p->list.prev=&heap_free_mem.freepage_list;
+  p++;
+  //page_t *prev=p;
+  while((void*)p<_heap.end){
+    prev->list.next=&p->list;
+    p->list.prev=&prev->list;
+    prev++;
+    p++;
+  }
+  prev->list.next->next=NULL; 
+  
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
