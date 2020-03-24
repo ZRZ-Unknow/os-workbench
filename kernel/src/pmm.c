@@ -84,7 +84,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   int i=0;
   while(i<num){
     if((void*)mp>=_heap.end){
-      assert(0);
+      return NULL;
     }
     assert(mp->slab_size==0);
     mp->cpu=cpu;
@@ -96,10 +96,15 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     else mp->s_mem=mp->addr+HDR_SIZE;
     lock_init(&mp->lock,"");
     heap_free_mem.num--;
-    if(i==num-1)
+    if(i==num-1){
       mp->list.next=NULL;
-    mp++;
+      break;
+    }
     i++;
+    if(mp->list.next==NULL){
+      return NULL;
+    }
+    mp=list_entry(mp->list.next,page_t,list);
   }
   //fix list
   assert(((void*)mp)<=_heap.end);
