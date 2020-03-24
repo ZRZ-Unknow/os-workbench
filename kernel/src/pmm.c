@@ -258,7 +258,7 @@ static void kfree(void *ptr) {
       page->list.prev=&heap_free_mem.freepage_list;
       page->list.next=tmp;
       if(tmp) tmp->prev=&page->list;
-      heap_free_mem.num--;
+      heap_free_mem.num++;
       lock_release(&heap_free_mem.lock_global);
       kmc[cpu].free_num[n]--;
     }
