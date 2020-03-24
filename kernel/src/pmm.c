@@ -155,7 +155,7 @@ static void pmm_init() {
     pp++;
     p++;
   }
-  pp->list.next->next=NULL; 
+  //pp->list.next->next=NULL; 
   
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
