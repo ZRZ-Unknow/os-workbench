@@ -158,6 +158,7 @@ static void *kalloc(size_t size) {
   lock_acquire(&kmc[cpu].lock);
 
   if(kmc[cpu].slab_list[sl_pos].next!=NULL){
+    Log("%d",cpu);
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     page_t *page=list_entry(lh,page_t,list);
     assert(page->obj_cnt<=page->obj_num);
