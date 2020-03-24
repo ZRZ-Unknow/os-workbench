@@ -91,7 +91,7 @@ static void heap_init(){
     p++;
     i++;
   }
-  printf("%p,%p,%d,%p\n",prev,p,i,prev+PAGE_SIZE);
+  printf("%p,%p,%d,%p\n",prev,p,i,(void*)prev+PAGE_SIZE);
   panic();
 }
 static void pmm_init() {
