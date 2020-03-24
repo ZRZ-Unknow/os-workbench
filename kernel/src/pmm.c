@@ -91,12 +91,12 @@ static void heap_init(){
     p++;
     i++;
   }
-  printf("dd\n");
   prev->list.next->next=NULL;
   page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
-  printf("ddd\n");
-  for(;pp!=NULL;pp++){
+  while(1){
     printf("%p\n",(void*)pp);
+    if(pp->list.next==NULL) break;
+    pp=list_entry(pp->list.next,page_t,list);
   }
   panic();
 }
