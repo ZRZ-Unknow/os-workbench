@@ -114,12 +114,12 @@ void heap_init(){
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
-  while((void*)p<_heap.end){
+  /*while((void*)p<_heap.end){
     prev->list.next=&p->list;
     p->list.prev=&prev->list;
     prev++;
     p++;
-  }
+  }*/
   prev->list.next->next=NULL;
   /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   while(1){
@@ -139,7 +139,7 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
-  //heap_init();
+  heap_init();
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
