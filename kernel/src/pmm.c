@@ -81,12 +81,8 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   if(heap_free_mem.freepage_list.next==NULL) return NULL;
   page_t *first_page=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   page_t *mp=first_page;
-  int i=0;
-  while(i<num){
-    if((void*)mp>=_heap.end){
-      return NULL;
-    }
-    assert(mp->slab_size==0);
+  for(int i=0;i<num;i++){
+    if((void*)mp>=_heap.end || mp==NULL) return NULL;
     mp->cpu=cpu;
     mp->slab_size=slab_size;
     mp->obj_cnt=0;
@@ -96,27 +92,26 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     else mp->s_mem=mp->addr+HDR_SIZE;
     lock_init(&mp->lock,"");
     heap_free_mem.num--;
-    if(i==num-1){
-      mp->list.next=NULL;
-      break;
-    }
-    i++;
     if(mp->list.next==NULL){
-      return NULL;
+      if(i==num-1){
+        assert(heap_free_mem.num==0);
+        heap_free_mem.freepage_list.next=NULL;
+        return first_page;
+      }
+      else{
+        return NULL; //数量不够
+      }
     }
     mp=list_entry(mp->list.next,page_t,list);
   }
   //fix list
-  assert(((void*)mp)<=_heap.end);
-  if((void*)mp==_heap.end){
-    heap_free_mem.freepage_list.next=NULL;
-  }
-  else{
-    heap_free_mem.freepage_list.next=&mp->list;
-    mp->list.prev=&heap_free_mem.freepage_list;
-  }
+  assert(((void*)mp)<_heap.end);
+  assert(mp!=NULL);
+  heap_free_mem.freepage_list.next=&mp->list;
+  mp->list.prev=&heap_free_mem.freepage_list;
   return first_page;
 }
+
 void heap_init(){
   lock_init(&heap_free_mem.lock_global,"lock_global");
   heap_free_mem.num=PAGE_NUM;
