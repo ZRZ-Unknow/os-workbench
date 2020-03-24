@@ -166,11 +166,13 @@ static void *kalloc(size_t size) {
     page_t *page=list_entry(lh,page_t,list);
     assert(page->obj_cnt<=page->obj_num);
     assert(page->cpu==cpu);
+    int cnt=0;
     while(page->obj_cnt==page->obj_num && lh->next!=NULL){  //已分配对象数小于总对象数时才可分配
       lh=lh->next;
       page=list_entry(lh,page_t,list);
       assert(page->obj_cnt<=page->obj_num);
-      Log("ddd");
+      cnt++;
+      Log("ddd%d",cnt);
       //if(page->cpu!=cpu){
       //  Log("%d,%d,%p",page->cpu,cpu);
       //  assert(0);
