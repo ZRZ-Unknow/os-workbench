@@ -48,7 +48,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&heap_free_mem.lock_global);
   if(heap_free_mem.num<num){
     printf("dddd\n");
-    assert(0);
+    //assert(0);
     lock_release(&heap_free_mem.lock_global);
     return NULL;
   }
