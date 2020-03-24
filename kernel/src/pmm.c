@@ -84,11 +84,13 @@ static void heap_init(){
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
-  while((void*)p<_heap.end){
+  int i=1;
+  while(i<PAGE_NUM){
     prev->list.next=&p->list;
     p->list.prev=&prev->list;
     prev++;
     p++;
+    i++;
   }
   prev->list.next->next=NULL;
   /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
