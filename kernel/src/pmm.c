@@ -111,7 +111,7 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
-  heap_init();
+  //heap_init();
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
