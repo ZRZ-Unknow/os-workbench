@@ -120,7 +120,8 @@ void heap_init(){
     prev++;
     p++;
   }
-  (prev->list.next)->next=NULL;
+  list_head *lh=prev->list.next;
+  lh->next=NULL;
   /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   while(1){
     printf("%p\n",(void*)pp);
