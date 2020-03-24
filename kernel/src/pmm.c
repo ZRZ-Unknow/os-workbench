@@ -200,7 +200,7 @@ static void *kalloc(size_t size) {
     ret=page->s_mem;
   }
   lock_release(&kmc[cpu].lock);
-  Log("alloc %p",ret);
+  Log("alloc %p,%d",ret,size);
   assert( !(((intptr_t)ret)%size));  //align 
   return ret;
 }
