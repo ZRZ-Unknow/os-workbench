@@ -36,7 +36,6 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 
 static void os_run() {   //可以随意改动
   while(1){
-    printf("hello\n");
     #ifdef TEST_MEM
     for(int i=0;i<N;i++){
       int choice=rand()%workload->sum;
@@ -65,7 +64,6 @@ static void os_run() {   //可以随意改动
       lock_release(&lk);
     }
     #endif
-    printf("hello\n");
   }
 }
 
