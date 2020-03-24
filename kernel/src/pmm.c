@@ -243,6 +243,13 @@ static void kfree(void *ptr) {
       list_head *next=page->list.next;
       prev->next=next;
       if(next) next->prev=prev;
+      //fix list
+      list_head *tmp=heap_free_mem.freepage_list.next;
+      heap_free_mem.freepage_list.next=&page->list;
+      page->list.prev=&heap_free_mem.freepage_list;
+      page->list.next=tmp;
+      if(tmp) tmp->prev=&page->list;
+
       lock_release(&heap_free_mem.lock_global);
       kmc[cpu].free_num[n]--;
     }
