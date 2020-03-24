@@ -80,6 +80,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
 static void heap_init(){
   page_t *p=mem_start;
   page_t *prev=mem_start;
+  heap_free_mem.freepage_list.prev=NULL;
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
