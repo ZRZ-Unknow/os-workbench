@@ -127,11 +127,11 @@ void heap_init(){
     if(pp->list.next==NULL) break;
     pp=list_entry(pp->list.next,page_t,list);
   }
-  while(1){
+  /*while(1){
     printf("%p\n",(void*)pp);
     if(pp->list.prev->prev==NULL) break;
     pp=list_entry(pp->list.prev,page_t,list);
-  }
+  }*/
   panic();
 }
 static void pmm_init() {
