@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <klib-macros.h>
 
+#define DEBUG
 #define KB *1024
 #define MB KB*1024
 #define MEM_SIZE (126 MB)
