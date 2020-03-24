@@ -117,12 +117,12 @@ static void pmm_init() {
     char name[5]="";
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
-    for(int j=0;j<SLAB_TYPE_NUM;j++){
+    /*for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(30,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
       kmc[i].free_num[j]=30;
-    }
+    }*/
     //debug_slab_print(new_page);
   }
   //debug_print();
