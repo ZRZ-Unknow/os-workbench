@@ -127,6 +127,7 @@ void heap_init(){
     if(pp->list.next==NULL) break;
     pp=list_entry(pp->list.next,page_t,list);
   }
+  printf("%p,%p\n",_heap.start,_heap.end);
   /*while(1){
     printf("%p\n",(void*)pp);
     if(pp->list.prev->prev==NULL) break;
