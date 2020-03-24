@@ -77,7 +77,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   return first_page;
 }
 
-static void heap_init(){
+void heap_init(){
   page_t *p=mem_start;
   page_t *prev=mem_start;
   heap_free_mem.freepage_list.prev=NULL;
@@ -111,7 +111,7 @@ static void pmm_init() {
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
-  heap_init();
+  //heap_init();
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
@@ -126,7 +126,7 @@ static void pmm_init() {
     //debug_slab_print(new_page);
   }
   //debug_print();
-  //panic("test");
+  panic("test");
 }
 
 static void *kalloc(size_t size) {
