@@ -95,6 +95,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
     else mp->s_mem=mp->addr+HDR_SIZE;
     lock_init(&mp->lock,"");
+    heap_free_mem.num--;
     if(i==num-1)
       mp->list.next=NULL;
     mp++;
@@ -112,6 +113,8 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   return first_page;
 }
 void heap_init(){
+  lock_init(&heap_free_mem.lock_global,"lock_global");
+  heap_free_mem.num=PAGE_NUM;
   page_t *p=mem_start;
   page_t *prev=mem_start;
   heap_free_mem.freepage_list.prev=NULL;
@@ -143,7 +146,6 @@ static void pmm_init() {
   //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
   //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
-  lock_init(&heap_free_mem.lock_global,"lock_global");
   heap_init();
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
@@ -164,7 +166,8 @@ static void pmm_init() {
 
 static void *kalloc(size_t size) {
   size=align_size(size);
-  Log("start alloc size %d",size); 
+  Log("start alloc size %d",size);
+  Log("heap free page num:%d",heap_free_mem.num);
   int cpu=_cpu();
   void *ret=NULL;
   int sl_pos=0;  //slablist_pos
@@ -230,6 +233,7 @@ static void kfree(void *ptr) {
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
   memset(ptr,0,page->slab_size);
+  Log("heap free page num:%d",heap_free_mem.num);
   if(page->obj_cnt==0){
     //需要对cpu上锁
     int cpu=page->cpu;
@@ -254,7 +258,7 @@ static void kfree(void *ptr) {
       page->list.prev=&heap_free_mem.freepage_list;
       page->list.next=tmp;
       if(tmp) tmp->prev=&page->list;
-
+      heap_free_mem.num--;
       lock_release(&heap_free_mem.lock_global);
       kmc[cpu].free_num[n]--;
     }
