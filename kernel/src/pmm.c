@@ -55,7 +55,10 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   page_t *mp=first_page;
 
   for(int i=0;i<num;i++){
-    if((void*)mp>=_heap.end || mp==NULL) return NULL;
+    if((void*)mp>=_heap.end || mp==NULL){
+      lock_release(&heap_free_mem.lock_global);
+      return NULL;
+    }
     mp->cpu=cpu;
     mp->slab_size=slab_size;
     mp->obj_cnt=0;
