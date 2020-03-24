@@ -72,7 +72,7 @@ MODULE_DEF(os) = {
   .run  = os_run,
 };
 /*
-extern mod_os_t __os_obj;  //extern表示定义在别的文件或模块中
+extern mod_os_t __os_obj;  
 mod_os_t *os = &__os_obj;
 mod_os_t __os_obj = {
   .init = os_init,

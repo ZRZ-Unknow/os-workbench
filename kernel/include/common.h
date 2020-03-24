@@ -9,7 +9,7 @@
 #define HDR_SIZE 1024
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
 #define SLAB_TYPE_NUM 8
-#define SLAB_LIMIT 16
+#define SLAB_LIMIT 32
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/
@@ -51,6 +51,11 @@ typedef struct kmem_cache{
   int free_num[SLAB_TYPE_NUM]; 
   list_head slab_list[SLAB_TYPE_NUM];
 }kmem_cache;
+
+typedef struct heap_mem{
+  spinlock_t lock_global;
+  list_head freepage_list;
+}heap_mem;
 
 /*--------------------pmm---------------------------*/
 
