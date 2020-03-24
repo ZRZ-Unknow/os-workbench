@@ -93,7 +93,7 @@ static void heap_init(){
     i++;
   }
   prev->list.next->next=NULL;
-  page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
+  /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   while(1){
     printf("%p\n",(void*)pp);
     if(pp->list.next==NULL) break;
@@ -103,7 +103,7 @@ static void heap_init(){
     printf("%p\n",(void*)pp);
     if(pp->list.prev->prev==NULL) break;
     pp=list_entry(pp->list.prev,page_t,list);
-  }
+  }*/
   //panic();
 }
 static void pmm_init() {
