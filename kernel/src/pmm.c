@@ -141,14 +141,15 @@ static void pmm_init() {
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
   //heap_init();
-  page_t *p=(page_t*)_heap.start;
-  page_t *prev=(page_t *)_heap.start;
+  page_t *p=mem_start;
+  page_t *prev=NULL;
   heap_free_mem.freepage_list.prev=NULL;
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
   p++;
   //page_t *prev=p;
   while((void*)p<_heap.end){
+    if(prev==NULL) prev=mem_start;
     prev->list.next=&p->list;
     p->list.prev=&prev->list;
     prev++;
