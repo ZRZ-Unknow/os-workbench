@@ -53,6 +53,7 @@ typedef struct kmem_cache{
 }kmem_cache;
 
 typedef struct heap_mem{
+  int num;
   spinlock_t lock_global;
   list_head freepage_list;
 }heap_mem;

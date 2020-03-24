@@ -83,6 +83,9 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   page_t *mp=first_page;
   int i=0;
   while(i<num){
+    if((void*)mp>=_heap.end){
+      assert(0);
+    }
     assert(mp->slab_size==0);
     mp->cpu=cpu;
     mp->slab_size=slab_size;
@@ -92,19 +95,20 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
     else mp->s_mem=mp->addr+HDR_SIZE;
     lock_init(&mp->lock,"");
-    if(mp->list.next==NULL || (void*)mp>=_heap.end){
-      assert(0);
-    }
     if(i==num-1)
       mp->list.next=NULL;
     mp++;
     i++;
   }
   //fix list
-  assert(((void*)mp)<_heap.end);
-  heap_free_mem.freepage_list.next=&mp->list;
-  mp->list.prev=&heap_free_mem.freepage_list;
-  
+  assert(((void*)mp)<=_heap.end);
+  if((void*)mp==_heap.end){
+    heap_free_mem.freepage_list.next=NULL;
+  }
+  else{
+    heap_free_mem.freepage_list.next=&mp->list;
+    mp->list.prev=&heap_free_mem.freepage_list;
+  }
   return first_page;
 }
 void heap_init(){
@@ -154,8 +158,8 @@ static void pmm_init() {
     }
     //debug_slab_print(new_page);
   }
-  //debug_print();
-  //panic("test");
+  debug_print();
+  panic("test");
 }
 
 static void *kalloc(size_t size) {
@@ -191,7 +195,7 @@ static void *kalloc(size_t size) {
   else assert(0);  //should never happen
   if(!ret){  //需要从_heap中分配，加一把大锁
     lock_acquire(&heap_free_mem.lock_global);
-    page_t *page=get_free_page(2,SLAB_SIZE[sl_pos],cpu); //ddddddd
+    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu); //ddddddd
     if(!page){
       lock_release(&heap_free_mem.lock_global);
       return NULL;
@@ -206,7 +210,7 @@ static void *kalloc(size_t size) {
     assert(page->bitmap[0]==0);
     page->bitmap[0]=1;
     page->obj_cnt++;    //误：这个时候cpu的free_num是不变的：加了一个并不free的page
-    kmc[cpu].free_num[sl_pos]+=1;     //dddddddddddd
+    //kmc[cpu].free_num[sl_pos]+=1;     //dddddddddddd
     ret=page->s_mem;
     lock_release(&heap_free_mem.lock_global);
   }
