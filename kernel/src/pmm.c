@@ -109,7 +109,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
 }
 void heap_init(){
   page_t *p=mem_start;
-  page_t *prev=mem_start;
+  //page_t *prev=mem_start;
   heap_free_mem.freepage_list.prev=NULL;
   heap_free_mem.freepage_list.next=&p->list;
   p->list.prev=&heap_free_mem.freepage_list;
@@ -120,7 +120,7 @@ void heap_init(){
     prev++;
     p++;
   }*/
-  prev->list.next->next=NULL;
+  //prev->list.next->next=NULL;
   /*page_t *pp=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   while(1){
     printf("%p\n",(void*)pp);
