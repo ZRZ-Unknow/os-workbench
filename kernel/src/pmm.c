@@ -128,17 +128,16 @@ void heap_init(){
     pp=list_entry(pp->list.next,page_t,list);
   }
   printf("%p,%p\n",_heap.start,_heap.end);
-  /*while(1){
+  while(1){
     printf("%p\n",(void*)pp);
     if(pp->list.prev->prev==NULL) break;
     pp=list_entry(pp->list.prev,page_t,list);
-  }*/
+  }
   panic();
 }
 static void pmm_init() {
-  uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
-  printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
-  panic();
+  //uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
+  //printf("Got %d MiB heap: [%p, %p),cpu num:%d\n", pmsize >> 20, _heap.start, _heap.end,_ncpu());
   mem_start=(page_t *) _heap.start;
   lock_init(&heap_free_mem.lock_global,"lock_global");
   heap_init();
