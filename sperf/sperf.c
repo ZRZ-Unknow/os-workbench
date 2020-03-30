@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
   for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
     else if(i==1) exec_argv[i]="-T";
+    else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
   for(int i=0;i<argc+2;i++)
