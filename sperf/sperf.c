@@ -6,6 +6,7 @@
 #include <regex.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define NUM 1024
 
@@ -61,6 +62,7 @@ void display(){
   for(int i=0;i<8;i++) printf("%s",div_0);
   fflush(stdout);
 }
+
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -89,6 +91,8 @@ int main(int argc, char *argv[]) {
     regex_t reg;
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
+    time_t begin,end;
+    begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
@@ -104,11 +108,12 @@ int main(int argc, char *argv[]) {
       else{
         printf("no match:%s",buf);
       }
+      if(end>begin){
+        sort();
+        display();
+      }
     }
     regfree(&reg);
-    sort();
-    display();
-    //debugprint();
   }
   return 0;
 }
