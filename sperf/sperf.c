@@ -52,7 +52,7 @@ void sort(){
 
 void display(){
   for(int i=0;i<syscall_num;i++){
-    printf("%s : (%f%%)",sys_call[i].name,sys_call[i].time/total_time);
+    printf("%s : (%f%%)\n",sys_call[i].name,sys_call[i].time/total_time);
   }
 }
 int main(int argc, char *argv[]) {
