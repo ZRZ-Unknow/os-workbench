@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
-    char *pattern="[0-9]*";//"^[1-9]/d*/./d*|0/./d*[1-9]/d*$";//"<[0-9]\.[0-9]>";
+    char *pattern="[0-9]*\.?[0-9]*";//"^[1-9]/d*/./d*|0/./d*[1-9]/d*$";//"<[0-9]\.[0-9]>";
     regex_t reg;
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
