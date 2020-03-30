@@ -49,6 +49,7 @@ int time_cmp(const void *syscall_1,const void *syscall_2){
 void sort(){
   qsort(sys_call,syscall_num,sizeof(system_call),time_cmp);
 }
+
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -90,14 +91,11 @@ int main(int argc, char *argv[]) {
         insert(name_buf,t);
       }
       else{
-        printf("no match\n");
+        printf("no match:%s\n",buf);
       }
     }
-    debugprint();
     regfree(&reg);
     sort();
-    printf("\n");
-    debugprint();
   }
   return 0;
 }
