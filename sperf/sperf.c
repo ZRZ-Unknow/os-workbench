@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
         double t;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         sscanf(buf,"%[A-z0-9_]",name_buf);
-        sscanf(time_buf,"%lf",t);
+        sscanf(time_buf,"%lf",&t);
         printf("%s:%d\n",name_buf,t);
         insert(name_buf,t);
       }
