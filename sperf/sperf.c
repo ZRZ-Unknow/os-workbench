@@ -65,12 +65,10 @@ void display(){
 
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
-  for(int i=0;i<argc+4;i++){
+  for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
     else if(i==1) exec_argv[i]="-Txx";
-    else if(i==2) exec_argv[i]="-o";
-    else if(i==3) exec_argv[i]="/proc/outout";
-    else if(i==argc+3) exec_argv[i]=NULL;
+    else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
@@ -82,7 +80,7 @@ int main(int argc, char *argv[]) {
     close(fildes[0]);
     int fd=open("dev/null",O_WRONLY);
     dup2(fd,STDOUT_FILENO);
-    dup2(fd,STDERR_FILENO);
+    dup2(fildes[1],STDERR_FILENO);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
@@ -98,6 +96,10 @@ int main(int argc, char *argv[]) {
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
+      if(strncmp(buf,"+++ exited with",15)==0)){
+        display();
+        break;
+      }
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64],name_buf[64];
