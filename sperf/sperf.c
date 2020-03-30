@@ -58,8 +58,7 @@ int main(int argc, char *argv[]) {
         printf("no match\n");
       }
     }
-    regfree(&time_reg);
-    regfree(&name_reg);
+    regfree(&reg);
   }
   return 0;
 }
