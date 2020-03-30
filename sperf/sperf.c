@@ -24,31 +24,21 @@ void debugprint(){
 
 void insert(char *name,double time){
   total_time+=time;
-
-  if(syscall_num==0){
-    sys_call[0].time=time;
-    strcpy(sys_call[0].name,name);
-    syscall_num++;
-    return;
-  }
-
   int pos=-1;
   for(int i=0;i<syscall_num;i++){
     if(strcmp(name,sys_call[i].name)==0)
       pos=i;
   }
-
-  if(pos==-1){
-    int i;
-    for(i=0;i<syscall_num;i++){
-      if(sys_call[i].time<time)
-        break;
-    }
+  if(pos==-1){   //一个新的系统调用
+    sys_call[syscall_num].time=time;
+    strcpy(sys_call[syscall_num].name,name);
+    syscall_num++;
   }
   else{
-
+    sys_call[pos].time+=time;
   }
 }
+
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -93,6 +83,7 @@ int main(int argc, char *argv[]) {
         printf("no match\n");
       }
     }
+    debugprint();
     regfree(&reg);
   }
   return 0;
