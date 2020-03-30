@@ -6,6 +6,16 @@
 #include <regex.h>
 #include <string.h>
 
+#define NUM 1024
+
+typedef struct system_call{
+  char name[64];
+  double time;
+}system_call;
+double total_time=0;
+system_call syscall[NUM];
+
+
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
