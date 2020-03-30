@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     //close(fildes[0]);
     int fd=open("dev/null",O_WRONLY);
     dup2(fd,STDOUT_FILENO);
-    dup2(fd,STDERR_FILENO);
+    dup2(fildes[1],STDERR_FILENO);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
