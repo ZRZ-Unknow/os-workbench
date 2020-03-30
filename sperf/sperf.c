@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
   int pid=fork();
   if(pid==0){
     //关闭读端
-    close(fildes[0]);
+    //close(fildes[0]);
     printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
