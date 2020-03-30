@@ -16,6 +16,7 @@ typedef struct system_call{
 double total_time=0;
 int syscall_num=0;
 system_call sys_call[NUM];
+char div[10]="\0\0\0\0\0\0\0\0\0\0";
 
 void debugprint(){
   for(int i=0;i<syscall_num;i++){
@@ -57,8 +58,7 @@ void display(){
     else if(sys_call[i].time/total_time>0.005) printf("%20s:\033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else printf("%20s:\033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
-  char tmp[2]="\0\0";
-  for(int i=0;i<16;i++) printf("%s",tmp);
+  for(int i=0;i<8;i++) printf("%s",div);
 }
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
