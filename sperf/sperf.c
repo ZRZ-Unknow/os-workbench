@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     close(fildes[1]);
     FILE *fp=fopen(fildes[0],"r");
     char buf[1024];
-    while(fgets(buf,1024,fp))!=NULL){
+    while(fgets(buf,1024,fp)!=NULL){
       printf("%s\n",buf);
     }
     printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
