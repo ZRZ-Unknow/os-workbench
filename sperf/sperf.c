@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     else if(i==1) exec_argv[i]="-Txx";
     else if(i==2) exec_argv[i]="-o";
     else if(i==3) exec_argv[i]="./out";
-    else if(i==argc+1) exec_argv[i]=NULL;
+    else if(i==argc+3) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
