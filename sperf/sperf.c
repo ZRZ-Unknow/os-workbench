@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
     while(fgets(buf,1024,fp)!=NULL){
+      printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(ret==0){
         char buff[64];
