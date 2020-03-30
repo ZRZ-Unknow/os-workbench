@@ -13,13 +13,23 @@ typedef struct system_call{
   double time;
 }system_call;
 double total_time=0;
+int syscall_num=0;
 system_call sys_call[NUM];
 
+void debugprint(){
+  for(int i=0;i<syscall_num;i++){
+    printf("%s:%f\n",sys_call[i].name,sys_call[i].time);
+  }
+}
 
 void insert(char *name,double time){
-
-
-
+  if(syscall_num==0){
+    sys_call[0].time=time;
+    strcpy(sys_call[0].name,name);
+    syscall_num++;
+    return;
+  }
+  debugprint();
 }
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
@@ -53,13 +63,12 @@ int main(int argc, char *argv[]) {
       //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
-        char time_buf[64];
-        char name_buf[64];
+        char time_buf[64],name_buf[64];
         double t;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         sscanf(buf,"%[A-z0-9_]",name_buf);
         sscanf(time_buf,"%lf",&t);
-        printf("%s:%f\n",name_buf,t);
+        //printf("%s:%f\n",name_buf,t);
         insert(name_buf,t);
       }
       else{
