@@ -53,7 +53,7 @@ void sort(){
 void display(){
   system("clear");
   for(int i=0;i<syscall_num;i++){
-    printf("%20s:\033[1;31m%9.6(lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
+    printf("%20s:\033[1;31m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
   //for(int i=0;i<16;i++) printf("\0\0\0\0\0");
 }
