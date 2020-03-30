@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <regex.h>
+#include <string.h>
 
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
