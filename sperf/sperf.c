@@ -19,13 +19,19 @@ int main(int argc, char *argv[]) {
   int pid=fork();
   if(pid==0){
     //关闭读端
-    //close(fildes[0]);
+    close(fildes[0]);
     int fd=open("dev/null",O_WRONLY);
     dup2(fd,STDOUT_FILENO);
     dup2(fildes[1],STDERR_FILENO);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
+    close(fildes[1]);
+    FILE *fp=fopen(fildes[0],"r");
+    char buf[1024];
+    while(fgets(buf,1024,fp))!=NULL){
+      printf("%s\n",buf);
+    }
     printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
   }
   return 0;
