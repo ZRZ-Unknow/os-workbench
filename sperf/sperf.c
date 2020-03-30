@@ -47,7 +47,7 @@ int time_cmp(const void *syscall_1,const void *syscall_2){
 }
 
 void sort(){
-  qsort(&sys_call[0].time,syscall_num,sizeof(system_call),time_cmp);
+  qsort(sys_call,syscall_num,sizeof(system_call),time_cmp);
 }
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
