@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
         char name_buf[64];
         strncpy(&time_buf[0],buf+time_pmatch.rm_so+1,time_pmatch.rm_eo-time_pmatch.rm_so-2);
         strncpy(&name_buf[0],buf+name_pmatch.rm_so,name_pmatch.rm_eo-name_pmatch.rm_so);
-        printf("%s:%s\n",name_buf,time_buf);
+        printf("--%s\n%s--\n",name_buf,time_buf);
       }
       else{
         printf("no match\n");
