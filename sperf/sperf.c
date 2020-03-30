@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
   }
   else{
     close(fildes[1]);
-    FILE *fp=fopen(fildes[0],"r");
+    FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
     while(fgets(buf,1024,fp)!=NULL){
       printf("%s\n",buf);
