@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
     debugprint();
     regfree(&reg);
     sort();
+    printf("\n");
     debugprint();
   }
   return 0;
