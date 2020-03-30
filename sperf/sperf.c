@@ -95,6 +95,8 @@ int main(int argc, char *argv[]) {
     }
     debugprint();
     regfree(&reg);
+    qsort();
+    debugprint();
   }
   return 0;
 }
