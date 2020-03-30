@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <regex.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define NUM 1024
 
@@ -39,6 +40,10 @@ void insert(char *name,double time){
   }
 }
 
+void sort(){
+
+
+}
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -68,7 +73,7 @@ int main(int argc, char *argv[]) {
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
     while(fgets(buf,1024,fp)!=NULL){
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64],name_buf[64];
