@@ -111,6 +111,7 @@ int main(int argc, char *argv[]) {
       if((end=time(NULL))>begin+0.01){
         sort();
         display();
+        begin=end;
       }
     }
     regfree(&reg);
