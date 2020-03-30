@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     while(fgets(buf,1024,fp)!=NULL){
       printf("%s\n",buf);
       time_ret=regexec(&time_reg,buf,1,&time_pmatch,0);
-      name_ret=regexec(&name_reg,buf,1,&name_pmatch,0);
+      name_ret=regexec(&name_reg,buf,1,&name_pmatch[0],0);
       if(!time_ret && !name_ret){
         char time_buf[64];
         char name_buf[64];
