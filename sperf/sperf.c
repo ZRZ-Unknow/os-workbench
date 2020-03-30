@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
         insert(name_buf,t);
       }
       else{
-        printf("no match:%s",&buf[0]);
+        printf("no match:%s",buf);
       }
     }
     regfree(&reg);
