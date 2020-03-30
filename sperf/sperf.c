@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
     char *time_pattern="<([0-9]*\\.[0-9]*)>";
-    char *name_pattern="^[A-z0-9]*\\(+";
+    char *name_pattern="[A-z0-9_](";
     regex_t time_reg,name_reg;
     regmatch_t time_pmatch,name_pmatch;
     int time_ret=regcomp(&time_reg,time_pattern,REG_EXTENDED);
