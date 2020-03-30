@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
-int main(int argc, char *argv[]) {
+#include <fcntl.h>
 
+int main(int argc, char *argv[]) {
 
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -20,6 +21,7 @@ int main(int argc, char *argv[]) {
     //关闭读端
     //close(fildes[0]);
     printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
+    dup2(open("dev/null",O_WRONLY),STDOUT_FILENO);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
