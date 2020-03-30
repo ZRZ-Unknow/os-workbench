@@ -13,9 +13,14 @@ typedef struct system_call{
   double time;
 }system_call;
 double total_time=0;
-//system_call sys_call[NUM];
+system_call sys_call[NUM];
 
 
+void insert(char *name,double time){
+
+
+
+}
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -45,14 +50,17 @@ int main(int argc, char *argv[]) {
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
     while(fgets(buf,1024,fp)!=NULL){
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64];
         char name_buf[64];
+        double t;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         sscanf(buf,"%[A-z0-9_]",name_buf);
-        printf("%s:%s\n",name_buf,time_buf);
+        sscanf(time_buf,"%lf",t);
+        printf("%s:%d\n",name_buf,t);
+        insert(name_buf,t);
       }
       else{
         printf("no match\n");
