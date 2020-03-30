@@ -13,7 +13,7 @@ typedef struct system_call{
   double time;
 }system_call;
 double total_time=0;
-system_call syscall[NUM];
+//system_call sys_call[NUM];
 
 
 int main(int argc, char *argv[]) {
