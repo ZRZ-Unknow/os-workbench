@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     if(i==0) exec_argv[i]="strace";
     else if(i==1) exec_argv[i]="-Txx";
     else if(i==2) exec_argv[i]="-o";
-    else if(i==3) exec_argv[i]="./out";
+    else if(i==3) exec_argv[i]="/proc/outout";
     else if(i==argc+3) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
