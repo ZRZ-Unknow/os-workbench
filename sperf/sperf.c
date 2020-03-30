@@ -41,11 +41,13 @@ void insert(char *name,double time){
 }
 
 int time_cmp(const void *syscall_1,const void * *syscall_2){
-  return ((system_call* const*)syscall_1)->time <= ((system_call* const*)syscall_2)->time;
+  system_call *sys1=(system_call*)syscall_1;
+  system_call *sys2=(system_call*)syscall_2;
+  return sys1->time <= sys2->time;
 }
-void sort(){
-  
 
+void sort(){
+  qsort(&sys_call[0].time,syscall_num,sizeof(system_call),time_cmp);
 }
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
