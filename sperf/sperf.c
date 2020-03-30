@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
-      if(strncmp(buf,"+++ exited with",15)==0)){
+      if(strncmp(buf,"+++ exited with",15)==0){
         display();
         break;
       }
