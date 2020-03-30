@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
       if(!time_ret && !name_ret){
         char time_buf[1024];
         char name_buf[1024];
-        strncpy(&time_buf[0],buf+time_pmatch.rm_so+1,time_pmatch.rm_eo-time_pmatch.rm_so-2);
-        strncpy(&name_buf[0],buf+name_pmatch.rm_so,name_pmatch.rm_eo-name_pmatch.rm_so-1);
+        //strncpy(&time_buf[0],buf+time_pmatch.rm_so+1,time_pmatch.rm_eo-time_pmatch.rm_so-2);
+        //strncpy(&name_buf[0],buf+name_pmatch.rm_so,name_pmatch.rm_eo-name_pmatch.rm_so-1);
         printf("%s:%s\n",name_buf,time_buf);
       }
       else{
