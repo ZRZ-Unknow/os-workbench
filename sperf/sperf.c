@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
         printf("%s\n",buff);
       }
       else{
-        printf("ddd\n");
+        printf("no match\n");
       }
     }
     regfree(&reg);
