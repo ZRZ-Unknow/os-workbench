@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
       else{
         printf("no match:%s",buf);
       }
-      if((end=time(NULL))>begin+0.001){
+      if((end=time(NULL))>begin){
         sort();
         display();
         begin=end;
