@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
       if(ret==0){
         char buff[64];
         strncpy(&buff[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
-        printf("%s\n",buff);
+        printf("num:%s\n",buff);
       }
       else{
         printf("no match\n");
