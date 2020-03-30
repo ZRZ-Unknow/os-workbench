@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
       }
     }
     regfree(&reg);
+    fclose(fp);
   }
   return 0;
 }
