@@ -55,7 +55,7 @@ void display(){
   for(int i=0;i<syscall_num;i++){
     printf("%s : (%f%%)\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
-  for(int i=0;i<8;i++) printf("\\0\0\0\0\0\0\0\0\0\0");
+  for(int i=0;i<8;i++) printf("\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0");
 }
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
