@@ -40,17 +40,22 @@ int main(int argc, char *argv[]) {
     close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
-    char *pattern="<([0-9]*\\.[0-9]*)>";
-    regex_t reg;
-    regmatch_t pmatch;
-    int ret=regcomp(&reg,pattern,REG_EXTENDED);
+    char *time_pattern="<([0-9]*\\.[0-9]*)>";
+    char *name_pattern="[A-z0-9]*(";
+    regex_t time_reg,name_reg;
+    regmatch_t time_pmatch,name_pmatch;
+    int time_ret=regcomp(&time_reg,time_pattern,REG_EXTENDED);
+    int name_ret=regcomp(&name_reg,name_pattern,REG_EXTENDED);
     while(fgets(buf,1024,fp)!=NULL){
       printf("%s\n",buf);
-      ret=regexec(&reg,buf,1,&pmatch,0);
-      if(ret==0){
-        char buff[64];
-        strncpy(&buff[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
-        printf("num:%s\n",buff);
+      time_ret=regexec(&time_reg,buf,1,&time_pmatch,0);
+      name_ret=regexec(&name_reg,buf,1,&name_pmatch,0);
+      if(!time_ret && !name_ret){
+        char time_buf[64];
+        char name_buf[64];
+        strncpy(&time_buf[0],time_buf+time_pmatch.rm_so+1,time_pmatch.rm_eo-time_pmatch.rm_so-2);
+        strncpy(&name_buf[0],name_buf+name_pmatch.rm_so,name_pmatch.rm_eo-name_pmatch.rm_so-1);
+        printf("%s:%s\n",name_buf,time_buf);
       }
       else{
         printf("no match\n");
