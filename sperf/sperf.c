@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
-    else if(i==1) exec_argv[i]="-T";
+    else if(i==1) exec_argv[i]="-Txx";
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
       else{
         printf("no match:%s",buf);
       }
-      if((end=time(NULL))>begin){
+      if((end=time(NULL))>begin+0.001){
         sort();
         display();
         begin=end;
