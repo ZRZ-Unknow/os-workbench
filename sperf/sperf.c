@@ -37,7 +37,9 @@ int main(int argc, char *argv[]) {
       //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(ret==0){
-
+        char buff[64];
+        strncpy(&buff[0],buf+pmatch.rm_so,pmatch.rm_eo-pmatch.rm_so);
+        printf("%s\n",buff);
       }
       else{
         printf("ddd\n");
