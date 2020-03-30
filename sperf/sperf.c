@@ -50,6 +50,11 @@ void sort(){
   qsort(sys_call,syscall_num,sizeof(system_call),time_cmp);
 }
 
+void display(){
+  for(int i=0;i<syscall_num;i++){
+    printf("%s : (%f%%)",sys_call[i].name,sys_call[i].time/total_time);
+  }
+}
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -96,7 +101,8 @@ int main(int argc, char *argv[]) {
     }
     regfree(&reg);
     sort();
-    debugprint();
+    display();
+    //debugprint();
   }
   return 0;
 }
