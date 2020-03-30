@@ -3,9 +3,9 @@
 #include <unistd.h>
 #include <assert.h>
 #include <fcntl.h>
+#include <regex.h>
 
 int main(int argc, char *argv[]) {
-
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
@@ -29,8 +29,19 @@ int main(int argc, char *argv[]) {
     close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
+    char *pattern="<[0-9]>";
+    regex_t reg;
+    regmatch_t pmatch;
+    int ret=regcomp(&reg,pattern,REG_EXTENDED);
     while(fgets(buf,1024,fp)!=NULL){
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
+      ret=regexec(&reg,buf,1,pmatch,0);
+      if(ret==0){
+
+      }
+      else{
+        printf("ddd\n");
+      }
     }
     printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
   }
