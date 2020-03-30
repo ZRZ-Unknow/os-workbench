@@ -13,13 +13,17 @@ int main(int argc, char *argv[]) {
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
-  //execve("/usr/bin/strace", exec_argv, exec_envp);
+  int fildes[2];
+  if(pipe(fildes)!=0) assert(0);
   int pid=fork();
   if(pid==0){
+    //关闭读端
+    close(fildes[0]);
+    printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
-    printf("ddd\n");
+    printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
   }
   return 0;
 }
