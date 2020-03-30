@@ -20,7 +20,9 @@ int main(int argc, char *argv[]) {
   if(pid==0){
     //关闭读端
     //close(fildes[0]);
-    dup2(open("dev/null",O_WRONLY),STDOUT_FILENO);
+    int fd=open("dev/null",O_WRONLY);
+    dup2(fd,STDOUT_FILENO);
+    dup2(fd,STDERR_FILENO);
     execve("/usr/bin/strace", exec_argv, exec_envp);
   }
   else{
