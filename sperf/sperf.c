@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
       }
     }
     regfree(&reg);
-    printf("%d,%d,%d\n",fildes[0],fildes[1],pid);
   }
   return 0;
 }
