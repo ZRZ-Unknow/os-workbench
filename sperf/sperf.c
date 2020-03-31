@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
         insert(name_buf,t);
       }
       else{
-        printf("no match:%s",buf);
+        continue;
       }
       end=time(NULL);
       if((double)(end-begin)>0.01){
