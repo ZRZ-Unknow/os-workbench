@@ -56,9 +56,9 @@ void sort(){
 void display(){
   system("clear");
   for(int i=0;i<syscall_num;i++){
-    if(i==0) printf("%20s:\033[1;31m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
-    else if(sys_call[i].time/total_time>0.01) printf("%20s:\033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
-    else printf("%20s:\033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
+    if(i==0) printf("%20s \033[1;31m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
+    else if(sys_call[i].time/total_time>0.01) printf("%20s \033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
+    else printf("%20s \033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
   for(int i=0;i<8;i++) printf("%s",div_0);
   fflush(stdout);
