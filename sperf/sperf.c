@@ -112,10 +112,10 @@ int main(int argc, char *argv[]) {
         printf("no match:%s",buf);
       }
       end=clock();
-      if((end-begin)/CLOCKS_PER_SEC>1){
+      if((double)(end-begin)/CLOCKS_PER_SEC>1){
         sort();
         display();
-        begin=end;
+        begin=clock();
       }
     }
     sort();
