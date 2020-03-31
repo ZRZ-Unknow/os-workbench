@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         printf("no match:%s",buf);
       }
       end=clock();
-      if((double)(end-begin)>1000){
+      if((double)(end-begin)>2000){
         sort();
         display();
         begin=clock();
