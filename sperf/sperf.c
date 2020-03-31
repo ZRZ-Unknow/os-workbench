@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
-      //printf("%s\n",buf);
+      printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64],name_buf[64];
