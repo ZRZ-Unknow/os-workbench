@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 
 #define NUM 1024
 
@@ -107,7 +108,9 @@ int main(int argc, char *argv[]) {
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         sscanf(buf,"%[A-z0-9_]",name_buf);
         sscanf(time_buf,"%lf",&t);
-        //printf("%s:%f\n",name_buf,t);
+        for(int i=0;i<strlen(name_buf);i++)
+          name_buf[i]=tolower(name_buf[i]);
+        printf("%s:%f\n",name_buf,t);
         insert(name_buf,t);
       }
       else{
