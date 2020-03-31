@@ -96,11 +96,6 @@ int main(int argc, char *argv[]) {
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
-      if(strncmp(buf,"+++ exited with",15)==0){
-        sort();
-        display();
-        break;
-      }
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64],name_buf[64];
@@ -110,7 +105,7 @@ int main(int argc, char *argv[]) {
         sscanf(time_buf,"%lf",&t);
         for(int i=0;i<strlen(name_buf);i++)
           name_buf[i]=tolower(name_buf[i]);
-        printf("%s:%f\n",name_buf,t);
+        //printf("%s:%f\n",name_buf,t);
         insert(name_buf,t);
       }
       else{
@@ -122,6 +117,8 @@ int main(int argc, char *argv[]) {
         begin=end;
       }
     }
+    sort();
+    display();
     regfree(&reg);
     fclose(fp);
   }
