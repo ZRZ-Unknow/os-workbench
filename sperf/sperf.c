@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
     regex_t reg;
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
-    time_t begin,end;
-    begin=time(NULL);
+    clock_t begin,end;
+    begin=clock();
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
@@ -111,7 +111,8 @@ int main(int argc, char *argv[]) {
       else{
         printf("no match:%s",buf);
       }
-      if((end=time(NULL))>begin+0.001){
+      end=clock();
+      if((end-begin)/CLOCKS_PER_SEC>1){
         sort();
         display();
         begin=end;
