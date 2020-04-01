@@ -109,13 +109,15 @@ int main(int argc, char *argv[]) {
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
+  char cmd_path[256];
   if(strncmp("/",cmd,1)!=0){
     //printf("%s--\n",cmd);
-    char *cmd_path=find_path(cmd);
-    strcat(cmd_path,"/");
-    strcat(cmd_path,cmd);
-    exec_argv[2]=cmd_path;
+    char *c_path=find_path(cmd);
+    sprintf(cmd_path,"%s/%s",c_path,cmd);
   }
+  else sprintf(cmd_path,"%s",argv[1]);
+  exec_argv[2]=&cmd_path[0];
+
   printf("%s\n",exec_argv[2]);
   assert(0);
 
