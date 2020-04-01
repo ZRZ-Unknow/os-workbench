@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
     display();
     regfree(&reg);
     fclose(fp);
-    printf("%s,%s,%s,%s,%s\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
+    printf("filename:%s,argv:[%s,%s,%s],envp:[%s,NULL]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
   }
   return 0;
 }
