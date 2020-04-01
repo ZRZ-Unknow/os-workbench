@@ -82,6 +82,7 @@ char *find_path(){
     closedir(dir);
     cmand=strtok(NULL,":");
   }
+  return NULL;
 }
 
 int main(int argc, char *argv[]) {
