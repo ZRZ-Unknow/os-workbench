@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
-  char cmd_path[64];
+  char cmd_path[50];
   char *c_path=NULL;
   if(strncmp("/",cmd,1)!=0){
     c_path=find_path(cmd);
