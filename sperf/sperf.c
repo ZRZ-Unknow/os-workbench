@@ -75,9 +75,13 @@ int main(int argc, char *argv[]) {
   char *exec_envp[] = { "PATH=/bin", NULL, };
   char *path=getenv("PATH");
   printf("%s\n",path);
-  strtok(path,":");
-  printf("%s\n",path);
-  assert(0);
+  char *cmand=strtok(path,":");
+  while(cmand){
+    printf("%s\n",cmand);
+    cmand=strtok(NULL,":");
+  }  
+
+
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
