@@ -83,10 +83,10 @@ int main(int argc, char *argv[]) {
     printf("%s\n",cmand);
     dir=opendir(cmand);
     while((entry=readdir(dir))!=NULL){
-      if(strcmp(entry->d_name,"strace")==0){ 
+      /*if(strcmp(entry->d_name,"strace")==0){ 
         printf("%s,--%s\n",cmand,entry->d_name);
         break;
-      }
+      }*/
     }
     closedir(dir);
     cmand=strtok(NULL,":");
