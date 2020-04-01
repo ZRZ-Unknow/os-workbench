@@ -105,6 +105,7 @@ int main(int argc, char *argv[]) {
   char exec_path[64];
   
   char *path=find_path("strace");
+  printf("path is %s\n",path);
   //sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
   //exec_envp[0]=&envp_path[0];
