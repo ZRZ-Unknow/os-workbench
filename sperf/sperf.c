@@ -68,7 +68,6 @@ void display(){
 
 char *find_path(char *cmd_name){
   char *ph=getenv("PATH");
-  //char path[128];
   memset(path,0,sizeof(path));
   strcpy(path,ph);
   char *cmand=strtok(path,":");
@@ -83,7 +82,6 @@ char *find_path(char *cmd_name){
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,cmd_name)==0){ 
         closedir(dir);
-        printf("find -%s\n",cmand);
         return cmand;
       }
     }
@@ -108,11 +106,10 @@ int main(int argc, char *argv[]) {
   char exec_path[64];
   
   char *path=find_path("strace");
-  assert(path!=NULL);
-  printf("path is %s\n",find_path("strace"));
-  //sprintf(envp_path,"PATH=%s",path);
+  printf("path is %s\n",path);
+  sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
-  //exec_envp[0]=&envp_path[0];
+  exec_envp[0]=&envp_path[0];
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
@@ -125,7 +122,7 @@ int main(int argc, char *argv[]) {
   else sprintf(cmd_path,"%s",argv[1]);
   sprintf(envp_path,"PATH=%s",cmd_path);
   exec_argv[2]=&cmd_path[0];
-  exec_envp[0]=&envp_path[0];
+  //exec_envp[0]=&envp_path[0];
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
