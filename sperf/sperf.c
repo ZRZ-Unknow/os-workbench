@@ -109,6 +109,9 @@ int main(int argc, char *argv[]) {
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
+  if(strncmp("/",cmd,1)==0){
+    printf("%s--\n",cmd);
+  }
   printf("%s\n",cmd);
   assert(0);
 
