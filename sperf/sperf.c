@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     cmand=strtok(NULL,":");
     //printf("dd\n");
   }  
-assert(0);
+//assert(0);
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
