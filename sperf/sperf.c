@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     DIR *dir=opendir(cmand);
     struct dirent *entry;
     while((entry=readdir(dir))!=NULL){
-      if(strcmp(entry->d_name,"strace")==0) printf("%s,%s\n",path,entry->d_name);
+      if(strcmp(entry->d_name,"strace")==0) printf("%s,--%s\n",path,entry->d_name);
     }
     closedir(dir); 
     cmand=strtok(NULL,":");
