@@ -107,23 +107,15 @@ int main(int argc, char *argv[]) {
   char envp_path[64];
   char exec_path[64];
   
-  char *path_=find_path("strace");
-  //printf("path is %s\n",path);
-  //sprintf(envp_path,"PATH=%s",path);
-  sprintf(exec_path,"%s/%s",path_,"strace");
-  //exec_envp[0]=&envp_path[0];
-  //exec_argv[0]=&exec_path[0];
+  char *strace_path=find_path("strace");
+  sprintf(exec_path,"%s/%s",strace_path,"strace");
 
   char *cmd=argv[1];
   char cmd_path[50];
-  char *c_path=NULL;
   if(strncmp("/",cmd,1)!=0){
-    c_path=find_path(cmd);
-    sprintf(cmd_path,"%s/%s",c_path,cmd);
+    strcpy(cmd_path,find_path(cmd));
   }
-  else sprintf(cmd_path,"%s",argv[1]);
-  sprintf(envp_path,"PATH=%s",c_path);
-  //exec_argv[2]=&cmd_path[0];
+  sprintf(envp_path,"PATH=%s",cmd_path);
   exec_envp[0]=&envp_path[0];
   
   int fildes[2];
@@ -175,7 +167,7 @@ int main(int argc, char *argv[]) {
     display();
     regfree(&reg);
     fclose(fp);
-    printf("filename: %s ,argv:[ %s, %s , %s ],envp:[ \"%s\" , NULL ]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
+    printf("filename:%s,argv:[%s,%s,%s],envp:[\"%s\",NULL]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
   }
   return 0;
 }
