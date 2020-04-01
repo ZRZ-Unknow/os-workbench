@@ -65,33 +65,36 @@ void display(){
   fflush(stdout);
 }
 
+char *find_path(){
+  char *path=getenv("PATH");
+  char *cmand=strtok(path,":");
+  DIR *dir;
+  struct dirent *entry;
+  while(cmand){
+    dir=opendir(cmand);
+    while((entry=readdir(dir))!=NULL){
+      if(strcmp(entry->d_name,"strace")==0){ 
+        printf("%s,--%s\n",cmand,entry->d_name);
+        closedir(dir);
+        return cmand;
+      }
+    }
+    closedir(dir);
+    cmand=strtok(NULL,":");
+  }
+}
+
 int main(int argc, char *argv[]) {
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
-    if(i==0) exec_argv[i]="/usr/bin/strace";
+    if(i==0) exec_argv[i]="strace";
     else if(i==1) exec_argv[i]="-Txx";
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
-  char *path=getenv("PATH");
-  printf("%s\n",path);
-  char *cmand=strtok(path,":");
-  DIR *dir;
-  struct dirent *entry;
-  while(cmand){
-    printf("%s\n",cmand);
-    dir=opendir(cmand);
-    while((entry=readdir(dir))!=NULL){
-      /*if(strcmp(entry->d_name,"strace")==0){ 
-        printf("%s,--%s\n",cmand,entry->d_name);
-        break;
-      }*/
-    }
-    closedir(dir);
-    cmand=strtok(NULL,":");
-    //printf("dd\n");
-  }  
+  char *path=find_path();
+
 //assert(0);
   printf("ddd\n");
   int fildes[2];
