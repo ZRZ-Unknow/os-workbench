@@ -80,8 +80,6 @@ char *find_path(char *cmd_name){
       if(strcmp(entry->d_name,cmd_name)==0){ 
         //printf("%s/%s\n",cmand,entry->d_name);
         closedir(dir);
-        strcat(cmand,"/");
-        strcat(cmand,cmd_name);
         return cmand;
       }
     }
@@ -99,9 +97,13 @@ int main(int argc, char *argv[]) {
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
-  char *exec_envp[] = { "PATH=/bin", NULL, };
+  char *exec_envp[] = { NULL, NULL, };
   char *path=find_path("strace");
   printf("%s\n",path);
+  char envp_path[32];
+  sprintf(envp_path,"PATH=%s",path);
+  printf("%s\n",envp_path);
+  exec_envp[0]=&envp_path[0];
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
