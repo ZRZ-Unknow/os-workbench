@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
   char *cmand=strtok(tmp,":");
   while(cmand){
     printf("%s\n",cmand);
-    DIR *dir=opendir(cmand);
+    /*DIR *dir=opendir(cmand);
     struct dirent *entry;
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,"strace")==0){ 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         //break;
       }
     }
-    closedir(dir); 
+    closedir(dir); */
     cmand=strtok(NULL,":");
     //printf("dd\n");
   }  
