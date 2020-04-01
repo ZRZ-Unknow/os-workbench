@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
-  char *exec_envp[] = { "PATH=/usr", NULL, };
+  char *exec_envp[] = { "PATH=/bin", NULL, };
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
