@@ -99,11 +99,14 @@ int main(int argc, char *argv[]) {
   }
   char *exec_envp[] = { NULL, NULL, };
   char *path=find_path("strace");
-  printf("%s\n",path);
+  //printf("%s\n",path);
   char envp_path[32];
   sprintf(envp_path,"PATH=%s",path);
-  printf("%s\n",envp_path);
+  //printf("%s\n",envp_path);
   exec_envp[0]=&envp_path[0];
+  char exec_path[32];
+  sprintf(exec_path,"%s/%s",path,"strace");
+  printf("%s\n",exec_path);
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
