@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
     printf("%s--\n",cmd);
     c_path=find_path(cmd);
     sprintf(cmd_path,"%s/%s",c_path,cmd);
+    printf("%s\n",cmd_path);
   }
   else sprintf(cmd_path,"%s",argv[1]);
   exec_argv[2]=&cmd_path[0];
