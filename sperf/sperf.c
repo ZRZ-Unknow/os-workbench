@@ -81,6 +81,7 @@ char *find_path(char *cmd_name){
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,cmd_name)==0){ 
         closedir(dir);
+        printf("find -%s\n",cmand);
         return cmand;
       }
     }
