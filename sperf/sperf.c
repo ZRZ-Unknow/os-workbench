@@ -80,6 +80,7 @@ char *find_path(char *cmd_name){
       if(strcmp(entry->d_name,cmd_name)==0){ 
         //printf("%s/%s\n",cmand,entry->d_name);
         closedir(dir);
+        strcat(cmand,"/");
         strcat(cmand,cmd_name);
         return cmand;
       }
