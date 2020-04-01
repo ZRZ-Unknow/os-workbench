@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
   }
   else sprintf(cmd_path,"%s",argv[1]);
   //sprintf(envp_path,"PATH=%s",cmd_path);
-  exec_argv[2]=&cmd_path[0];
+  //exec_argv[2]=&cmd_path[0];
   //exec_envp[0]=&envp_path[0];
   
   int fildes[2];
