@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include <dirent.h>
 
 #define NUM 1024
 
@@ -78,9 +79,14 @@ int main(int argc, char *argv[]) {
   char *cmand=strtok(path,":");
   while(cmand){
     printf("%s\n",cmand);
+    DIR *dir=opendir(cmand);
+    struct dirent *entry;
+    while((entry=readdir(dir))!=NULL){
+      if(strcmp(entry->d_name,"strace")==0) printf("%s,%s",path,entry->d_name);
+    } 
     cmand=strtok(NULL,":");
   }  
-
+assert(0);
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
