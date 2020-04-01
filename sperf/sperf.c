@@ -76,7 +76,9 @@ int main(int argc, char *argv[]) {
   char *exec_envp[] = { "PATH=/bin", NULL, };
   char *path=getenv("PATH");
   printf("%s\n",path);
-  char *cmand=strtok(path,":");
+  char tmp[200];
+  strcpy(tmp,path);
+  char *cmand=strtok(tmp,":");
   while(cmand){
     printf("%s\n",cmand);
     DIR *dir=opendir(cmand);
