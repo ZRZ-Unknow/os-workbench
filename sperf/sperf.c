@@ -65,16 +65,20 @@ void display(){
   fflush(stdout);
 }
 
-char *find_path(){
+char *find_path(char *cmd_name){
   char *path=getenv("PATH");
   char *cmand=strtok(path,":");
   DIR *dir;
   struct dirent *entry;
   while(cmand){
     dir=opendir(cmand);
+    if(!dir){
+      cmand=strtok(NULL,":");
+      continue;
+    }
     while((entry=readdir(dir))!=NULL){
-      if(strcmp(entry->d_name,"strace")==0){ 
-        printf("%s,--%s\n",cmand,entry->d_name);
+      if(strcmp(entry->d_name,cmd_name)==0){ 
+        printf("%s/%s\n",cmand,entry->d_name);
         closedir(dir);
         return cmand;
       }
@@ -94,7 +98,7 @@ int main(int argc, char *argv[]) {
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
-  char *path=find_path();
+  char *path=find_path("strace");
 
 //assert(0);
   printf("ddd\n");
