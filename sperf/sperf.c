@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
     sprintf(cmd_path,"%s/%s",c_path,cmd);
   }
   else sprintf(cmd_path,"%s",argv[1]);
-  sprintf(envp_path,"PATH=%s",cmd_path);
+  sprintf(envp_path,"PATH=%s",cpath);
   //exec_argv[2]=&cmd_path[0];
   exec_envp[0]=&envp_path[0];
   
