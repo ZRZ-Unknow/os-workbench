@@ -76,20 +76,19 @@ int main(int argc, char *argv[]) {
   char *exec_envp[] = { "PATH=/bin", NULL, };
   char *path=getenv("PATH");
   printf("%s\n",path);
-  char tmp[200];
-  strcpy(tmp,path);
-  char *cmand=strtok(tmp,":");
+  char *cmand=strtok(path,":");
+  DIR *dir;
+  struct dirent *entry;
   while(cmand){
     printf("%s\n",cmand);
-    /*DIR *dir=opendir(cmand);
-    struct dirent *entry;
+    dir=opendir(cmand);
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,"strace")==0){ 
         printf("%s,--%s\n",cmand,entry->d_name);
-        //break;
+        break;
       }
     }
-    closedir(dir); */
+    closedir(dir);
     cmand=strtok(NULL,":");
     //printf("dd\n");
   }  
