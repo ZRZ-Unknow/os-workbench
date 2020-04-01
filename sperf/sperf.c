@@ -109,10 +109,14 @@ int main(int argc, char *argv[]) {
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
-  if(strncmp("/",cmd,1)==0){
-    printf("%s--\n",cmd);
+  if(strncmp("/",cmd,1)!=0){
+    //printf("%s--\n",cmd);
+    char *cmd_path=find_path(cmd);
+    strcat(cmd_path,"/");
+    strcat(cmd_path,cmd);
+    exec_argv[2]=cmd_path;
   }
-  printf("%s\n",cmd);
+  printf("%s\n",exec_argv[2]);
   assert(0);
 
   int fildes[2];
