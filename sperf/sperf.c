@@ -66,7 +66,9 @@ void display(){
 }
 
 char *find_path(char *cmd_name){
-  char *path=getenv("PATH");
+  char *ph=getenv("PATH");
+  char path[128];
+  strcpy(path,ph);
   char *cmand=strtok(path,":");
   DIR *dir;
   struct dirent *entry;
@@ -115,7 +117,7 @@ int main(int argc, char *argv[]) {
     printf("%s--\n",cmd);
     c_path=find_path(cmd);
     sprintf(cmd_path,"%s/%s",c_path,cmd);
-    printf("%s\n",cmd_path);
+    printf("--%s\n",cmd_path);
   }
   else sprintf(cmd_path,"%s",argv[1]);
   exec_argv[2]=&cmd_path[0];
