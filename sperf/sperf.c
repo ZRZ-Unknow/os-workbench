@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
-    if(i==0) exec_argv[i]=NULL;
+    if(i==0) exec_argv[i]="strace";
     else if(i==1) exec_argv[i]="-Txx";
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
   //sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
   //exec_envp[0]=&envp_path[0];
-  exec_argv[0]=&exec_path[0];
+  //exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
   char cmd_path[50];
