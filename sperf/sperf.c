@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     }
     closedir(dir); 
     cmand=strtok(NULL,":");
-    printf("dd\n");
+    //printf("dd\n");
   }  
 assert(0);
 
