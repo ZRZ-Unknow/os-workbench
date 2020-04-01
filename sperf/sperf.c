@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
   char exec_path[64];
   
   char *path=find_path("strace");
-  printf("path is %s\n",path);
+  //printf("path is %s\n",path);
   sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
   exec_envp[0]=&envp_path[0];
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
   //sprintf(envp_path,"PATH=%s",cmd_path);
   exec_argv[2]=&cmd_path[0];
   //exec_envp[0]=&envp_path[0];
-  printf("dddddddddd %s\n",exec_envp[0]);
+  
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
     display();
     regfree(&reg);
     fclose(fp);
-    printf("%s,%s,%s,%s\n",exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
+    //printf("%s,%s,%s,%s\n",exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
   }
   return 0;
 }
