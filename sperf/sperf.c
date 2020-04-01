@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
   if(strncmp("/",cmd,1)!=0){
     strcpy(cmd_path,find_path(cmd));
   }
+  else cmd_path[0]=NULL;
   sprintf(envp_path,"PATH=%s",cmd_path);
   exec_envp[0]=&envp_path[0];
   
