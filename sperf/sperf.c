@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     int fd=open("dev/null",O_WRONLY);
     dup2(fd,STDOUT_FILENO);
     dup2(fildes[1],STDERR_FILENO);
-    execve("/usr/bin/strace", exec_argv, exec_envp);
+    execve(exec_path, exec_argv, exec_envp);
   }
   else{
     close(fildes[1]);
