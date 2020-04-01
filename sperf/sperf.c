@@ -107,9 +107,9 @@ int main(int argc, char *argv[]) {
   
   char *path=find_path("strace");
   //printf("path is %s\n",path);
-  sprintf(envp_path,"PATH=%s",path);
+  //sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
-  exec_envp[0]=&envp_path[0];
+  //exec_envp[0]=&envp_path[0];
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
@@ -120,9 +120,9 @@ int main(int argc, char *argv[]) {
     sprintf(cmd_path,"%s/%s",c_path,cmd);
   }
   else sprintf(cmd_path,"%s",argv[1]);
-  //sprintf(envp_path,"PATH=%s",cmd_path);
+  sprintf(envp_path,"PATH=%s",cmd_path);
   //exec_argv[2]=&cmd_path[0];
-  //exec_envp[0]=&envp_path[0];
+  exec_envp[0]=&envp_path[0];
   
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
