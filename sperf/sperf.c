@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,"strace")==0){ 
         printf("%s,--%s\n",cmand,entry->d_name);
-        break;
+        //break;
       }
     }
     closedir(dir); 
