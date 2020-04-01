@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
   //printf("path is %s\n",path);
   sprintf(envp_path,"PATH=%s",path);
   sprintf(exec_path,"%s/%s",path,"strace");
-  //exec_envp[0]=&envp_path[0];
+  exec_envp[0]=&envp_path[0];
   exec_argv[0]=&exec_path[0];
 
   char *cmd=argv[1];
