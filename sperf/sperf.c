@@ -113,6 +113,7 @@ int main(int argc, char *argv[]) {
   if(strncmp("/",cmd,1)!=0){
     //printf("%s--\n",cmd);
     char *c_path=find_path(cmd);
+    printf("%s\n",c_path);
     sprintf(cmd_path,"%s/%s",c_path,cmd);
   }
   else sprintf(cmd_path,"%s",argv[1]);
