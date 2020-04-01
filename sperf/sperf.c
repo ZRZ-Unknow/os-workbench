@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
   }
   else sprintf(cmd_path,"%s",argv[1]);
   exec_argv[2]=&cmd_path[0];
-  exec_envp[0]=c_path;
+  exec_envp[0]=&c_path;
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
