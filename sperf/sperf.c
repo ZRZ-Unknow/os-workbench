@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 
   char *cmd=argv[1];
   char cmd_path[256];
-  char *c_path=NULL;
+  char *c_path="/bin";
   if(strncmp("/",cmd,1)!=0){
     c_path=find_path(cmd);
     sprintf(cmd_path,"%s/%s",c_path,cmd);
