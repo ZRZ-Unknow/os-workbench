@@ -78,7 +78,6 @@ char *find_path(char *cmd_name){
     }
     while((entry=readdir(dir))!=NULL){
       if(strcmp(entry->d_name,cmd_name)==0){ 
-        //printf("%s/%s\n",cmand,entry->d_name);
         closedir(dir);
         return cmand;
       }
@@ -90,6 +89,7 @@ char *find_path(char *cmd_name){
 }
 
 int main(int argc, char *argv[]) {
+
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
@@ -97,16 +97,15 @@ int main(int argc, char *argv[]) {
     else if(i==argc+1) exec_argv[i]=NULL;
     else exec_argv[i]=argv[i-1];
   }
+  
   char *exec_envp[] = { NULL, NULL, };
+  char envp_path[64];
+  char exec_path[64];
+  
   char *path=find_path("strace");
-  //printf("%s\n",path);
-  char envp_path[32];
   sprintf(envp_path,"PATH=%s",path);
-  //printf("%s\n",envp_path);
-  exec_envp[0]=&envp_path[0];
-  char exec_path[32];
   sprintf(exec_path,"%s/%s",path,"strace");
-  printf("%s\n",exec_path);
+  exec_envp[0]=&envp_path[0];
 
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
