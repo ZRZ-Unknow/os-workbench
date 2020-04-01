@@ -108,6 +108,10 @@ int main(int argc, char *argv[]) {
   exec_envp[0]=&envp_path[0];
   exec_argv[0]=&exec_path[0];
 
+  char *cmd=argv[1];
+  printf("%s\n",cmd);
+  assert(0);
+
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
