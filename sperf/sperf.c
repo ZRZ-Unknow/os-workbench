@@ -20,6 +20,7 @@ double total_time=0;
 int syscall_num=0;
 system_call sys_call[NUM];
 char div_0[10]="\0\0\0\0\0\0\0\0\0\0";
+char path[128];
 
 void debugprint(){
   for(int i=0;i<syscall_num;i++){
@@ -67,7 +68,8 @@ void display(){
 
 char *find_path(char *cmd_name){
   char *ph=getenv("PATH");
-  char path[128];
+  //char path[128];
+  memset(path,0,sizeof(path));
   strcpy(path,ph);
   char *cmand=strtok(path,":");
   DIR *dir;
