@@ -73,6 +73,9 @@ int main(int argc, char *argv[]) {
     else exec_argv[i]=argv[i-1];
   }
   char *exec_envp[] = { "PATH=/bin", NULL, };
+  char *path=getenv("PATH");
+  printf("%s\n",path);
+  assert(0);
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
