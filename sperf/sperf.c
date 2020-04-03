@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
   char path2[128];
   strcpy(path2,path);
 
-  if(strstr(argv[1],"/")!=NULL){      
+  if(strstr(argv[1],"/")==NULL){      
     char *_cmd_path=find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
     sprintf(envp_path,"PATH=%s",cmd_path);
