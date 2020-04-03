@@ -9,6 +9,9 @@ int main(int argc, char *argv[]) {
     if (!fgets(line, sizeof(line), stdin)) {
       break;
     }
+    for(int i=0;i<strlen(line);i++){
+      printf("%s-",line[i]);
+    }
     printf("Got %zu chars.\n", strlen(line)); // WTF?
   }
 }
