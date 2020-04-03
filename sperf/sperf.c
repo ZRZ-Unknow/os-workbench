@@ -70,7 +70,7 @@ char *find_path(char *cmd_name){
   char *ph=getenv("PATH");
   memset(path,0,sizeof(path));
   strcpy(path,ph);
-  char *cmand=strtok(path,":");
+  char *cmand=strtok(path,':');
   DIR *dir;
   struct dirent *entry;
   while(cmand){
