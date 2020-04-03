@@ -20,7 +20,7 @@ double total_time=0;
 int syscall_num=0;
 system_call sys_call[NUM];
 char div_0[10]="\0\0\0\0\0\0\0\0\0\0";
-char path[128];
+//char path[128];
 
 void debugprint(){
   for(int i=0;i<syscall_num;i++){
@@ -66,8 +66,8 @@ void display(){
   fflush(stdout);
 }
 
-char *find_path(char *cmd_name){
-  char *cmand=strtok(path,":");
+char *find_path(char *token,char *cmd_name){
+  char *cmand=strtok(token,":");
   DIR *dir;
   struct dirent *entry;
   while(cmand){
@@ -90,9 +90,7 @@ char *find_path(char *cmd_name){
 
 int main(int argc, char *argv[]) {
   
-  char *ph=getenv("PATH");
-  memset(path,0,sizeof(path));
-  strcpy(path,ph);
+;
   
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
@@ -108,13 +106,20 @@ int main(int argc, char *argv[]) {
   char envp_path[64];
   char exec_path[64];
   
-  char *strace_path=find_path("strace");
+  char path1[128];
+  char *ph=getenv("PATH");
+  strcpy(path1,ph);
+  
+  char *strace_path=find_path(path1,"strace");
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
   char *cmd=argv[1];
   char cmd_path[50];
+  char path2[128];
+  strcpy(path2,ph);
+
   if(strncmp("/",cmd,1)!=0){
-    strcpy(cmd_path,find_path(cmd));
+    strcpy(cmd_path,find_path(path2,cmd));
     sprintf(envp_path,"PATH=%s",cmd_path);
     exec_envp[0]=&envp_path[0];
   }
