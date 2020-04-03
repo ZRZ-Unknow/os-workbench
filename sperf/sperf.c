@@ -67,10 +67,7 @@ void display(){
 }
 
 char *find_path(char *cmd_name){
-  const char *ph=getenv("PATH");
-  //memset(path,0,sizeof(path));
-  //strcpy(path,ph);
-  char *cmand=strtok(ph,":");
+  char *cmand=strtok(path,":");
   DIR *dir;
   struct dirent *entry;
   while(cmand){
@@ -92,7 +89,11 @@ char *find_path(char *cmd_name){
 }
 
 int main(int argc, char *argv[]) {
-
+  
+  char *ph=getenv("PATH");
+  memset(path,0,sizeof(path));
+  strcpy(path,ph);
+  
   char *exec_argv[argc+2];
   for(int i=0;i<argc+2;i++){
     if(i==0) exec_argv[i]="strace";
