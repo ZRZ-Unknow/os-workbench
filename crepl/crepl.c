@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
       break;
     }
     for(int i=0;i<strlen(line);i++){
-      printf("%s-",line[i]);
+      printf("%d-",line[i]);
     }
     printf("Got %zu chars.\n", strlen(line)); // WTF?
   }
