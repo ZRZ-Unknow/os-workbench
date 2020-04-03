@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
   //char *cmd=argv[1];
   char cmd_path[64];
   char path2[128];
-  strcpy(path2,ph);
+  strcpy(path2,path);
 
   if(strstr(argv[1],"/")!=NULL){      
     char *_cmd_path=find_path(path2,argv[1]);       
