@@ -67,10 +67,10 @@ void display(){
 }
 
 char *find_path(char *cmd_name){
-  char *ph=getenv("PATH");
-  memset(path,0,sizeof(path));
-  strcpy(path,ph);
-  char *cmand=strtok(path,":");
+  const char *ph=getenv("PATH");
+  //memset(path,0,sizeof(path));
+  //strcpy(path,ph);
+  char *cmand=strtok(ph,":");
   DIR *dir;
   struct dirent *entry;
   while(cmand){
