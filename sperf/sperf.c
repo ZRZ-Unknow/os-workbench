@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
   //char *cmd=argv[1];
-  char cmd_path[64];
+  char cmd_path[56];
   char path2[128];
   strcpy(path2,path);
 
