@@ -7,10 +7,10 @@
 #define MB KB*1024
 #define MEM_SIZE (126 MB)
 #define PAGE_SIZE (8 KB)
-#define HDR_SIZE 1024
+#define HDR_SIZE 256
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
-#define SLAB_TYPE_NUM 8
-#define SLAB_LIMIT 5
+#define SLAB_TYPE_NUM 10
+#define SLAB_LIMIT 1
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/
@@ -39,10 +39,10 @@ typedef union page {
     int obj_cnt;     // 页面中已分配的对象数，减少到 0 时回收页面
     int obj_num;     //总对象数
     void *addr;      //首地址
-    void *s_mem;     //slab中第一个对象的地址，其地址为: addr+(80+obj_num); 对象的大小为 slab_size
+    void *s_mem;     //slab中第一个对象的地址，其地址为: addr+(slab_size<=256)?256:slab_size; 对象的大小为 slab_size
     list_head list;  // 属于同一个线程的页面的链表
-    uint8_t bitmap[512];  //往后obj_num个字节都属于bitmap;
-  }; // 匿名结构体
+    int bitmap[31];  //共32*31=992个bit，从第一个开始往后obj_num个bit都要用到
+  }; // 匿名结构体，大小不超过256
   uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
 
@@ -71,7 +71,11 @@ page_t *get_free_page(int num,int slab_size,int cpu);
   ((type *) \
     ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
   )
-#define get_head_addr(addr) (addr-(((intptr_t)(addr))&(PAGE_SIZE-1)))     
+#define get_head_addr(addr) (addr-(((intptr_t)(addr))&(PAGE_SIZE-1)))   
+
+#define setbit(x,pos)  x|=(1<<pos)     //将x的pos位置为1
+#define clrbit(x,pos)  x&=~(1<<pos)    //将x的pos位置为0
+#define getbit(x,pos)   ((x) >> (pos)&1)    //取x的pos位
    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
 
 static inline int get_obj_pos(void *addr){
