@@ -174,8 +174,16 @@ static void *kalloc(size_t size) {
   //这里需要锁cpu:防止其他cpu并发的free
   lock_acquire(&kmc[cpu].lock);
 
+  list_head *fs_list=kmc[cpu].freeslab_list[sl_pos].next;
+  page_t *fs_page=list_entry(fs_list,page_t,list);
 
-  if(kmc[cpu].slab_list[sl_pos].next!=NULL){
+  lock_acquire(&fs_page->lock);
+  if(fs_page->obj_cnt<fs_page->obj_num){  //有空闲对象则直接分配
+      ret=get_free_obj(fs_page);   //这里需要有cpu的free_num的改变：一个完全free的page被分配，对应的free_num要-1
+  }
+  lock_release(&fs_page->lock);
+
+  if(kmc[cpu].freeslab_list[sl_pos].next!=NULL){
     Log("%d",cpu);
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     page_t *page=list_entry(lh,page_t,list);
