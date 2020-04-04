@@ -149,19 +149,19 @@ static void pmm_init() {
     for(int j=0;j<SLAB_TYPE_NUM;j++){
       page_t *new_page=get_free_page(1,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
+      kmc[i].freeslab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
       kmc[i].free_num[j]=1;
     }
     //debug_slab_print(new_page);
   }
-  debug_print();
-  panic("test");
+  //debug_print();
+  //panic("test");
 }
 
 static void *kalloc(size_t size) {
+
   size=align_size(size);
-  Log("start alloc size %d",size);
-  Log("heap free page num:%d",heap_free_mem.num);
   int cpu=_cpu();
   void *ret=NULL;
   int sl_pos=0;  //slablist_pos
@@ -169,8 +169,11 @@ static void *kalloc(size_t size) {
     if(size<=SLAB_SIZE[sl_pos]) break;
   }
   assert(sl_pos<SLAB_TYPE_NUM);
-  //这里是否需要锁cpu?先锁一个试试
+  
+  Log("cpu:%d start alloc size:%d,heap_free_page_num:%d",cpu,size,heap_free_mem.num);
+  //这里需要锁cpu:防止其他cpu并发的free
   lock_acquire(&kmc[cpu].lock);
+
 
   if(kmc[cpu].slab_list[sl_pos].next!=NULL){
     Log("%d",cpu);
