@@ -4,8 +4,8 @@ static heap_mem heap_free_mem;
 static page_t *mem_start=NULL;
 static kmem_cache kmc[8];
 //static spinlock_t lock_global;
-
 int SLAB_SIZE[SLAB_TYPE_NUM]={8,16,32,64,128,256,512,1024,2048,4096};
+
 int get_slab_pos(int size){
   int pos=-1;
   switch (size){
@@ -49,12 +49,15 @@ void *get_free_obj(page_t* page){
 
 page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&heap_free_mem.lock_global);
+
   if(heap_free_mem.num<num){
     //assert(0);
     lock_release(&heap_free_mem.lock_global);
     return NULL;
   }
+  
   assert(heap_free_mem.freepage_list.next!=NULL);
+  
   page_t *first_page=list_entry(heap_free_mem.freepage_list.next,page_t,list);
   page_t *mp=first_page;
 
@@ -63,16 +66,17 @@ page_t *get_free_page(int num,int slab_size,int cpu){
       lock_release(&heap_free_mem.lock_global);
       return NULL;
     }
+
     mp->cpu=cpu;
     mp->slab_size=slab_size;
     mp->obj_cnt=0;
     mp->obj_num=(PAGE_SIZE-HDR_SIZE)/mp->slab_size;
     mp->addr=mp;
-
-    if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
-    else mp->s_mem=mp->addr+HDR_SIZE;
-    
+    mp->s_mem=(slab_size<=HDR_SIZE) ? (mp->addr+HDR_SIZE) : (mp->addr+slab_size);
     lock_init(&mp->lock,"");
+    //if(slab_size>HDR_SIZE) mp->s_mem=mp->addr+slab_size;
+    //else mp->s_mem=mp->addr+HDR_SIZE;
+    
     heap_free_mem.num--;
     if(mp->list.next==NULL){
       if(i==num-1){
@@ -87,6 +91,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
     }
     mp=list_entry(mp->list.next,page_t,list);
   }
+
   //fix list
   assert(((void*)mp)<_heap.end);
   assert(mp!=NULL);
@@ -135,20 +140,21 @@ static void pmm_init() {
   mem_start=(page_t *) _heap.start;
   memset(mem_start,0,MEM_SIZE);
   heap_init();
+  //为每个cpu的每种slab分配一个页面
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
-      page_t *new_page=get_free_page(4,SLAB_SIZE[j],i);
+      page_t *new_page=get_free_page(1,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
-      kmc[i].free_num[j]=4;
+      kmc[i].free_num[j]=1;
     }
     //debug_slab_print(new_page);
   }
-  //debug_print();
+  debug_print();
   //panic("test");
 }
 
