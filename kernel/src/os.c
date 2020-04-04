@@ -66,7 +66,7 @@ static void os_run() {   //可以随意改动
     }
     int end=uptime();
     printf("time:%d\n",end-begin);
-    assert(0);
+    //assert(0);
     #endif
   }
 }
