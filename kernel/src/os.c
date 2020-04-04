@@ -1,6 +1,6 @@
 #include <common.h>
 
-//#define TEST_MEM
+#define TEST_MEM
 spinlock_t lk;
 
 #ifdef TEST_MEM
@@ -50,20 +50,21 @@ static void os_run() {   //可以随意改动
       }
       size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
       void *ret=pmm->alloc(size);
+      assert(ret);
       int cpu=_cpu();
       ptr[i+cpu*N]=ret;
       lock_acquire(&lk);
       printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
       lock_release(&lk);
     }
-    for(int j=0;j<N;j++){
+    /*for(int j=0;j<N;j++){
       int cpu=_cpu();
       int n=_ncpu();
       pmm->free(ptr[j+(n-cpu-1)*N]);
       lock_acquire(&lk);
       printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
       lock_release(&lk);
-    }
+    }*/
     int end=uptime();
     printf("time:%d\n",end-begin);
     //assert(0);
