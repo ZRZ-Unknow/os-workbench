@@ -183,6 +183,31 @@ static void *kalloc(size_t size) {
   }
   lock_release(&fs_page->lock);
 
+  if(!ret){  //意味着fs_page中无空闲对象，全局分配一个页面
+    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu); //ddddddd
+    if(!page){
+      lock_release(&kmc[cpu].lock);
+      return NULL;
+    }
+    assert(page->cpu==cpu);
+    assert(page->list.next==NULL);
+
+    lock_acquire(&fs_page->lock);
+    assert(fs_page->list.next==NULL);
+    assert(fs_page->slab_size!=0);
+    fs_page->list.next=&page->list;
+    page->list.prev=&fs_page->list;
+    lock_release(&fs_page->lock);
+    
+    kmc[cpu].freeslab_list[sl_pos].next=&page->list;
+    kmc[cpu].free_num[sl_pos]+=1;
+    ret=get_free_obj(page);
+  } 
+  lock_release(&kmc[cpu].lock);
+  Log("cpu %d alloc ptr:%p,size:%d,heap_free_page_num:%d",cpu,ret,size,heap_free_mem.num);
+  assert( !(((intptr_t)ret)%size));  //align 
+  return ret;
+/*
   if(kmc[cpu].freeslab_list[sl_pos].next!=NULL){
     Log("%d",cpu);
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
@@ -225,6 +250,7 @@ static void *kalloc(size_t size) {
   Log("alloc %p,%d",ret,size);
   assert( !(((intptr_t)ret)%size));  //align 
   return ret;
+*/
 }
 
 static void kfree(void *ptr) {
