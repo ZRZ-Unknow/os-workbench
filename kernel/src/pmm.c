@@ -24,11 +24,33 @@ int get_slab_pos(int size){
   assert(pos!=-1);
   return pos;
 }
-//调用前先上锁
+//调用前先上锁,调用一定返回非空。
+//[8  ,16 ,32 ,64 ,128,256,512,1024,2048,4096]
+//[992,496,248,124,62 ,31 ,15 ,7   ,3   ,1]
+//[31 ,16 ,8  ,4  ,2  ,1  ,1  ,1   ,1   ,1]
 void *get_free_obj(page_t* page){
-  int pos=0;
   void *ret=NULL;
-  for(;pos<page->obj_num;pos++){
+  int bitmap_num=(page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
+  for(int i=0;i<bitmap_num;i++){
+    if(page->bitmap[i]==I) continue;
+    int pos=0;
+    while(1){
+      if(getbit(page->bitmap[i],pos)==0){
+        if(page->obj_cnt==0){  //改变cpu的free_num值
+          int n=get_slab_pos(page->slab_size);
+          kmc[page->cpu].free_num[n]--;
+        }
+        setbit(page->bitmap[i],pos);
+        page->obj_cnt++;
+        ret=page->s_mem+(i*32+pos)*page->slab_size;
+        return ret;
+      }
+      pos++;
+      assert(pos<32);
+    }
+  }
+  assert(0);
+  /*for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
       //Log("find free pos:%d",pos);
       assert(page->bitmap[pos]==0);
@@ -44,14 +66,13 @@ void *get_free_obj(page_t* page){
       break;
     }
   }
-  return ret;
+  return ret;*/
 }
 
 page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&heap_free_mem.lock_global);
 
   if(heap_free_mem.num<num){
-    //assert(0);
     lock_release(&heap_free_mem.lock_global);
     return NULL;
   }
@@ -201,7 +222,10 @@ static void *kalloc(size_t size) {
     
     kmc[cpu].freeslab_list[sl_pos].next=&page->list;
     kmc[cpu].free_num[sl_pos]+=1;
+
+    lock_acquire(&page->lock);
     ret=get_free_obj(page);
+    lock_release(&page->lock);
   } 
   lock_release(&kmc[cpu].lock);
   Log("cpu %d alloc ptr:%p,size:%d,heap_free_page_num:%d",cpu,ret,size,heap_free_mem.num);
