@@ -284,13 +284,40 @@ static void kfree(void *ptr) {
 
   lock_acquire(&page->lock);
 
-  int pos=(ptr-page->s_mem)/page->slab_size;
+  int offset=(ptr-page->s_mem)/page->slab_size;
+  int i=offset/32;
+  int pos=offset-i*32;
+  Assert( getbit(page->bitmap[i],pos)==1, "kfree 0 ##ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->obj_cnt--;
-  Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
-  page->bitmap[pos]=0;
+  clrbit(page->bitmap[i],pos);
   memset(ptr,0,page->slab_size);
   Log("heap free page num:%d",heap_free_mem.num);
-
+ 
+  if(page->obj_cnt==0){
+    int cpu=page->cpu;
+    //归还页面
+    lock_acquire(&kmc[cpu].lock);
+    page->cpu=-1;
+    page->slab_size=0;
+    page->obj_num=0;
+    page->s_mem=NULL;
+    list_head *prev=page->list.prev;
+    list_head *next=page->list.next;
+    prev->next=next;
+    if(next) next->prev=prev;
+    lock_release(&kmc[cpu].lock);
+    //fix list
+    lock_acquire(&heap_free_mem.lock_global);
+    list_head *tmp=heap_free_mem.freepage_list.next;
+    heap_free_mem.freepage_list.next=&page->list;
+    page->list.prev=&heap_free_mem.freepage_list;
+    page->list.next=tmp;
+    if(tmp) tmp->prev=&page->list;
+    heap_free_mem.num++;
+    lock_release(&heap_free_mem.lock_global);
+  }
+  lock_release(&page->lock);
+/*
   if(page->obj_cnt==0){
     //需要对cpu上锁
     int cpu=page->cpu;
@@ -329,6 +356,7 @@ static void kfree(void *ptr) {
     lock_release(&kmc[cpu].lock);
   }
   lock_release(&page->lock);
+*/
 }
 
 
