@@ -1,6 +1,6 @@
 #include <common.h>
 
-#define TEST_MEM
+//#define TEST_MEM
 spinlock_t lk;
 
 #ifdef TEST_MEM
