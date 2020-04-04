@@ -14,7 +14,7 @@ struct workload {
 };
 
 struct workload
-  wl_typical = {.prob = {10,20,40,50,15,5,2,1},.sum=0 },
+  wl_typical = {.prob = {10,10,20,40,50,15,5,2,1,1},.sum=0 },
   wl_stress  = {.prob = {0,0,0,400,200,100,2,1},.sum=0 },
   wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
 ;
