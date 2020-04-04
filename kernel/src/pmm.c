@@ -183,7 +183,7 @@ static void *kalloc(size_t size) {
   }
   else assert(0);  //should never happen
   if(!ret){  //需要从_heap中分配，加一把大锁
-    int n=(size>=1024)?3:1;
+    int n=(size>=1024)?3:2;
     page_t *page=get_free_page(n,SLAB_SIZE[sl_pos],cpu); //ddddddd
     if(!page){
       lock_release(&kmc[cpu].lock);
@@ -231,7 +231,7 @@ static void kfree(void *ptr) {
     Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
     kmc[cpu].free_num[n]++;
 
-    if(kmc[cpu].free_num[n]>=SLAB_LIMIT){  //归还页面
+    if(kmc[cpu].free_num[n]>SLAB_LIMIT){  //归还页面
       Log("cpu%d,slab_type:%d,free_page_num:%d,return page to _heap",cpu,n,kmc[cpu].free_num[n]);
 
       lock_acquire(&heap_free_mem.lock_global);
