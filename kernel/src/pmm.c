@@ -201,10 +201,30 @@ static void *kalloc(size_t size) {
   lock_acquire(&fs_page->lock);
   if(fs_page->obj_cnt<fs_page->obj_num){  //有空闲对象则直接分配
       ret=get_free_obj(fs_page);   //这里需要有cpu的free_num的改变：一个完全free的page被分配，对应的free_num要-1
+      lock_release(&fs_page->lock);
   }
-  lock_release(&fs_page->lock);
+  else{   //遍历链表找到有空闲对象的page，
+    lock_release(&fs_page->lock);
+    list_head *lh=kmc[cpu].slab_list[sl_pos].next;
+    page_t *page=list_entry(lh,page_t,list);
+    assert(page->obj_cnt<=page->obj_num);
+    assert(page->cpu==cpu);
+    while(page->obj_cnt==page->obj_num && lh->next!=NULL){  //已分配对象数小于总对象数时才可分配
+      lh=lh->next;
+      page=list_entry(lh,page_t,list);
+      Assert(page->cpu==cpu,"%d,%d",page->cpu,cpu);
+    }
+    kmc[cpu].freeslab_list[sl_pos].next=&page->list;
+    if(page->obj_cnt<page->obj_num){  //此时要么page可分配，要么lh指向链表中最后一个page
+      lock_acquire(&page->lock);
+      assert(page->obj_cnt<page->obj_num);
+      ret=get_free_obj(page);   //这里需要有cpu的free_num的改变：一个完全free的page被分配，对应的free_num要-1
+      lock_release(&page->lock);
+    }
+  }
 
-  if(!ret){  //意味着fs_page中无空闲对象，全局分配一个页面
+
+  if(!ret){  //意味着链表中无空闲page，fs_page中无空闲对象，全局分配一个页面
     page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu); //ddddddd
     if(!page){
       lock_release(&kmc[cpu].lock);
@@ -212,7 +232,10 @@ static void *kalloc(size_t size) {
     }
     assert(page->cpu==cpu);
     assert(page->list.next==NULL);
-
+    
+    fs_list=kmc[cpu].freeslab_list[sl_pos].next;
+    fs_page=list_entry(fs_list,page_t,list);
+    
     lock_acquire(&fs_page->lock);
     assert(fs_page->list.next==NULL);
     assert(fs_page->slab_size!=0);
@@ -295,15 +318,15 @@ static void kfree(void *ptr) {
  
   if(page->obj_cnt==0){
     int cpu=page->cpu;
-    //int n=get_slab_pos(page->slab_size);
+    int n=get_slab_pos(page->slab_size);
     //归还页面
     lock_acquire(&kmc[cpu].lock);
-    /*if(kmc[cpu].freeslab_list.next==&page->list){  //此时不用归还
+    if(kmc[cpu].freeslab_list->next==&page->list){  //此时不用归还
       kmc[cpu].free_num[n]++;
       lock_release(&kmc[cpu].lock);
       lock_release(&page->lock);
       return;
-    }*/
+    }
     page->cpu=-1;
     page->slab_size=0;
     page->obj_num=0;
