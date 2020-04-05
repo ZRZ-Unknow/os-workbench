@@ -198,7 +198,7 @@ static void *kalloc(size_t size) {
     lock_release(&lock_global);
     assert(page->cpu==cpu);
     
-    list_head *lh=&fs_page->list;
+    list_head *lh=kmc[cpu].freepage[sl_pos];
     assert(lh->next==NULL);
     //list_head *lh=&kmc[cpu].slab_list[sl_pos];
     //while(lh->next!=NULL) lh=lh->next;
