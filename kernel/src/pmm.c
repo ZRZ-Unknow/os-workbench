@@ -137,6 +137,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   return first_page;
 }
 page_t *get_one_free_page(int slab_size,int cpu){
+  Log("cpu %d alloc one page,slabsize:%d",cpu,slab_size);
   page_t *page=NULL;
   for(int i=0;i<504;i++){
     if((heap_bitmap[i]^I)==0) continue;
