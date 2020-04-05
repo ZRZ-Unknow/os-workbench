@@ -192,6 +192,7 @@ static void *kalloc(size_t size) {
       lock_release(&fs_page->lock);
   }
   else{
+    lock_release(&fs_page->lock);
     list_head *lh=kmc[cpu].slab_list[sl_pos].next;
     kmc[cpu].freepage[sl_pos]=NULL;
     page_t *page=list_entry(lh,page_t,list);
