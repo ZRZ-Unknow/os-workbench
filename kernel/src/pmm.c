@@ -30,11 +30,11 @@ int get_slab_pos(int size){
 //[31 ,16 ,8  ,4  ,2  ,1  ,1  ,1   ,1   ,1]
 void *get_free_obj(page_t* page){
   void *ret=NULL;
-  int bitmap_num=(page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
+  int bitmap_num=page->obj_num/32+1;//  (page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
   for(int i=0;i<bitmap_num;i++){
     if(page->bitmap[i]==I) continue;
     int pos=0;
-    while(1){
+    while((i*32+pos)<page->obj_num){
       if(getbit(page->bitmap[i],pos)==0){
         if(page->obj_cnt==0){  //改变cpu的free_num值
           int n=get_slab_pos(page->slab_size);

@@ -7,7 +7,7 @@ spinlock_t lk;
 spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
-int N=100000;
+int N=500000;
 
 struct workload {
   int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
@@ -67,7 +67,7 @@ static void os_run() {   //可以随意改动
     }*/
     int end=uptime();
     printf("time:%d\n",end-begin);
-    //assert(0);
+    assert(0);
     #endif
   }
 }
