@@ -126,6 +126,7 @@ extern spinlock_t lk;
 #define panic(format, ...) \
   do { \
     Log("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
+    _halt(1); \
   } while (0)
 
 #define assert(cond) \
