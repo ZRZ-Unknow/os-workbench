@@ -10,6 +10,7 @@
 #define PAGE_NUM MEM_SIZE/PAGE_SIZE  //16128
 #define SLAB_TYPE_NUM 10
 #define SLAB_LIMIT 16
+#define I 0b11111111111111111111111111111111
 //126MB内存, 假设内存分配大小的上限是 4 KiB,
 
 /*---------------------spinlock-------------------*/

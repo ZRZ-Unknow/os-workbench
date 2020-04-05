@@ -23,7 +23,7 @@ int get_slab_pos(int size){
   return pos;
 }
 //调用前先上锁
-void *get_free_obj(page_t* page){
+/*void *get_free_obj(page_t* page){
   int pos=0;
   void *ret=NULL;
   for(;pos<page->obj_num;pos++){
@@ -43,6 +43,30 @@ void *get_free_obj(page_t* page){
     }
   }
   return ret;
+}*/
+void *get_free_obj(page_t* page){
+  void *ret=NULL;
+  int bitmap_num=page->obj_num/32;
+  for(int i=0;i<bitmap_num;i++){
+    if(page->bitmap[i]==I) continue;
+    int pos=0;
+    while(1){
+      if(getbit(page->bitmap[i],pos)==0){
+        if(page->obj_cnt==0){  //改变cpu的free_num值
+          int n=get_slab_pos(page->slab_size);
+          kmc[page->cpu].free_num[n]--;
+        }
+        setbit(page->bitmap[i],pos);
+        page->obj_cnt++;
+        ret=page->s_mem+(i*32+pos)*page->slab_size;
+        return ret;
+      }
+      pos++;
+      assert(pos<32);
+    }
+  }
+  assert(0);
+  return NULL;
 }
 //调用前先上锁
 page_t *get_free_page(int num,int slab_size,int cpu){
@@ -146,10 +170,12 @@ static void *kalloc(size_t size) {
     lh->next=&page->list;
     page->list.prev=lh;
     page->list.next=NULL;
-    assert(page->bitmap[0]==0);
-    page->bitmap[0]=1;
-    page->obj_cnt++;    //这个时候cpu的free_num是不变的：加了一个并不free的page
-    ret=page->s_mem;
+    kmc[cpu].free_num[sl_pos]++;
+    ret=get_free_obj(page);
+    //assert(page->bitmap[0]==0);
+    //page->bitmap[0]=1;
+    //page->obj_cnt++;    //这个时候cpu的free_num是不变的：加了一个并不free的page
+    //ret=page->s_mem;
     lock_release(&lock_global);
   }
   lock_release(&kmc[cpu].lock);
