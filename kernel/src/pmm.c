@@ -219,13 +219,13 @@ static void *kalloc(size_t size) {
 static void kfree(void *ptr) {
   Log("free:%p",ptr);
   page_t *page=get_head_addr(ptr);
-  assert(!page%8192);
+  Assert(!page%PAGE_SIZE,"%p",ptr);
   lock_acquire(&page->lock);
 
   int offset=(ptr-page->s_mem)/page->slab_size;
   int i=offset/32;
   int pos=offset-i*32;
-  Assert( getbit(page->bitmap[i],31-pos)==1, "kfree 0 ##ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
+  Assert( getbit(page->bitmap[i],31-pos)==1, "cpu:%d free ptr:[%p,%p),size:%d",page->cpu,ptr,ptr+page->slab_size,page->slab_size);
   page->obj_cnt--;
   clrbit(page->bitmap[i],31-pos);
   memset(ptr,0,page->slab_size);
