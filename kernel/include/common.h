@@ -52,6 +52,7 @@ typedef struct kmem_cache{
   spinlock_t lock;
   int free_num[SLAB_TYPE_NUM]; 
   list_head slab_list[SLAB_TYPE_NUM];
+  list_head *freepage[SLAB_TYPE_NUM];
 }kmem_cache;
 
 /*--------------------pmm---------------------------*/
@@ -86,7 +87,7 @@ static inline size_t align_size(size_t size){
 
 /*-----------------------debug------------------------*/
 extern spinlock_t lk;
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
