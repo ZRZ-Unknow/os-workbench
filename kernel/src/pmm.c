@@ -111,6 +111,13 @@ page_t *get_free_page(int num,int slab_size,int cpu){
       mp->addr=mp;
       mp->s_mem=(slab_size<=HDR_SIZE) ? (mp->addr+HDR_SIZE) : (mp->addr+slab_size);
       mp->list.next=NULL;
+      
+      int offset=(mp-mem_start)/PAGE_SIZE;
+      int j=offset/32;
+      int pos=offset-j*32;
+      assert(getbit(heap_bitmap[j],pos)==0);
+      setbit(heap_bitmap[j],pos);
+      
       lock_init(&mp->lock,"");
       if(first_page==NULL){
         first_page=mp;
@@ -129,7 +136,26 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   }
   return first_page;
 }
-
+page_t *get_one_free_page(int slab_size,int cpu){
+  page_t *page=NULL;
+  for(int i=0;i<504;i++){
+    if((heap_bitmap[i]^I)==0) continue;
+    for(int j=0;j<32;j++){
+      if(getbit(heap_bitmap[i],j)==0){
+        page=mem_start+i*32+j;
+        page->cpu=cpu;
+        page->slab_size=slab_size;
+        page->obj_cnt=0;
+        page->obj_num=(PAGE_SIZE-HDR_SIZE)/page->slab_size;
+        page->addr=page;
+        page->s_mem=(slab_size<=HDR_SIZE) ? (page->addr+HDR_SIZE) : (page->addr+slab_size);
+        page->list.next=NULL;
+        lock_init(&page->lock,"");
+      }
+    }
+  }
+  return page;
+}
 
 static void pmm_init() {
   mem_start=(page_t *) _heap.start;
@@ -194,7 +220,8 @@ static void *kalloc(size_t size) {
 
   if(!ret){  ///意味着链表中无空闲page，fs_page中无空闲对象，全局分配一个页面，且fs_page刚好是最后一个页面
     lock_acquire(&lock_global);
-    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
+    //page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
+    page_t *page=get_one_free_page(SLAB_SIZE[sl_pos],cpu);
     if(!page){
       lock_release(&lock_global);
       return NULL;
@@ -239,7 +266,7 @@ static void kfree(void *ptr) {
     kmc[cpu].free_num[n]++;
     if(kmc[cpu].free_num[n]>=SLAB_LIMIT && kmc[cpu].freepage[n]!=&page->list){  //归还页面
       Log("cpu%d,slab_type:%d,free_page_num:%d,return page to _heap",cpu,n,kmc[cpu].free_num[n]);
-      //lock_acquire(&lock_global);
+
       page->cpu=-1;
       page->slab_size=0;
       page->obj_num=0;
@@ -248,7 +275,15 @@ static void kfree(void *ptr) {
       list_head *next=page->list.next;
       prev->next=next;
       if(next) next->prev=prev;
-      //lock_release(&lock_global);
+      
+      int p=page-mem_start;
+      int pi=p/32;
+      int ppos=p-pi*32;
+      
+      lock_acquire(&lock_global);
+      clrbit(heap_bitmap[pi],ppos);
+      lock_release(&lock_global);
+
       kmc[cpu].free_num[n]--;
     }
     lock_release(&kmc[cpu].lock);
