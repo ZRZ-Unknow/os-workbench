@@ -203,12 +203,12 @@ static void *kalloc(size_t size) {
       assert(page->obj_cnt<=page->obj_num);
       assert(page->cpu==cpu);
     }
+    kmc[cpu].freepage[sl_pos]=&page->list;
     if(page->obj_cnt<page->obj_num){  //此时要么page可分配，要么lh指向链表中最后一个page且不可分配
       lock_acquire(&page->lock);
       assert(page->obj_cnt<page->obj_num);
       ret=get_free_obj(page);   //这里需要有cpu的free_num的改变：一个完全free的page被分配，对应的free_num要-1
       lock_release(&page->lock);
-      kmc[cpu].freepage[sl_pos]=&page->list;
     }
   }
   //else assert(0);  //should never happen
