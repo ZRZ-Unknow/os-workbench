@@ -229,6 +229,7 @@ static void *kalloc(size_t size) {
     kmc[cpu].free_num[sl_pos]++;
     ret=get_free_obj(page);
     lock_release(&lock_global);
+    kmc[cpu].freepage[sl_pos]=&page->list;
   }
   lock_release(&kmc[cpu].lock);
   Log("alloc %p",ret);
@@ -256,7 +257,7 @@ static void kfree(void *ptr) {
     int n=get_slab_pos(page->slab_size);
     Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
     kmc[cpu].free_num[n]++;
-    if(kmc[cpu].free_num[n]>=SLAB_LIMIT){  //归还页面
+    if(kmc[cpu].free_num[n]>=SLAB_LIMIT && kmc[cpu].freepage[n]!=&page->list){  //归还页面
       Log("cpu%d,slab_type:%d,free_page_num:%d,return page to _heap",cpu,n,kmc[cpu].free_num[n]);
       lock_acquire(&lock_global);
       page->cpu=-1;
