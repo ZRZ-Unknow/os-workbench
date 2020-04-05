@@ -64,7 +64,7 @@ void *get_free_obj(page_t* page){
       pos++;
       assert(pos<32);
     }
-  Log("i==%d,bitmap_num:%d",i,bitmap_num);
+  Log("i==%d,bitmap_num:%d,obj_cnt:,obj_num:,slab_size:%d",i,bitmap_num,page->obj_cnt,page->obj_num,page->slab_size);
   }
   assert(0);
   return NULL;
