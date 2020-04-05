@@ -86,7 +86,7 @@ static inline size_t align_size(size_t size){
 
 /*-----------------------debug------------------------*/
 extern spinlock_t lk;
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
