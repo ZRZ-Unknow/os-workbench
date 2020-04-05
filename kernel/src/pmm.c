@@ -19,7 +19,7 @@ int get_slab_pos(int size){
     case 4096: pos=9;break;
     default:break;
   }
-  assert(pos!=-1);
+  Assert(pos!=-1,"size:%d",size);
   return pos;
 }
 //调用前先上锁
