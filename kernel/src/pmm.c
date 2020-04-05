@@ -164,6 +164,9 @@ page_t *get_one_free_page(int slab_size,int cpu){
 static void pmm_init() {
   mem_start=(page_t *) _heap.start;
   lock_init(&lock_global,"lock_global");
+  for(int i=0;i<504;i++){
+    heap_bitmap[i]=O;
+  }
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
@@ -235,8 +238,6 @@ static void *kalloc(size_t size) {
     
     list_head *lh=kmc[cpu].freepage[sl_pos];
     assert(lh->next==NULL);
-    //list_head *lh=&kmc[cpu].slab_list[sl_pos];
-    //while(lh->next!=NULL) lh=lh->next;
     lh->next=&page->list;
     page->list.prev=lh;
     kmc[cpu].free_num[sl_pos]++;
