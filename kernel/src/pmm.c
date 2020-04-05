@@ -32,8 +32,8 @@ void *get_free_obj(page_t* page){
     int pos;
     int f=__builtin_ffs(page->bitmap[i]);
     if(f==0) pos=0;
-    else if(f>1) pos=33-f;
-    else pos=-1;
+    else if(f==1) pos=-1;
+    else pos=33-f;
     
     if(pos!=-1){
       if(page->obj_cnt==0){  //改变cpu的free_num值
