@@ -6,17 +6,17 @@ spinlock_t lk;
 #ifdef TEST_MEM
 spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
-void *ptr[80000];
-int N=10000;
+void *ptr[800000];
+int N=100000;
 
 struct workload {
   int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
 };
 
 struct workload
-  wl_typical = {.prob = {10,20,40,50,15,5,2,1},.sum=0 },
-  wl_stress  = {.prob = {0,0,0,400,200,100,2,1},.sum=0 },
-  wl_page    = {.prob = {0,0,0,0,10,20,80,100},.sum=0 }
+  wl_typical = {.prob = {10,10,20,40,50,15,5,2,1,1},.sum=0 },
+  wl_stress  = {.prob = {0,0,0,300,400,200,100,2,1,1},.sum=0 },
+  wl_page    = {.prob = {0,0,0,0,20,10,20,80,100,80},.sum=0 }
 ;
 static struct workload *workload = &wl_typical;
 #endif
@@ -37,6 +37,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     #ifdef TEST_MEM
+    int begin=uptime();
     for(int i=0;i<N;i++){
       int choice=rand()%workload->sum;
       int n=0,sum=0;
@@ -63,6 +64,9 @@ static void os_run() {   //可以随意改动
       printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
       lock_release(&lk);
     }
+    int end=uptime();
+    printf("time:%d\n",end-begin);
+    assert(0);
     #endif
   }
 }
