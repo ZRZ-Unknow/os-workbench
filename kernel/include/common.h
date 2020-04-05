@@ -2,7 +2,7 @@
 #include <klib.h>
 #include <klib-macros.h>
 
-#define DEBUG
+//#define DEBUG
 #define KB *1024
 #define MB KB*1024
 #define MEM_SIZE (126 MB)
@@ -126,7 +126,6 @@ extern spinlock_t lk;
 #define panic(format, ...) \
   do { \
     Log("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
-    _halt(1); \
   } while (0)
 
 #define assert(cond) \

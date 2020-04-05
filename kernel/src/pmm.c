@@ -50,6 +50,7 @@ void *get_free_obj(page_t* page){
     }
   }
   assert(0);
+  return NULL;
   /*for(;pos<page->obj_num;pos++){
     if(page->bitmap[pos]==0){
       //Log("find free pos:%d",pos);
