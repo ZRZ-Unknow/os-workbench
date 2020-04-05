@@ -113,11 +113,11 @@ page_t *get_free_page(int num,int slab_size,int cpu){
       mp->s_mem=(slab_size<=HDR_SIZE) ? (mp->addr+HDR_SIZE) : (mp->addr+slab_size);
       mp->list.next=NULL;
       
-      int offset=mp-mem_start;
+      /*int offset=mp-mem_start;
       int j=offset/32;
       int pos=offset-j*32;
       assert(getbit(heap_bitmap[j],pos)==0);
-      setbit(heap_bitmap[j],pos);
+      setbit(heap_bitmap[j],pos);*/
       
       lock_init(&mp->lock,"");
       if(first_page==NULL){
@@ -164,20 +164,17 @@ page_t *get_one_free_page(int slab_size,int cpu){
 static void pmm_init() {
   mem_start=(page_t *) _heap.start;
   lock_init(&lock_global,"lock_global");
-  for(int i=0;i<504;i++){
-    heap_bitmap[i]=O;
-  }
   for(int i=0;i<_ncpu();i++){
     kmc[i].cpu=i;
     char name[5]="";
     sprintf(&name[0],"cpu%d",i);
     lock_init(&kmc[i].lock,&name[0]);
     for(int j=0;j<SLAB_TYPE_NUM;j++){
-      page_t *new_page=get_free_page(10,SLAB_SIZE[j],i);
+      page_t *new_page=get_free_page(INIT_PAGENUM,SLAB_SIZE[j],i);
       kmc[i].slab_list[j].next=&new_page->list;
       kmc[i].freepage[j]=&new_page->list;
       new_page->list.prev=&kmc[i].slab_list[j];
-      kmc[i].free_num[j]=10;
+      kmc[i].free_num[j]=INIT_PAGENUM;
     }
   }
 }
@@ -227,8 +224,7 @@ static void *kalloc(size_t size) {
 
   if(!ret){  ///意味着链表中无空闲page，fs_page中无空闲对象，全局分配一个页面，且fs_page刚好是最后一个页面
     lock_acquire(&lock_global);
-    //page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
-    page_t *page=get_one_free_page(SLAB_SIZE[sl_pos],cpu);
+    page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
     if(!page){
       lock_release(&lock_global);
       return NULL;
@@ -281,13 +277,12 @@ static void kfree(void *ptr) {
       prev->next=next;
       if(next) next->prev=prev;
       
-      int p=page-mem_start;
+      /*int p=page-mem_start;
       int pi=p/32;
       int ppos=p-pi*32;
-      
       lock_acquire(&lock_global);
       clrbit(heap_bitmap[pi],ppos);
-      lock_release(&lock_global);
+      lock_release(&lock_global);*/
 
       kmc[cpu].free_num[n]--;
     }

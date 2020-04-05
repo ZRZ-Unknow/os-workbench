@@ -1,13 +1,13 @@
 #include <common.h>
 
-//#define TEST_MEM
+#define TEST_MEM
 spinlock_t lk;
 
 #ifdef TEST_MEM
 spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
-int N=500000;
+int N=200000;
 
 struct workload {
   int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
