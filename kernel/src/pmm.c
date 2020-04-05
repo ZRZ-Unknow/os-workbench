@@ -1,20 +1,22 @@
 #include <common.h>
 
 static page_t *mem_start=NULL;
-static kmem_cache kmc[MAX_CPU];
+static kmem_cache kmc[8];
 static spinlock_t lock_global;
-int SLAB_SIZE[SLAB_TYPE_NUM]={16,32,64,128,256,512,1024,4096};
+int SLAB_SIZE[SLAB_TYPE_NUM]={8,16,32,64,128,256,512,1024,2048,4096};
 int get_slab_pos(int size){
   int pos=-1;
   switch (size){
-    case 16: pos=0;break;
-    case 32: pos=1;break;
-    case 64: pos=2;break;
-    case 128: pos=3;break;
-    case 256: pos=4;break;
-    case 512: pos=5;break;
-    case 1024: pos=6;break;
-    case 4096: pos=7;break;
+    case 8: pos=0;break;
+    case 16: pos=1;break;
+    case 32: pos=2;break;
+    case 64: pos=3;break;
+    case 128: pos=4;break;
+    case 256: pos=5;break;
+    case 512: pos=6;break;
+    case 1024: pos=7;break;
+    case 2048: pos=8;break;
+    case 4096: pos=9;break;
     default:break;
   }
   assert(pos!=-1);
