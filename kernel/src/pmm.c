@@ -151,6 +151,7 @@ page_t *get_one_free_page(int slab_size,int cpu){
         page->s_mem=(slab_size<=HDR_SIZE) ? (page->addr+HDR_SIZE) : (page->addr+slab_size);
         page->list.next=NULL;
         lock_init(&page->lock,"");
+        return page;
       }
     }
   }
