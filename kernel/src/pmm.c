@@ -28,7 +28,8 @@ void *get_free_obj(page_t* page){
   void *ret=NULL;
   int bitmap_num= (page->obj_num%32==0)?(page->obj_num/32):(page->obj_num/32+1);  //page->obj_num/32+1;
   for(int i=0;i<bitmap_num;i++){
-    if(page->bitmap[i]==I) continue;
+    //if(page->bitmap[i]==I) continue;
+    if(__builtin_popcount(page->bitmap[i])==32) continue;
     int pos;
     int f=__builtin_ffs(page->bitmap[i]);
     if(f==0) pos=0;
