@@ -64,6 +64,7 @@ void *get_free_obj(page_t* page){
       pos++;
       assert(pos<32);
     }
+  Log("i==%d",i);
   }
   assert(0);
   return NULL;
