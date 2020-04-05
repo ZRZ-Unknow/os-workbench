@@ -39,6 +39,7 @@ void *get_free_obj(page_t* page){
         int n=get_slab_pos(page->slab_size);
         kmc[page->cpu].free_num[n]--;
       }
+      assert(getbit(page->bitmap[i],31-pos)==0);
       setbit(page->bitmap[i],31-pos);
       page->obj_cnt++;
       ret=page->s_mem+(i*32+pos)*page->slab_size;
