@@ -112,7 +112,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
       mp->s_mem=(slab_size<=HDR_SIZE) ? (mp->addr+HDR_SIZE) : (mp->addr+slab_size);
       mp->list.next=NULL;
       
-      int offset=(mp-mem_start)/PAGE_SIZE;
+      int offset=mp-mem_start;
       int j=offset/32;
       int pos=offset-j*32;
       assert(getbit(heap_bitmap[j],pos)==0);
