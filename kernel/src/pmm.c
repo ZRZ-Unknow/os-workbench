@@ -46,7 +46,7 @@ int get_slab_pos(int size){
 }*/
 void *get_free_obj(page_t* page){
   void *ret=NULL;
-  int bitmap_num=page->obj_num/32;
+  int bitmap_num= (page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
   for(int i=0;i<bitmap_num;i++){
     if(page->bitmap[i]==I) continue;
     int pos=0;
