@@ -67,8 +67,8 @@ page_t *get_free_page(int num,int slab_size,int cpu);
     ( (char *)(ptr) - (uintptr_t)(&((type *)0)->member) ) \
   )
 #define get_head_addr(addr) (addr-(((intptr_t)(addr))&(PAGE_SIZE-1)))   
-#define setbit(x,pos)  x|=(1<<pos)     //将x的pos位置为1
-#define clrbit(x,pos)  x&=~(1<<pos)    //将x的pos位置为0
+#define setbit(x,pos)  x|=(1<<(pos))     //将x的pos位置为1
+#define clrbit(x,pos)  x&=~(1<<(pos))    //将x的pos位置为0
 #define getbit(x,pos)   ((x) >> (pos)&1)    //取x的pos位
    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
 
@@ -86,7 +86,7 @@ static inline size_t align_size(size_t size){
 
 /*-----------------------debug------------------------*/
 extern spinlock_t lk;
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
