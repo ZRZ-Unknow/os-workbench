@@ -191,11 +191,19 @@ static void kfree(void *ptr) {
   page_t *page=get_head_addr(ptr);
   assert(page);
   lock_acquire(&page->lock);
-  int pos=(ptr-page->s_mem)/page->slab_size;
+
+  int offset=(ptr-page->s_mem)/page->slab_size;
+  int i=offset/32;
+  int pos=offset-i*32;
+  Assert( getbit(page->bitmap[i],pos)==1, "kfree 0 ##ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
+  page->obj_cnt--;
+  clrbit(page->bitmap[i],pos);
+  memset(ptr,0,page->slab_size);
+  /*int pos=(ptr-page->s_mem)/page->slab_size;
   page->obj_cnt--;
   Assert(page->bitmap[pos]==1,"ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->bitmap[pos]=0;
-  memset(ptr,0,page->slab_size);
+  memset(ptr,0,page->slab_size);*/
   if(page->obj_cnt==0){
     //需要对cpu上锁
     int cpu=page->cpu;
