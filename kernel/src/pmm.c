@@ -219,7 +219,7 @@ static void *kalloc(size_t size) {
 static void kfree(void *ptr) {
   Log("free:%p",ptr);
   page_t *page=get_head_addr(ptr);
-  assert(page);
+  assert(!page%8192);
   lock_acquire(&page->lock);
 
   int offset=(ptr-page->s_mem)/page->slab_size;
