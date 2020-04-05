@@ -23,7 +23,7 @@ int get_slab_pos(int size){
   return pos;
 }
 //调用前先上锁
-/*void *get_free_obj(page_t* page){
+void *get_free_obj(page_t* page){
   void *ret=NULL;
   int bitmap_num= page->obj_num/32+1;
   for(int i=0;i<bitmap_num;i++){
@@ -65,8 +65,8 @@ int get_slab_pos(int size){
   }
   assert(0);
   return NULL;
-}*/
-void *get_free_obj(page_t* page){
+}
+/*void *get_free_obj(page_t* page){
   void *ret=NULL;
   int bitmap_num= page->obj_num/32+1;//(page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
   for(int i=0;i<bitmap_num;i++){
@@ -90,7 +90,7 @@ void *get_free_obj(page_t* page){
   }
   assert(0);
   return NULL;
-}
+}*/
 //调用前先上锁
 page_t *get_free_page(int num,int slab_size,int cpu){
   page_t *mp=mem_start;
@@ -223,9 +223,9 @@ static void kfree(void *ptr) {
   int offset=(ptr-page->s_mem)/page->slab_size;
   int i=offset/32;
   int pos=offset-i*32;
-  Assert( getbit(page->bitmap[i],pos)==1, "kfree 0 ##ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
+  Assert( getbit(page->bitmap[i],31-pos)==1, "kfree 0 ##ptr:[%p,%p),size:%d",ptr,ptr+page->slab_size,page->slab_size);
   page->obj_cnt--;
-  clrbit(page->bitmap[i],pos);
+  clrbit(page->bitmap[i],31-pos);
   memset(ptr,0,page->slab_size);
   if(page->obj_cnt==0){
     //需要对cpu上锁
