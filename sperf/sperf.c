@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
     };*/
   }
   else{
-    //close(fildes[1]);
+    close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
     char *pattern="<([0-9]*\\.[0-9]*)>";
