@@ -96,7 +96,8 @@ int main(int argc, char *argv[]) {
   exec_argv[0]="strace";
   exec_argv[1]="-Txx";
   memcpy(exec_argv+2,argv+1,argc*sizeof(char*));
-
+  printf("%s\n",argv[1]);
+  assert(0);
 /*execve(filename,argv,envp):
   filename必须使用可执行文件的绝对路径如/usr/bin/strace，argv中可以直接写strace，--可以写命令的可执行文件的绝对路径如/usr/bin/ls，然后envp为NULL;
                                                        　                 --可以直接写命令如 ls，然后envp为命令的可执行文件的路径如PATH=/usr/bin*/  
@@ -109,7 +110,7 @@ int main(int argc, char *argv[]) {
   char *strace_path=find_path(path1,"strace");
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
-  char cmd_path[128];
+  /*char cmd_path[128];
   char path2[512];
   strcpy(path2,getenv("PATH"));
   
@@ -118,7 +119,7 @@ int main(int argc, char *argv[]) {
     char *_cmd_path=find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
     sprintf(envp_path,"PATH=%s",cmd_path);
-  }
+  }*/
   
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
