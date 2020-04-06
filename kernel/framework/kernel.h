@@ -38,3 +38,9 @@ MODULE(kmt) {
   void (*sem_wait)(sem_t *sem);
   void (*sem_signal)(sem_t *sem);
 };
+
+typedef struct device device_t;
+MODULE(dev) {
+  void (*init)();
+  device_t *(*lookup)(const char *name);
+};
