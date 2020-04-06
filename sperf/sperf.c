@@ -115,8 +115,8 @@ int main(int argc, char *argv[]) {
     printf("%s\n",argv[1]); 
     char *_cmd_path=find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
-    sprintf(envp_path,"%s/%s",cmd_path,exec_argv[2]);
-    exec_argv[2]=&envp_path;
+    sprintf(envp_path,"%s/%s\0",cmd_path,exec_argv[2]);
+    exec_argv[2]=&envp_path[0];
   }
   
   int fildes[2];
