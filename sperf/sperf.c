@@ -90,7 +90,7 @@ char *find_path(char *Path,char *filename){
 
 int main(int argc, char *argv[]) {
   
-  char *path=malloc(sizeof(getenv("PATH")));
+  char *path=malloc(strlen(getenv("PATH")));
   path=getenv("PATH");
   char *exec_argv[argc+2];
   exec_argv[0]="strace";
