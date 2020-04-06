@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
   if(pid==0){
     //关闭读端
     close(fildes[0]);
-    int fd=open("dev/null",O_RDWR);
+    int fd=open("/dev/null",O_RDWR);
     dup2(fd,STDOUT_FILENO);
     dup2(fildes[1],STDERR_FILENO);
     if(execve(exec_path, exec_argv, exec_envp)==-1){
