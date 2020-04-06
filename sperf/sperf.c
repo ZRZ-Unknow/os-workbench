@@ -56,7 +56,6 @@ void sort(){
 }
 
 void display(){
-  system("/usr/bin/clear");
   for(int i=0;i<syscall_num;i++){
     if(i==0) printf("%20s \033[1;31m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else if(sys_call[i].time/total_time>0.01) printf("%20s \033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
@@ -108,7 +107,7 @@ int main(int argc, char *argv[]) {
   char *strace_path=find_path(path1,"strace");
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
-  /*char cmd_path[128];
+  char cmd_path[128];
   char path2[512];
   strcpy(path2,getenv("PATH"));
   
@@ -116,8 +115,9 @@ int main(int argc, char *argv[]) {
     printf("%s\n",argv[1]); 
     char *_cmd_path=find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
-    sprintf(envp_path,"PATH=%s",cmd_path);
-  }*/
+    sprintf(envp_path,"%s/%s",cmd_path,exec_argv[2]);
+    exec_argv[2]=&envp_path;
+  }
   
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
@@ -168,7 +168,6 @@ int main(int argc, char *argv[]) {
     display();
     regfree(&reg);
     fclose(fp);
-    //printf("filename:%s,argv:[%s,%s,%s],envp:[\"%s\",NULL]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
   }
   return 0;
 }
