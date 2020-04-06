@@ -9,6 +9,7 @@
 #include <time.h>
 #include <ctype.h>
 #include <dirent.h>
+#include <stdbool.h>
 
 #define NUM 1024
 
@@ -90,8 +91,7 @@ char *find_path(char *Path,char *filename){
 
 int main(int argc, char *argv[]) {
   
-  char *path=malloc(strlen(getenv("PATH")));
-  path=getenv("PATH");
+  char *path=getenv("PATH");
   char *exec_argv[argc+2];
   exec_argv[0]="strace";
   exec_argv[1]="-Txx";
@@ -113,9 +113,31 @@ int main(int argc, char *argv[]) {
   char cmd_path[56];
   char path2[128];
   strcpy(path2,path);
+  
+  char *ppath=strtok(path2,":");
+  DIR *dir;
+  struct dirent *entry;
+  bool find=false;
+  while(ppath){  //find file in path
+    dir=opendir(ppath);
+    if(!dir){
+      ppath=strtok(NULL,":");
+      continue;
+    }
+    while((entry=readdir(dir))!=NULL){
+      if(strcmp(entry->d_name,"strace")==0){
+        closedir(dir);
+        find=true;
+        break;
+      }
+    }
+    closedir(dir);
+    if(find==true) break;
+    ppath=strtok(NULL,":");
+  }
 
   if(strstr(argv[1],"/")==NULL){      
-    char *_cmd_path=find_path(path2,argv[1]);       
+    char *_cmd_path=ppath;//find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
     sprintf(envp_path,"PATH=%s",cmd_path);
     exec_envp[0]=&envp_path[0];
