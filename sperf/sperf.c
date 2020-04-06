@@ -57,7 +57,7 @@ void sort(){
 
 void display(){
   system("/usr/bin/clear");
-  for(int i=0;i<syscall_num;i++){
+  for(int i=0;i<5;i++){
     if(i==0) printf("%20s \033[1;31m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else if(sys_call[i].time/total_time>0.01) printf("%20s \033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else printf("%20s \033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
@@ -92,6 +92,7 @@ char *find_path(char *Path,char *filename){
 int main(int argc, char *argv[]) {
   
   char *path=getenv("PATH");
+  char **exec_env=__environ;
   char *exec_argv[argc+2];
   exec_argv[0]="strace";
   exec_argv[1]="-Txx";
@@ -100,7 +101,6 @@ int main(int argc, char *argv[]) {
 /*execve(filename,argv,envp):
   filename必须使用可执行文件的绝对路径如/usr/bin/strace，argv中可以直接写strace，--可以写命令的可执行文件的绝对路径如/usr/bin/ls，然后envp为NULL;
                                                        　                 --可以直接写命令如 ls，然后envp为命令的可执行文件的路径如PATH=/usr/bin*/  
-  //char *exec_envp[] = { NULL, NULL, };
   char envp_path[64];
   char exec_path[64];
   
@@ -118,12 +118,8 @@ int main(int argc, char *argv[]) {
     char *_cmd_path=find_path(path2,argv[1]);       
     strcpy(cmd_path,_cmd_path);
     sprintf(envp_path,"PATH=%s",cmd_path);
-    //exec_envp[0]=&envp_path[0];
   }
-  //else exec_envp[0]=NULL;
   
-  char **exec_env=__environ;
-  //printf("%s\n",*env);
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
