@@ -89,7 +89,8 @@ char *find_path(char *Path,char *filename){
 
 int main(int argc, char *argv[]) {
   
-  char *path=getenv("PATH");
+  char *path=malloc(sizeof(getenv("PATH")));
+  path=getenv("PATH");
   char *exec_argv[argc+2];
   exec_argv[0]="strace";
   exec_argv[1]="-Txx";
@@ -171,7 +172,7 @@ int main(int argc, char *argv[]) {
     display();
     regfree(&reg);
     fclose(fp);
-    printf("filename:%s,argv:[%s,%s,%s],envp:[\"%s\",NULL]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
+    //printf("filename:%s,argv:[%s,%s,%s],envp:[\"%s\",NULL]\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2],exec_envp[0]);
   }
   return 0;
 }
