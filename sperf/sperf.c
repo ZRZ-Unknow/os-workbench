@@ -66,6 +66,7 @@ void display(){
 }
 
 char *find_path(char *Path,char *filename){
+  char tmp[128];
   char *path=strtok(Path,":");
   DIR *dir;
   struct dirent *entry;
@@ -76,7 +77,9 @@ char *find_path(char *Path,char *filename){
       continue;
     }
     while((entry=readdir(dir))!=NULL){
-      if(strcmp(entry->d_name,filename)==0){ 
+      if(strcmp(entry->d_name,filename)==0){
+        sprintf(tmp,"%s/%s",path,filename);
+        __execve(tmp,filename,NULL); 
         closedir(dir);
         return path;
       }
