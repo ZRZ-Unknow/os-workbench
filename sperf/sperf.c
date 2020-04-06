@@ -134,11 +134,10 @@ int main(int argc, char *argv[]) {
     if(find==true) break;
     ppath=strtok(NULL,":");
   }
-  printf("%s\n",ppath);
-  assert(0);
+  
   if(strstr(argv[1],"/")==NULL){      
-    char *_cmd_path=ppath;//find_path(path2,argv[1]);       
-    strcpy(cmd_path,_cmd_path);
+    //char *_cmd_path=ppath;//find_path(path2,argv[1]);       
+    strcpy(cmd_path,ppath);
     sprintf(envp_path,"PATH=%s",cmd_path);
     exec_envp[0]=&envp_path[0];
   }
