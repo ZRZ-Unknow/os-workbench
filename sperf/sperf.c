@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
   else exec_envp[0]=NULL;
   
   char **env=__environ;
-  printf("%s\n",env);
+  printf("%s\n",*env);
   assert(0);
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
