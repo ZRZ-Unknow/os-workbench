@@ -133,7 +133,8 @@ int main(int argc, char *argv[]) {
     int fd=open("/dev/null",O_RDWR);
     dup2(fd,STDOUT_FILENO);
     dup2(fildes[1],STDERR_FILENO);
-    if(execve(exec_path, exec_argv, exec_envp)==-1){
+    execve(exec_path, exec_argv, exec_envp)==-1;
+    /*if(execve(exec_path, exec_argv, exec_envp)==-1){
       char ppath[128];
       memset(ppath,'\0',sizeof(ppath));
       strcpy(ppath,getenv("PATH"));
@@ -145,7 +146,7 @@ int main(int argc, char *argv[]) {
         memset(exec_path,'\0',sizeof(exec_path));
         sprintf(exec_path,"%s/%s",spath,"strace");
       }
-    };
+    };*/
   }
   else{
     //close(fildes[1]);
