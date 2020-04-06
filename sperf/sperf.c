@@ -106,15 +106,9 @@ int main(int argc, char *argv[]) {
   
   char path1[128];
   strcpy(path1,path);
-  //find strace's path  
-  char *strace_path=find_path(path1,"strace");
-  sprintf(exec_path,"%s/%s",strace_path,"strace");
-
-  char cmd_path[56];
-  char path2[128];
-  strcpy(path2,path);
+  //find strace's path 
   
-  char *ppath=strtok(path2,":");
+  char *ppath=strtok(path1,":");
   DIR *dir;
   struct dirent *entry;
   bool find=false;
@@ -134,10 +128,17 @@ int main(int argc, char *argv[]) {
     if(find==true) break;
     ppath=strtok(NULL,":");
   }
+
+  char *strace_path=ppath;//find_path(path1,"strace");
+  sprintf(exec_path,"%s/%s",strace_path,"strace");
+
+  char cmd_path[56];
+  char path2[128];
+  strcpy(path2,path);
   
   if(strstr(argv[1],"/")==NULL){      
-    //char *_cmd_path=ppath;//find_path(path2,argv[1]);       
-    strcpy(cmd_path,ppath);
+    char *_cmd_path=find_path(path2,argv[1]);       
+    strcpy(cmd_path,_cmd_path);
     sprintf(envp_path,"PATH=%s",cmd_path);
     exec_envp[0]=&envp_path[0];
   }
