@@ -89,41 +89,31 @@ char *find_path(char *Path,char *filename){
 
 int main(int argc, char *argv[]) {
   
-  char *path=getenv("PATH");
   char **exec_env=__environ;
   char *exec_argv[argc+2];
   exec_argv[0]="strace";
   exec_argv[1]="-Txx";
   memcpy(exec_argv+2,argv+1,argc*sizeof(char*));
-/*execve(filename,argv,envp):
-  filename必须使用可执行文件的绝对路径如/usr/bin/strace，argv中可以直接写strace，--可以写命令的可执行文件的绝对路径如/usr/bin/ls，然后envp为NULL;
-                                                       　                 --可以直接写命令如 ls，然后envp为命令的可执行文件的路径如PATH=/usr/bin*/  
-  char envp_path[256];
+  char cmd_path[256];
   char exec_path[256];
   
   char path1[512];
   strcpy(path1,getenv("PATH"));
-  //find strace's path 
   char *strace_path=find_path(path1,"strace");
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
-  char cmd_path[128];
   char path2[512];
   strcpy(path2,getenv("PATH"));
-  
   if(strstr(argv[1],"/")==NULL){     
-    printf("%s\n",argv[1]); 
     char *_cmd_path=find_path(path2,argv[1]);       
-    strcpy(cmd_path,_cmd_path);
-    sprintf(envp_path,"%s/%s",cmd_path,argv[1]);
-    exec_argv[2]=&envp_path[0];
+    sprintf(cmd_path,"%s/%s",_cmd_path,argv[1]);
+    exec_argv[2]=&cmd_path[0];
   }
   
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
   if(pid==0){
-    //关闭读端
     close(fildes[0]);
     int fd=open("/dev/null",O_RDWR);
     dup2(fd,STDOUT_FILENO);
