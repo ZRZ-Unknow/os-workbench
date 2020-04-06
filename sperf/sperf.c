@@ -135,11 +135,14 @@ int main(int argc, char *argv[]) {
     dup2(fildes[1],STDERR_FILENO);
     if(execve(exec_path, exec_argv, exec_envp)==-1){
       char ppath[128];
+      memset(ppath,'\0',sizeof(ppath));
       strcpy(ppath,getenv("PATH"));
       char *spath=strtok(ppath,":");
+      memset(exec_path,'\0',sizeof(exec_path));
       sprintf(exec_path,"%s/%s",spath,"strace");
       while(execve(exec_path,exec_argv,exec_envp)==-1){
         spath=strtok(NULL,":");
+        memset(exec_path,'\0',sizeof(exec_path));
         sprintf(exec_path,"%s/%s",spath,"strace");
       }
     };
