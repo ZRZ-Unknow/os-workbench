@@ -107,29 +107,7 @@ int main(int argc, char *argv[]) {
   char path1[128];
   strcpy(path1,path);
   //find strace's path 
-  
-  char *ppath=strtok(path1,":");
-  DIR *dir;
-  struct dirent *entry;
-  bool find=false;
-  while(ppath){  //find file in path
-    dir=opendir(ppath);
-    if(!dir){
-      ppath=strtok(NULL,":");
-      continue;
-    }
-    while((entry=readdir(dir))!=NULL){
-      if(strcmp(entry->d_name,"strace")==0){
-        find=true;
-        break;
-      }
-    }
-    closedir(dir);
-    if(find==true) break;
-    ppath=strtok(NULL,":");
-  }
-
-  char *strace_path=ppath;//find_path(path1,"strace");
+  char *strace_path=find_path(path1,"strace");
   sprintf(exec_path,"%s/%s",strace_path,"strace");
 
   char cmd_path[56];
@@ -155,7 +133,16 @@ int main(int argc, char *argv[]) {
     int fd=open("dev/null",O_WRONLY);
     dup2(fd,STDOUT_FILENO);
     dup2(fildes[1],STDERR_FILENO);
-    execve(exec_path, exec_argv, exec_envp);
+    if(execve(exec_path, exec_argv, exec_envp)==-1){
+      char ppath[128];
+      strcpy(ppath,getenv("PATH"));
+      char *spath=strtok(ppath,":");
+      sprintf(exec_path,"%s/%s",spath,"strace");
+      while(execve(exec_path,exec_argv,exec_envp)==-1){
+        spath=strtok(NULL,":");
+        sprintf(exec_path,"%s/%s",spath,"strace");
+      }
+    };
   }
   else{
     close(fildes[1]);
