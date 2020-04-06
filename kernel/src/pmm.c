@@ -3,7 +3,7 @@
 static page_t *mem_start=NULL;
 static kmem_cache kmc[8];
 static spinlock_t lock_global;
-int heap_bitmap[504];
+//int heap_bitmap[504];
 int SLAB_SIZE[SLAB_TYPE_NUM]={8,16,32,64,128,256,512,1024,2048,4096};
 int get_slab_pos(int size){
   int pos=-1;
@@ -137,7 +137,7 @@ page_t *get_free_page(int num,int slab_size,int cpu){
   }
   return first_page;
 }
-page_t *get_one_free_page(int slab_size,int cpu){
+/*page_t *get_one_free_page(int slab_size,int cpu){
   Log("cpu %d alloc one page,slabsize:%d",cpu,slab_size);
   page_t *page=NULL;
   for(int i=0;i<504;i++){
@@ -159,7 +159,7 @@ page_t *get_one_free_page(int slab_size,int cpu){
     }
   }
   return page;
-}
+}*/
 
 static void pmm_init() {
   mem_start=(page_t *) _heap.start;
