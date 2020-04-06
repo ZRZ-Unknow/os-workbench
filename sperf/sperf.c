@@ -98,8 +98,8 @@ int main(int argc, char *argv[]) {
 /*execve(filename,argv,envp):
   filename必须使用可执行文件的绝对路径如/usr/bin/strace，argv中可以直接写strace，--可以写命令的可执行文件的绝对路径如/usr/bin/ls，然后envp为NULL;
                                                        　                 --可以直接写命令如 ls，然后envp为命令的可执行文件的路径如PATH=/usr/bin*/  
-  char envp_path[128];
-  char exec_path[128];
+  char envp_path[256];
+  char exec_path[256];
   
   char path1[512];
   strcpy(path1,getenv("PATH"));
