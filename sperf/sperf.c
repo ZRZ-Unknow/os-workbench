@@ -68,7 +68,7 @@ void display(){
 char *find_path(char *Path,char *filename){
   char tmp[128];
   char *path=strtok(Path,":");
-  char *arg[2]={"strace","/bin/ls",NULL};
+  char *arg[3]={"strace","/bin/ls",NULL};
   DIR *dir;
   struct dirent *entry;
   while(path){  //find file in path
