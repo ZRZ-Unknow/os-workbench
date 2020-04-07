@@ -43,11 +43,11 @@ void compile(){
     int status;
     wait(&status);
     if(WIFEXITED(status)!=0){
-      if(WEXITSTATUS(status)!=0) printf("\033[1;31mCompile Error!\033[0m\n");
-      else printf("\033[1;31mCompile OK!\033[0m\n");;
+      if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
+      else printf("\033[1;31m      Compile OK!\033[0m\n");;
     }
     else{
-      printf("\033[1;31mCompile Error!\033[0m\n");
+      printf("\033[1;31m      Compile Error!\033[0m\n");
     }
   }
   unlink(src_filename);
