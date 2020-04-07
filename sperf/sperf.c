@@ -48,7 +48,7 @@ void insert(char *name,double time){
 int time_cmp(const void *syscall_1,const void *syscall_2){
   //system_call *sys1=(system_call*)syscall_1;
   //system_call *sys2=(system_call*)syscall_2;
-  return (system_call*)syscall_1->time <= (system_call*)syscall_2->time;
+  return ((system_call*)syscall_1)->time <= ((system_call*)syscall_2)->time;
 }
 
 void sort(){
