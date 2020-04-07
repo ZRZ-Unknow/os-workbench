@@ -19,10 +19,7 @@ int main(int argc, char *argv[]) {
     else{
       printf("It's a expression\n");
     }
-    for(int i=0;i<strlen(line);i++){
-      printf("%d-",line[i]);
-    }
-    printf("##%d,%d##\n",'\n','r');
-    printf("Got %zu chars.\n", strlen(line)); // WTF?
+    printf("%s\n",line);
+    printf("%s\n",tmp);
   }
 }
