@@ -19,6 +19,7 @@ static char tmp[4];
 static char src_filename[32];
 static char dst_filename[32];
 static char wrap_name[32];
+int (*f)();
 
 void compile(){
   sprintf(src_filename,"/tmp/func_c_XXXXXX");
@@ -57,7 +58,42 @@ void compile(){
   unlink(dst_filename);
 }
 void run(){
-
+  sprintf(src_filename,"/tmp/func_c_XXXXXX");
+  sprintf(dst_filename,"/tmp/func_so_XXXXXX");
+  if(mkstemp(src_filename)==-1) printf("mkstemp failed\n");
+  if(mkstemp(dst_filename)==-1) printf("mkstemp failed\n");
+  FILE *fp=fopen(src_filename,"w");
+  fprintf(fp,"int wrap_func(){return %s;}",line);
+  fclose(fp);
+  char *exec_argv[]={"gcc",TARGET,"-x","c","-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
+  int fildes[2];
+  if(pipe(fildes)!=0) assert(0);
+  int pid=fork();
+  if(pid==0){
+    int fd=open("/dev/null",O_RDWR);
+    dup2(fd,STDOUT_FILENO);
+    dup2(fd,STDERR_FILENO);
+    execvp(exec_argv[0],exec_argv);
+  }
+  else{
+    int status;
+    wait(&status);
+    if(WIFEXITED(status)!=0){
+      if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
+      else{
+        void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
+        if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
+        else{
+          f=dlsym(handle,"wrap_func");
+          int value=f();
+          printf("\033[1;32m      Result: \033[1;30m%d\033[0m\n",value); 
+        } 
+      }
+    }
+    else printf("\033[1;31m      Compile Error!\033[0m\n");
+  }
+  unlink(src_filename);
+  unlink(dst_filename);
 }
 int main(int argc, char *argv[]) {
   while (1) {
