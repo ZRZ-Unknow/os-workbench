@@ -50,7 +50,6 @@ void compile(){
         void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
         if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
         else printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
-        dlclose(handle);
       }
     }
     else printf("\033[1;31m      Compile Error!\033[0m\n");
@@ -89,6 +88,7 @@ void run(){
           int value=f();
           printf("\033[1;32m      Result: \033[1;30m%d\033[0m\n",value); 
         } 
+        dlclose(handle);
       }
     }
     else printf("\033[1;31m      Compile Error!\033[0m\n");
