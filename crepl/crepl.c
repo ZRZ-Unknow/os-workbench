@@ -4,15 +4,17 @@
 
 static char line[4096];
 static char tmp[4];
-static char func_name[128];
-static char wrap_name[128];
+static char src_filename[32];
+static char dst_filename[32];
+static char wrap_name[32];
 
 void compile(){
-  sprintf(func_name,"/tmp/zrz_crepl/func_XXXXXX");
-  int fd=mkstemp(func_name);
-  if(fd==-1){
-    printf("error\n");
-  }
+  sprintf(src_filename,"/tmp/func_c_XXXXXX");
+  sprintf(dst_filename,"/tmp/func_so_XXXXXX");
+  if(mkstemp(src_filename)==-1) printf("mkstemp failed\n");
+  if(mkstemp(dst_filename)==-1) printf("mkstemp failed\n");
+  unlink(src_filename);
+  unlink(dst_filename);
 }
 
 int main(int argc, char *argv[]) {
