@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <assert.h>
+#include <wait.h>
 
 static char line[4096];
 static char tmp[4];
@@ -31,6 +32,17 @@ void compile(){
     execvp(exec_argv[0],exec_argv);
   }
   else{
+/*wait(int *status):父进程一旦调用了wait就立即阻塞自己，由wait自动分析是否当前进程的某个子进程已经退出，如果让它找到了这样一个已经变成僵尸的子进程，
+  wait就会收集这个子进程的信息，并把它彻底销毁后返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止。*/
+    int status;
+    wait(&status);
+    if(status){
+      printf("compile error!\n");
+      return;
+    }
+    else{
+      printf("kk\n");
+    }
     printf("dddd\n");
   }
   unlink(src_filename);
