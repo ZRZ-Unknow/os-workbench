@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <assert.h>
 
 static char line[4096];
 static char tmp[4];
