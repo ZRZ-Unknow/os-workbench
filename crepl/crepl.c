@@ -14,6 +14,9 @@ void compile(){
   sprintf(dst_filename,"/tmp/func_so_XXXXXX");
   if(mkstemp(src_filename)==-1) printf("mkstemp failed\n");
   if(mkstemp(dst_filename)==-1) printf("mkstemp failed\n");
+  FILE *fp=fopen(src_filename,"w");
+  fprintf(fp,"%s",line);
+  fclose(fp);
   unlink(src_filename);
   unlink(dst_filename);
 }
