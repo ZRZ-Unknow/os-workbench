@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     if (!fgets(line, sizeof(line), stdin)) {
       break;
     }
-    sscanf(tmp,"%3s",line);
+    sscanf(tmp,"%4s",line);
     if(strncmp(tmp,"int",3)==0){
       printf("It's a function\n");
     }
