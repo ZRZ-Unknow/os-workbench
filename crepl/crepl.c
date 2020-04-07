@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
   static char line[4096];
-  char tmp[4];
+  char tmp[5];
   while (1) {
     printf("crepl> ");
     memset(line,'\0',sizeof(line));
