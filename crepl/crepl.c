@@ -30,6 +30,9 @@ void compile(){
     dup2(fd,STDERR_FILENO);
     execvp(exec_argv[0],exec_argv);
   }
+  else{
+    printf("dddd\n");
+  }
   unlink(src_filename);
   unlink(dst_filename);
 }
