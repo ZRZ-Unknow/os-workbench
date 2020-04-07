@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
       end=time(NULL);
-      if((end-begin)>0.1){
+      if((end-begin)>1){
         sort();
         display();
         begin=time(NULL);
