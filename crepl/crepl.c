@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <wait.h>
+#include <dlfcn.h>
 
 #if defined(__i386__)
   #define TARGET "-m32"
@@ -44,12 +45,13 @@ void compile(){
     wait(&status);
     if(WIFEXITED(status)!=0){
       if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
-      else printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
+      else{
+        void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
+        if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
+        else printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
+      }
     }
-    else{
-      
-      printf("\033[1;31m      Compile Error!\033[0m\n");
-    }
+    else printf("\033[1;31m      Compile Error!\033[0m\n");
   }
   unlink(src_filename);
   unlink(dst_filename);
@@ -73,3 +75,17 @@ int main(int argc, char *argv[]) {
     }
   }
 }
+/*void *dlopen( const char * pathname, int mode );
+以指定模式打开指定的动态链接库,返回一个句柄(handle),失败返回NULL
+  1、解析方式
+    RTLD_LAZY：在dlopen返回前，对于动态库中的未定义的符号不执行解析（只对函数引用有效，对于变量引用总是立即解析）。
+    RTLD_NOW： 需要在dlopen返回前，解析出所有未定义符号，如果解析不出来，在dlopen会返回NULL，错误为：: undefined symbol: xxxx.......
+  2、作用范围，可与解析方式通过“|”组合使用。 
+    RTLD_GLOBAL：动态库中定义的符号可被其后打开的其它库重定位。 
+    RTLD_LOCAL： 与RTLD_GLOBAL作用相反，动态库中定义的符号不能被其后打开的其它库重定位。如果没有指明是RTLD_GLOBAL还是RTLD_LOCAL，则缺省为RTLD_LOCAL
+  3、作用方式
+    RTLD_NODELETE： 在dlclose()期间不卸载库，并且在以后使用dlopen()重新加载库时不初始化库中的静态变量。这个flag不是POSIX-2001标准。 
+    RTLD_NOLOAD： 不加载库。可用于测试库是否已加载(dlopen()返回NULL说明未加载，否则说明已加载），也可用于改变已加载库的flag，如：先前加载库的flag为RTLD＿LOCAL，用dlopen(RTLD_NOLOAD|RTLD_GLOBAL)后flag将变成RTLD_GLOBAL。这个flag不是POSIX-2001标准。
+    RTLD_DEEPBIND：在搜索全局符号前先搜索库内的符号，避免同名符号的冲突。这个flag不是POSIX-2001标准。
+void *dlsym(void *handle, const char* symbol);
+handle是使用dlopen函数之后返回的句柄，symbol是要求获取的函数的名称，函数，返回值是void*,指向函数的地址，供调用使用*/
