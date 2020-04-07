@@ -44,10 +44,11 @@ void compile(){
     wait(&status);
     if(WIFEXITED(status)!=0){
       if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
-      else printf("\033[1;31m      Compile OK!\033[0m\n");;
+      else printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
     }
     else{
-      printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
+      
+      printf("\033[1;31m      Compile Error!\033[0m\n");
     }
   }
   unlink(src_filename);
