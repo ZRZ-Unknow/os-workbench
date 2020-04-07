@@ -44,7 +44,6 @@ void compile(){
     wait(&status);
     if(status!=0){
       printf("compile error!\n");
-      return;
     }
     else{
       printf("kk\n");
