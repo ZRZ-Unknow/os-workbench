@@ -7,6 +7,12 @@
 #include <assert.h>
 #include <wait.h>
 
+#if defined(__i386__)
+  #define TARGET "-m32"
+#elif defined(__x86_64__)
+  #define TARGET "-m64"
+#endif
+
 static char line[4096];
 static char tmp[4];
 static char src_filename[32];
@@ -21,7 +27,7 @@ void compile(){
   FILE *fp=fopen(src_filename,"w");
   fprintf(fp,"%s",line);
   fclose(fp);
-  char *exec_argv[]={"gcc","-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
+  char *exec_argv[]={"gcc",TARGET,"-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
@@ -36,7 +42,7 @@ void compile(){
   wait就会收集这个子进程的信息，并把它彻底销毁后返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止。*/
     int status;
     wait(&status);
-    if(status){
+    if(status!=0){
       printf("compile error!\n");
       return;
     }
