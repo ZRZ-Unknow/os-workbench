@@ -27,7 +27,7 @@ void compile(){
   FILE *fp=fopen(src_filename,"w");
   fprintf(fp,"%s",line);
   fclose(fp);
-  char *exec_argv[]={"gcc",TARGET,"-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
+  char *exec_argv[]={"gcc",TARGET,"c","-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
   int fildes[2];
   if(pipe(fildes)!=0) assert(0);
   int pid=fork();
