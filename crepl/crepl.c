@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 static char line[4096];
 static char tmp[4];
@@ -17,6 +19,16 @@ void compile(){
   FILE *fp=fopen(src_filename,"w");
   fprintf(fp,"%s",line);
   fclose(fp);
+  char *exec_argv={"gcc","-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
+  int fildes[2];
+  if(pipe(fildes)!=0) assert(0);
+  int pid=fork();
+  if(pid==0){
+    int fd=open("/dev/null",O_RDWR);
+    dup2(fd,STDOUT_FILENO);
+    dup2(fd,STDERR_FILENO);
+    execvp(exec_argv[0],exec_argv);
+  }
   unlink(src_filename);
   unlink(dst_filename);
 }
