@@ -45,9 +45,8 @@ void compile(bool func){
   wait就会收集这个子进程的信息，并把它彻底销毁后返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止。*/
     int status;
     wait(&status);
-    if(WIFEXITED(status)!=0){
-      if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
-      else{
+    if(status!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
+    else{
         void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
         unlink(src_filename);
         unlink(dst_filename);
@@ -62,8 +61,6 @@ void compile(bool func){
           }
         }
       }
-    }
-    else printf("\033[1;31m      Compile Error!\033[0m\n");
   }
 }
 void run(){
