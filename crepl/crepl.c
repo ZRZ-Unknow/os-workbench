@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 static char line[4096];
+static char tmp[4];
 static char func_name[128];
 static char wrap_name[128];
-static int func_num=0;
-static int wrap_num=0;
 
 void compile(){
+  sprintf(func_name,"/tmp/func_XXXXXX.c");
+  int fd=mkstemps(func_name);
+  if(fd==-1){
+    printf("error\n");
+  }
 }
 
 int main(int argc, char *argv[]) {
-  static char tmp[4];
   while (1) {
     printf("crepl> ");
     memset(line,'\0',sizeof(line));
