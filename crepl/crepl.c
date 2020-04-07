@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
   while (1) {
     printf("crepl> ");
     memset(line,'\0',sizeof(line));
-    memset(tmp,'\0',sizeof(tmp));
+   // memset(tmp,'\0',sizeof(tmp));
     fflush(stdout);
     if (!fgets(line, sizeof(line), stdin)) {
       break;
