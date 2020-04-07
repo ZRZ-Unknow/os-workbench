@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <wait.h>
 #include <dlfcn.h>
+#include <stdbool.h>
 
 #if defined(__i386__)
   #define TARGET "-m32"
@@ -18,16 +19,16 @@ static char line[4096];
 static char tmp[4];
 static char src_filename[32];
 static char dst_filename[32];
-static char wrap_name[32];
 int (*f)();
 
-void compile(){
+void compile(bool func){
   sprintf(src_filename,"/tmp/func_c_XXXXXX");
   sprintf(dst_filename,"/tmp/func_so_XXXXXX");
   if(mkstemp(src_filename)==-1) printf("mkstemp failed\n");
   if(mkstemp(dst_filename)==-1) printf("mkstemp failed\n");
   FILE *fp=fopen(src_filename,"w");
-  fprintf(fp,"%s",line);
+  if(func) fprintf(fp,"%s",line);
+  else fprintf(fp,"int wrap_func(){return %s;}",line);
   fclose(fp);
   char *exec_argv[]={"gcc",TARGET,"-x","c","-fPIC","-w","-shared","-o",dst_filename,src_filename,NULL};
   int fildes[2];
@@ -49,7 +50,15 @@ void compile(){
       else{
         void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
         if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
-        else printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
+        else{ 
+          if(func) printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
+          else{
+            f=dlsym(handle,"wrap_func");
+            int value=f();
+            printf("\033[1;32m      Result: \033[1;30m%d\033[0m\n",value);
+            dlclose(handle); 
+          }
+        }
       }
     }
     else printf("\033[1;31m      Compile Error!\033[0m\n");
@@ -107,10 +116,10 @@ int main(int argc, char *argv[]) {
     }
     sscanf(line,"%3s",tmp);
     if(strncmp(line,"int",3)==0){
-      compile();
+      compile(true);
     }
     else{
-      run();
+      compile(false);
     }
   }
 }
