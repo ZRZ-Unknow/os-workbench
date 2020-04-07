@@ -49,6 +49,8 @@ void compile(bool func){
       if(WEXITSTATUS(status)!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
       else{
         void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
+        unlink(src_filename);
+        unlink(dst_filename);
         if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
         else{ 
           if(func) printf("\033[1;32m      Added: \033[1;30m%s\033[0m",line);
@@ -63,8 +65,6 @@ void compile(bool func){
     }
     else printf("\033[1;31m      Compile Error!\033[0m\n");
   }
-  unlink(src_filename);
-  unlink(dst_filename);
 }
 void run(){
   sprintf(src_filename,"/tmp/func_c_XXXXXX");
