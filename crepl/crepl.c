@@ -43,7 +43,8 @@ void compile(){
     int status;
     wait(&status);
     if(WIFEXITED(status)!=0){
-      printf("compile error!\n");
+      if(WEXITSTATUS(status)!=0) printf("compile error!\n");
+      else printf("compile ok\n");
     }
     else{
       printf("kk\n");
