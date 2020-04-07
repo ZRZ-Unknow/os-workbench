@@ -8,7 +8,7 @@ static char func_name[128];
 static char wrap_name[128];
 
 void compile(){
-  sprintf(func_name,"/tmp/func_XXXXXX");
+  sprintf(func_name,"/tmp/zrz_crepl/func_XXXXXX");
   int fd=mkstemp(func_name);
   if(fd==-1){
     printf("error\n");
