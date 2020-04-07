@@ -47,7 +47,7 @@ void compile(bool func){
     wait(&status);
     if(status!=0) printf("\033[1;31m      Compile Error!\033[0m\n");
     else{
-        void *handle=dlopen(dst_filename,RTLD_LAZY|RTLD_GLOBAL);
+        void *handle=dlopen(dst_filename,RTLD_NOW|RTLD_GLOBAL);
         unlink(src_filename);
         unlink(dst_filename);
         if(!handle) printf("\033[1;31m      Compile Error!\033[0m\n");
