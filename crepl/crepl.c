@@ -56,7 +56,9 @@ void compile(){
   unlink(src_filename);
   unlink(dst_filename);
 }
+void run(){
 
+}
 int main(int argc, char *argv[]) {
   while (1) {
     printf("crepl> ");
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]) {
       compile();
     }
     else{
-      printf("It's a expression\n");
+      run();
     }
   }
 }
