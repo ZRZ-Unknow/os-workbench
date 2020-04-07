@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
   static char line[4096];
-  char tmp[4];
+  //char tmp[4];
   while (1) {
     printf("crepl> ");
     memset(line,'\0',sizeof(line));
@@ -12,14 +12,14 @@ int main(int argc, char *argv[]) {
     if (!fgets(line, sizeof(line), stdin)) {
       break;
     }
-    sscanf(line,"%3s",tmp);
-    if(strncmp(tmp,"int",3)==0){
+    //sscanf(line,"%3s",tmp);
+    if(strncmp(line,"int",3)==0){
       printf("It's a function\n");
     }
     else{
       printf("It's a expression\n");
     }
-    printf("%s\n",line);
-    printf("%s\n",tmp);
+    printf("%s",line);
+    //printf("%s\n",tmp);
   }
 }
