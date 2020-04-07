@@ -8,8 +8,8 @@ static char func_name[128];
 static char wrap_name[128];
 
 void compile(){
-  sprintf(func_name,"/tmp/func_XXXXXX.c");
-  int fd=mkstemps(func_name);
+  sprintf(func_name,"/tmp/func_XXXXXX");
+  int fd=mkstemp(func_name);
   if(fd==-1){
     printf("error\n");
   }
