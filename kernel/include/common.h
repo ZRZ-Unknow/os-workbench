@@ -42,8 +42,7 @@ typedef union page {
     void *addr;      //首地址
     void *s_mem;     //slab中第一个对象的地址，其地址为: addr+(80+obj_num); 对象的大小为 slab_size
     list_head list;  // 属于同一个线程的页面的链表
-    //uint8_t bitmap[512];  //往后obj_num个字节都属于bitmap;
-    int bitmap[31];  //共32*31=992个bit，从第一个开始往后obj_num个bit都要用到
+    unsigned int bitmap[31];  //共32*31=992个bit，从第一个开始往后obj_num个bit都要用到
   }; // 匿名结构体
   uint8_t data[PAGE_SIZE];
 } __attribute__((packed)) page_t;  //告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐
