@@ -24,52 +24,6 @@ int get_slab_pos(int size){
   return pos;
 }
 //调用前先上锁
-/*void *get_free_obj(page_t* page){
-  assert(page);
-  void *ret=NULL;
-  int bitmap_num= (page->obj_num%32==0)?(page->obj_num/32):(page->obj_num/32+1);  //page->obj_num/32+1;
-  for(int i=0;i<bitmap_num;i++){
-    //if(page->bitmap[i]==I) continue;
-    if((page->bitmap[i]^I)==0) continue;
-    int pos;
-    int f=__builtin_ffs(page->bitmap[i]);
-    if(f==0) pos=0;
-    else if(f==1) pos=-1;
-    else pos=33-f;
-    
-    if(pos!=-1){
-      if(page->obj_cnt==0){  //改变cpu的free_num值
-        int n=get_slab_pos(page->slab_size);
-        kmc[page->cpu].free_num[n]--;
-      }
-      assert(getbit(page->bitmap[i],31-pos)==0);
-      setbit(page->bitmap[i],31-pos);
-      page->obj_cnt++;
-      ret=page->s_mem+(i*32+pos)*page->slab_size;
-      return ret;
-    }
-    else{
-      pos=0;
-      while((i*32+pos<page->obj_num)){
-        if(getbit(page->bitmap[i],31-pos)==0){
-          if(page->obj_cnt==0){  //改变cpu的free_num值
-            int n=get_slab_pos(page->slab_size);
-            kmc[page->cpu].free_num[n]--;
-          }
-          setbit(page->bitmap[i],31-pos);
-          page->obj_cnt++;
-          ret=page->s_mem+(i*32+pos)*page->slab_size;
-          return ret;
-        }
-        pos++;
-        assert(pos<32);
-      }
-    }
-  Log("i==%d,bitmap_num:%d,obj_cnt:%d,obj_num:%d,slab_size:%d",i,bitmap_num,page->obj_cnt,page->obj_num,page->slab_size);
-  }
-  assert(0);
-  return NULL;
-}*/
 void *get_free_obj(page_t* page){
   void *ret=NULL;
   int bitmap_num= (page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
@@ -96,7 +50,7 @@ void *get_free_obj(page_t* page){
   assert(0);
   return NULL;
 }
-//调用前先上锁
+
 page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&lock_global);
   page_t *mp=mem_start;
@@ -197,13 +151,10 @@ static void *kalloc(size_t size) {
   }
 
   if(!ret){  ///意味着链表中无空闲page，fs_page中无空闲对象，全局分配一个页面，且fs_page刚好是最后一个页面
-    //lock_acquire(&lock_global);
     page_t *page=get_free_page(1,SLAB_SIZE[sl_pos],cpu);
     if(!page){
-      //lock_release(&lock_global);
       return NULL;
     }
-    //lock_release(&lock_global);
     assert(page->cpu==cpu);
     
     list_head *lh=kmc[cpu].freepage[sl_pos];
@@ -239,7 +190,7 @@ static void kfree(void *ptr) {
     int n=get_slab_pos(page->slab_size);
     Log("cpu:%d,slab_type:%d,free_page_num:%d",cpu,n,kmc[cpu].free_num[n]);
     kmc[cpu].free_num[n]++;
-    if(kmc[cpu].free_num[n]>=SLAB_LIMIT && kmc[cpu].freepage[n]!=&page->list){  //归还页面
+    if(kmc[cpu].free_num[n]>=SLAB_LIMIT && kmc[cpu].freepage[n]!=&page->list){  //归还页面到_heap
       Log("cpu%d,slab_type:%d,free_page_num:%d,return page to _heap",cpu,n,kmc[cpu].free_num[n]);
 
       page->cpu=-1;
@@ -294,11 +245,6 @@ void debug_slab_print(page_t *page){
     printf("pos:%d,bitmap:%d,addr:[%p,%p)\n",p,page->bitmap[pos],ret,ret+page->slab_size);
   }
 }
-
-
-
-
-
 
 
 /*----------------------------waste----------------------*/  //may be useful someday
