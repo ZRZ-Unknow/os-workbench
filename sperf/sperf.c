@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
-      //printf("%s\n",buf);
+      printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[64],name_buf[64];
@@ -156,6 +156,7 @@ int main(int argc, char *argv[]) {
         insert(name_buf,t);
       }
       else{
+        memset(buf,'\0',sizeof(buf));
         continue;
       }
       end=time(NULL);
@@ -164,6 +165,7 @@ int main(int argc, char *argv[]) {
         display();
         begin=time(NULL);
       }
+      memset(buf,'\0',sizeof(buf));
     }
     sort();
     display();
