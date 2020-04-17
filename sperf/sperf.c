@@ -122,23 +122,22 @@ int main(int argc, char *argv[]) {
     close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
     char buf[1024];
-    /*char *pattern="<([0-9]*\\.[0-9]*)>";
+    char *pattern="<([0-9]*\\.[0-9]*)>";
     regex_t reg;
     regmatch_t pmatch;
-    int ret=regcomp(&reg,pattern,REG_EXTENDED);*/
+    int ret=regcomp(&reg,pattern,REG_EXTENDED);
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
-      //ret=regexec(&reg,buf,1,&pmatch,0);
-      //printf("%s\n",buf);
-      if(buf[strlen(buf)-2]=='>'){
+      ret=regexec(&reg,buf,1,&pmatch,0);
+      if(!ret){
         char time_buf[64],name_buf[64];
         memset(time_buf,0,sizeof(time_buf));
         memset(name_buf,0,sizeof(name_buf));
         double t;
-        //strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
-        int j;
+        strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
+        /*int j;
         for(j=strlen(buf)-1;j>=0;j--){
           if(buf[j]=='<') break;
         }
@@ -147,9 +146,9 @@ int main(int argc, char *argv[]) {
         for(i=0;i<strlen(buf);i++){
           if(buf[i]=='(') break;
         }
-        strncpy(&name_buf[0],buf,i);
+        strncpy(&name_buf[0],buf,i);*/
         //printf("%s\n",name_buf);
-        //sscanf(buf,"%[A-z0-9_](",name_buf);
+        sscanf(buf,"%[A-z0-9_](",name_buf);
         sscanf(time_buf,"%lf",&t);
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
