@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
       //printf("%s\n",buf);
       //ret=regexec(&reg,buf,1,&pmatch,0);
       printf("%s\n",buf);
-      printf("%s",buf[strlen(buf)-1]);
+      printf("%c",buf[strlen(buf)-1]);
       if(buf[strlen(buf)-1]=='>'){
         char time_buf[64],name_buf[64];
         memset(time_buf,0,sizeof(time_buf));
