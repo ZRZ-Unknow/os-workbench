@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         int i;
         for(i=0;i<strlen(buf);i++){
-          if(buf[i]=="(") break;
+          if(buf[i]=='(') break;
         }
         strncpy(name_buf,buf,i);
         printf("%s\n",name_buf);
