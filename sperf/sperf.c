@@ -143,7 +143,6 @@ int main(int argc, char *argv[]) {
           if(buf[j]=='<') break;
         }
         strncpy(&time_buf[0],buf+j,strlen(buf)-j);
-        printf("%s\n",time_buf);
         int i;
         for(i=0;i<strlen(buf);i++){
           if(buf[i]=='(') break;
