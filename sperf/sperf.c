@@ -137,13 +137,13 @@ int main(int argc, char *argv[]) {
         memset(name_buf,0,sizeof(name_buf));
         double t;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
-        int i;
+        /*int i;
         for(i=0;i<strlen(buf);i++){
           if(buf[i]=='(') break;
         }
         strncpy(&name_buf[0],buf,i);
-        printf("%s\n",name_buf);
-        //sscanf(buf,"%[A-z0-9_](",name_buf);
+        printf("%s\n",name_buf);*/
+        sscanf(buf,"%[A-z0-9_](",name_buf);
         sscanf(time_buf,"%lf",&t);
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
