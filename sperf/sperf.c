@@ -143,8 +143,8 @@ int main(int argc, char *argv[]) {
         printf("%s\n",name_buf);
         //sscanf(buf,"%[A-z0-9_](",name_buf);
         sscanf(time_buf,"%lf",&t);
-        for(int i=0;i<strlen(name_buf);i++)
-          name_buf[i]=tolower(name_buf[i]);
+        //for(int i=0;i<strlen(name_buf);i++)
+          //name_buf[i]=tolower(name_buf[i]);
         //printf("%s:%f\n",name_buf,t);
         insert(name_buf,t);
       }
