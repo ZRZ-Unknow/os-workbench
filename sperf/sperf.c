@@ -121,20 +121,20 @@ int main(int argc, char *argv[]) {
   else{
     close(fildes[1]);
     FILE *fp=fdopen(fildes[0],"r");
-    char buf[1024];
+    char buf[4096];
     char *pattern="<([0-9]*\\.[0-9]*)>";
     regex_t reg;
     regmatch_t pmatch;
     int ret=regcomp(&reg,pattern,REG_EXTENDED);
     time_t begin,end;
     begin=time(NULL);
-    while(fgets(buf,1024,fp)!=NULL){
+    while(fgets(buf,4096,fp)!=NULL){
       printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
-        char time_buf[64],name_buf[64];
-        memset(time_buf,0,sizeof(time_buf));
-        memset(name_buf,0,sizeof(name_buf));
+        char time_buf[256],name_buf[256];
+        memset(time_buf,'\0',sizeof(time_buf));
+        memset(name_buf,'\0',sizeof(name_buf));
         double t;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         /*int j;
@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
     }
     sort();
     display();
-    //regfree(&reg);
+    regfree(&reg);
     fclose(fp);
     //printf("%s,%s,%s,%s\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2]);
   }
