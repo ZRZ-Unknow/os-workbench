@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     while(fgets(buf,1024,fp)!=NULL){
       //printf("%s\n",buf);
       //ret=regexec(&reg,buf,1,&pmatch,0);
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
       if(buf[strlen(buf)-2]=='>'){
         char time_buf[64],name_buf[64];
         memset(time_buf,0,sizeof(time_buf));
