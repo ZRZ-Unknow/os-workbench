@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,4096,fp)!=NULL){
-      //printf("%s\n",buf);
+      printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[256],name_buf[256];
@@ -172,7 +172,6 @@ int main(int argc, char *argv[]) {
     regfree(&reg);
     fclose(fp);
     //printf("%s,%s,%s,%s\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2]);
-    return 0;
   }
   return 0;
 }
