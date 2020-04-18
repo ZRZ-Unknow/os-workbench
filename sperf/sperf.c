@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     close(fildes[0]);
     int fd=open("/dev/null",O_RDWR);
     dup2(fd,STDOUT_FILENO);
-    dup2(fd,STDERR_FILENO);
+    //dup2(f,STDERR_FILENO);
     execve(exec_path, exec_argv, exec_env);
   }
   else{
