@@ -172,6 +172,7 @@ int main(int argc, char *argv[]) {
     regfree(&reg);
     fclose(fp);
     //printf("%s,%s,%s,%s\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2]);
+    return 0;
   }
   return 0;
 }
