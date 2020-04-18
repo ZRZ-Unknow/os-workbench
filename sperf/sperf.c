@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
         //printf("%s:%f\n",name_buf,t);
-        if(name_buf[0]=='\0' || t==0){
+        if(name_buf[0]=='\0' || t==0 || t>1){
           //printf("%s\n",buf);
           //assert(0);
           memset(buf,'\0',sizeof(buf));
