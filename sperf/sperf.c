@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
         char time_buf[256],name_buf[256];
         memset(time_buf,'\0',sizeof(time_buf));
         memset(name_buf,'\0',sizeof(name_buf));
-        double t;
+        double t=0;
         strncpy(&time_buf[0],buf+pmatch.rm_so+1,pmatch.rm_eo-pmatch.rm_so-2);
         /*int j;
         for(j=strlen(buf)-1;j>=0;j--){
@@ -150,16 +150,16 @@ int main(int argc, char *argv[]) {
         strncpy(&name_buf[0],buf,i);*/
         //printf("%s\n",name_buf);
         sscanf(buf,"%[A-z0-9_](",name_buf);
-        if(name_buf[0]=='\0'){
+        sscanf(time_buf,"%lf",&t);
+        //for(int i=0;i<strlen(name_buf);i++)
+          //name_buf[i]=tolower(name_buf[i]);
+        //printf("%s:%f\n",name_buf,t);
+        if(name_buf[0]=='\0' || t==0){
           //printf("%s\n",buf);
           //assert(0);
           memset(buf,'\0',sizeof(buf));
           continue;
         }
-        sscanf(time_buf,"%lf",&t);
-        //for(int i=0;i<strlen(name_buf);i++)
-          //name_buf[i]=tolower(name_buf[i]);
-        //printf("%s:%f\n",name_buf,t);
         insert(name_buf,t);
       }
       else{
