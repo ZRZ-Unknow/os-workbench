@@ -130,7 +130,8 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,4096,stdin)!=NULL){
-      printf("%s\n",buf);
+      if(strncmp(buf,"select",6)==0)
+        printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[256],name_buf[256];
