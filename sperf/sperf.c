@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,4096,fp)!=NULL){
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[256],name_buf[256];
