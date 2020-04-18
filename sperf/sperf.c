@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,4096,stdin)!=NULL){
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[256],name_buf[256];
@@ -150,6 +150,9 @@ int main(int argc, char *argv[]) {
         strncpy(&name_buf[0],buf,i);*/
         //printf("%s\n",name_buf);
         sscanf(buf,"%[A-z0-9_](",name_buf);
+        if(name_buf[0]=='\0'){
+          printf("%s\n",buf);
+        }
         sscanf(time_buf,"%lf",&t);
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
