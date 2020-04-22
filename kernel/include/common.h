@@ -74,8 +74,8 @@ typedef struct os_handler_array{
   os_single_handler os_handler[MAX_HANDLER_NUM];
 }os_handler_array;
 
-typedef struct task{
-  //struct{
+typedef union task{
+  struct{
     char *name;
     int task_id;
     int task_cpu;
@@ -84,8 +84,8 @@ typedef struct task{
     void *arg;
     list_head list;
     uint8_t canary;
-  //};
-  //union data[TASK_SIZE];
+  };
+  uint8_t data[TASK_SIZE];
 } __attribute__((packed)) task_t;
 
 
