@@ -94,7 +94,7 @@ typedef struct single_handler{
   int seq;
   int event;
   handler_t handler;
-  struct os_irq_handler *next;
+  struct single_handler *next;
 }single_handler;
 
 typedef struct irq_handler_list{
