@@ -19,6 +19,7 @@
 //126MB内存, 假设内存分配大小的上限是 4 KiB
 
 #define TASK_SIZE (4 KB)
+#define MAGIC 0x5a5aa5a5
 
 /*---------------------spinlock-------------------*/
 typedef struct spinlock{
@@ -64,6 +65,12 @@ typedef struct kmem_cache{
 
 /*----------------------kmt-----------------------*/
 #define MAX_HANDLER_NUM 32
+#define INIT 0
+#define RUN 1
+#define SLEEP 2
+#define INI_MIN -9999
+#define INI_MAX 9999
+
 typedef struct os_single_handler{
   int seq;
   int event;
@@ -77,13 +84,13 @@ typedef struct os_handler_array{
 typedef struct task{
   union{
     struct{
-      uint32_t pid,cpu,status;
+      int pid,cpu,status;
       const char *name;
-      _Context *context;
       void (*entry)(void*);
       void *arg;
+      _Context *context;
       list_head list;
-      uint8_t canary;
+      uint32_t canary;
     };
     uint8_t data[TASK_SIZE];
   };
