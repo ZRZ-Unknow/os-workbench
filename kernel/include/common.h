@@ -32,7 +32,7 @@ int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
 
-/*---------------------memory---------------------*/
+/*---------------------pmm---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;
 }list_head;
@@ -60,6 +60,22 @@ typedef struct kmem_cache{
   list_head *freepage[SLAB_TYPE_NUM];
 }kmem_cache;
 
+/*----------------------kmt-----------------------*/
+#define MAX_HANDLER_NUM 32
+typedef struct os_single_handler{
+  int seq;
+  int event;
+  handler_t handler;
+}os_single_handler;
+typedef struct os_handler_array{
+  int handler_num;
+  os_single_handler os_handler[MAX_HANDLER_NUM];
+}os_handler_array;
+
+
+
+
+
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
   ((type *) \
@@ -72,17 +88,7 @@ typedef struct kmem_cache{
    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
 
 
-/*----------------------handler-----------------------*/
-#define MAX_HANDLER_NUM 32
-typedef struct os_single_handler{
-  int seq;
-  int event;
-  handler_t handler;
-}os_single_handler;
-typedef struct os_handler_array{
-  int handler_num;
-  os_single_handler os_handler[MAX_HANDLER_NUM];
-}os_handler_array;
+
 
 /*-----------------------debug------------------------*/
 extern spinlock_t printf_lk;
