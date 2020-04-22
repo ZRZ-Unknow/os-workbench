@@ -71,6 +71,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
      
 
 static void os_run() {   //可以随意改动
+  printf("Hello from cpu%d\n",_cpu());
   _intr_write(1);
   while(1){
     #ifdef TEST_MEM
