@@ -1,6 +1,6 @@
 #include <common.h>
 
-#define TEST_MEM
+//#define TEST_MEM
 spinlock_t lk;
 
 #ifdef TEST_MEM
@@ -19,25 +19,9 @@ struct workload
   wl_page    = {.prob = {0,0,0,0,20,10,20,80,100,80},.sum=0 }
 ;
 static struct workload *workload = &wl_typical;
-#endif
 
-static void os_init() {  //必须在这里完成所有必要的初始化
-  lock_init(&lk,"printf_lock");
-  pmm->init();
-  
-  #ifdef TEST_MEM
-  srand(uptime());
-  lock_init(&test_lk,"test_lk");
-  for(int i=0;i<SLAB_TYPE_NUM;i++) 
-    workload->sum+=workload->prob[i];
-  #endif
-}
-     
-
-static void os_run() {   //可以随意改动
-  while(1){
-    #ifdef TEST_MEM
-    int begin=uptime();
+static void mem_test(){
+  int begin=uptime();
     for(int i=0;i<N;i++){
       int choice=rand()%workload->sum;
       int n=0,sum=0;
@@ -67,6 +51,26 @@ static void os_run() {   //可以随意改动
     int end=uptime();
     printf("time:%d\n",end-begin);
     assert(0);
+}
+#endif
+
+static void os_init() {  //必须在这里完成所有必要的初始化
+  lock_init(&lk,"printf_lock");
+  pmm->init();
+  
+  #ifdef TEST_MEM
+  srand(uptime());
+  lock_init(&test_lk,"test_lk");
+  for(int i=0;i<SLAB_TYPE_NUM;i++) 
+    workload->sum+=workload->prob[i];
+  #endif
+}
+     
+
+static void os_run() {   //可以随意改动
+  while(1){
+    #ifdef TEST_MEM
+    mem_test(); 
     #endif
   }
 }
