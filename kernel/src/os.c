@@ -1,7 +1,7 @@
 #include <common.h>
 
 spinlock_t printf_lk;
-irq_handler_list handler_list={NULL};
+os_handler_array os_handlers={.handler_num=0};
 
 //#define TEST_MEM
 #ifdef TEST_MEM
@@ -79,9 +79,9 @@ static void os_run() {   //可以随意改动
   返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
   _Context *next=NULL;
-  for(single_handler *h=handler_list.head;h!=NULL;h=h->next){
-    if(h->event==_EVENT_NULL || h->event==ev.event){
-      _Context *r=h->handler(ev,context);
+  for(int i=0;i<os_handlers.handler_num;i++){
+    if(os_handlers.os_handler[i].event==_EVENT_NULL || os_handlers.os_handler[i].event==ev.event){
+      _Context *r=os_handlers.os_handler[i].handler(ev,context);
       Assert(r && next , "returning multiple contexts");
       if(r) next=r;
     }
@@ -91,20 +91,8 @@ static _Context *os_trap(_Event ev,_Context *context){
 }
 
 static void os_on_irq(int seq,int event, handler_t handler){
-  //insert a handler into handler_list whose seq form small to big
-  single_handler *h=pmm->alloc(sizeof(single_handler));
-  h->seq=seq;
-  h->event=event;
-  h->handler=handler;
-
-  if(handler_list.head==NULL){
-    handler_list.head=h;
-    return;
-  }
-
-
-
-  return;
+  //insert a handler into handler_array whose seq form small to big
+  
 }
 
 MODULE_DEF(os) = {

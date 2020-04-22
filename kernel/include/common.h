@@ -90,16 +90,16 @@ static inline size_t align_size(size_t size){
 }
 
 /*----------------------handler-----------------------*/
-typedef struct single_handler{
+#define MAX_HANDLER_NUM 32
+typedef struct os_single_handler{
   int seq;
   int event;
   handler_t handler;
-  struct single_handler *next;
-}single_handler;
-
-typedef struct irq_handler_list{
-  single_handler *head;
-}irq_handler_list;
+}os_single_handler;
+typedef struct os_handler_array{
+  int handler_num;
+  os_single_handler os_handler[MAX_HANDLER_NUM];
+}os_handler_array;
 
 /*-----------------------debug------------------------*/
 extern spinlock_t printf_lk;
