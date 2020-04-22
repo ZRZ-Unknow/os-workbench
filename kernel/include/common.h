@@ -31,6 +31,7 @@ void lock_release(spinlock_t *lk);
 int holding(spinlock_t *lk);
 void pushcli(void);
 void popcli(void);
+
 /*---------------------memory---------------------*/
 typedef struct list_head{
   struct list_head *next,*prev;
@@ -61,10 +62,10 @@ typedef struct kmem_cache{
 
 /*--------------------pmm---------------------------*/
 
-void debug_print();
+/*void debug_print();
 void debug_slab_print(page_t *page);
 void *get_free_obj(page_t* page);
-page_t *get_free_page(int num,int slab_size,int cpu);
+page_t *get_free_page(int num,int slab_size,int cpu);*/
 
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
