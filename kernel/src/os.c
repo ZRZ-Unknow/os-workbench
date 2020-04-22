@@ -57,7 +57,7 @@ static void mem_test(){
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
   pmm->init();
-  
+  kmt->init(); 
   #ifdef TEST_MEM
   srand(uptime());
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
