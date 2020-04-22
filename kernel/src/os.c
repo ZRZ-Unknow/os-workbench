@@ -1,10 +1,9 @@
 #include <common.h>
 
 #define TEST_MEM
-spinlock_t lk;
+spinlock_t printf_lk;
 
 #ifdef TEST_MEM
-//spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
 int N=300000;
@@ -36,17 +35,17 @@ static void mem_test(){
       void *ret=pmm->alloc(size);
       int cpu=_cpu();
       ptr[i+cpu*N]=ret;
-      lock_acquire(&lk);
+      lock_acquire(&printf_lk);
       printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
-      lock_release(&lk);
+      lock_release(&printf_lk);
     }
     for(int j=0;j<N;j++){
       int cpu=_cpu();
       int n=_ncpu();
       pmm->free(ptr[j+(n-cpu-1)*N]);
-      lock_acquire(&lk);
+      lock_acquire(&printf_lk);
       printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
-      lock_release(&lk);
+      lock_release(&printf_lk);
     }
     int end=uptime();
     printf("time:%d\n",end-begin);
@@ -55,12 +54,11 @@ static void mem_test(){
 #endif
 
 static void os_init() {  //必须在这里完成所有必要的初始化
-  lock_init(&lk,"printf_lock");
+  lock_init(&printf_lk,"printf_lock");
   pmm->init();
   
   #ifdef TEST_MEM
   srand(uptime());
-  //lock_init(&test_lk,"test_lk");
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
     workload->sum+=workload->prob[i];
   #endif

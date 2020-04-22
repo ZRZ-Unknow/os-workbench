@@ -90,15 +90,15 @@ static inline size_t align_size(size_t size){
 }
 
 /*-----------------------debug------------------------*/
-extern spinlock_t lk;
+extern spinlock_t printf_lk;
 #define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
-  lock_acquire(&lk); \
+  lock_acquire(&printf_lk); \
   printf("\33[1;35m[%s,%d,%s] " format "\33[0m\n", \
       __FILE__, __LINE__, __func__, ## __VA_ARGS__); \
-  lock_release(&lk); 
+  lock_release(&printf_lk); 
 #else
 #define Log(format,...)
 #endif
