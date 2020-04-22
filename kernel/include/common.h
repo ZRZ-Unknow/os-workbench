@@ -104,7 +104,7 @@ typedef struct os_handler_array{
 
 /*-----------------------debug------------------------*/
 extern spinlock_t printf_lk;
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
