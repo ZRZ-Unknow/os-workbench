@@ -1,8 +1,9 @@
 #include <common.h>
 
-#define TEST_MEM
 spinlock_t printf_lk;
+os_irq_handler *handler_head=NULL;
 
+//#define TEST_MEM
 #ifdef TEST_MEM
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
@@ -66,6 +67,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
      
 
 static void os_run() {   //可以随意改动
+  _intr_write(1);
   while(1){
     #ifdef TEST_MEM
     mem_test();
@@ -73,6 +75,8 @@ static void os_run() {   //可以随意改动
   }
 }
 
+/*类似与thread-os-mp.c中的on_interrupt，每次中断后，AM会保存现场，然后调用os_trap（可以进行进程切换等）进行中断处理，os_trap
+  返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
 
   return NULL;
