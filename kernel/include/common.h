@@ -72,9 +72,15 @@ typedef struct os_handler_array{
   os_single_handler os_handler[MAX_HANDLER_NUM];
 }os_handler_array;
 
+typedef struct task{
+
+}task_t;
 
 
+/*------------------semaphore----------------------*/
+typedef struct semaphore{
 
+}sem_t;
 
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
