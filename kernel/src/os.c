@@ -1,7 +1,7 @@
 #include <common.h>
 
 spinlock_t printf_lk;
-os_handler_array os_handlers={.handler_num=0};
+static os_handler_array os_handlers={.handler_num=0};
 
 //#define TEST_MEM
 #ifdef TEST_MEM
