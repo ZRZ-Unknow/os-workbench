@@ -91,6 +91,19 @@ static _Context *os_trap(_Event ev,_Context *context){
 }
 
 static void os_on_irq(int seq,int event, handler_t handler){
+  //insert a handler into handler_list whose seq form small to big
+  single_handler *h=pmm->alloc(sizeof(single_handler));
+  h->seq=seq;
+  h->event=event;
+  h->handler=handler;
+
+  if(handler_list.head==NULL){
+    handler_list.head=h;
+    return;
+  }
+
+
+
   return;
 }
 
