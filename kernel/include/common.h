@@ -74,19 +74,20 @@ typedef struct os_handler_array{
   os_single_handler os_handler[MAX_HANDLER_NUM];
 }os_handler_array;
 
-typedef union task{
-  struct{
-    char *name;
-    int task_id;
-    int task_cpu;
-    _Context *context;
-    void (*entry)(void*);
-    void *arg;
-    list_head list;
-    uint8_t canary;
+typedef struct task{
+  union{
+    struct{
+      uint32_t pid,cpu,status;
+      const char *name;
+      _Context *context;
+      void (*entry)(void*);
+      void *arg;
+      list_head list;
+      uint8_t canary;
+    };
+    uint8_t data[TASK_SIZE];
   };
-  uint8_t data[TASK_SIZE];
-} __attribute__((packed)) task_t;
+} __attribute__((packed))task_t;
 
 
 /*------------------semaphore----------------------*/

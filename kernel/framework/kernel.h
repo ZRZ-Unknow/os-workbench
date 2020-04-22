@@ -33,7 +33,7 @@ MODULE(pmm) {
   void  (*free)(void *ptr);
 };
 
-typedef union task task_t;
+typedef struct task task_t;
 typedef struct spinlock spinlock_t;
 typedef struct semaphore sem_t;
 MODULE(kmt) {
