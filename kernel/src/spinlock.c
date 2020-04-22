@@ -3,7 +3,7 @@
 int ncli[MAX_CPU]={0};
 int intena[MAX_CPU]={0};
 
-void lock_init(spinlock_t *lk,char *name){
+void lock_init(spinlock_t *lk,const char *name){
     lk->name=name;
     lk->locked=0;
     lk->cpu=-1;

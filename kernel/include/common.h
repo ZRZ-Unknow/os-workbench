@@ -16,16 +16,18 @@
 #define SLAB_LIMIT 16
 #define INIT_PAGENUM 10
 #define I 0b11111111111111111111111111111111
-//126MB内存, 假设内存分配大小的上限是 4 KiB,
+//126MB内存, 假设内存分配大小的上限是 4 KiB
+
+#define TASK_SIZE (4 KB)
 
 /*---------------------spinlock-------------------*/
 typedef struct spinlock{
   bool locked;
-  char *name;
+  const char *name;
   int cpu;
 }spinlock_t;
 
-void lock_init(spinlock_t *lk,char *name);
+void lock_init(spinlock_t *lk,const char *name);
 void lock_acquire(spinlock_t *lk);
 void lock_release(spinlock_t *lk);
 int holding(spinlock_t *lk);
@@ -73,8 +75,18 @@ typedef struct os_handler_array{
 }os_handler_array;
 
 typedef struct task{
-
-}task_t;
+  //struct{
+    char *name;
+    int task_id;
+    int task_cpu;
+    _Context *context;
+    void (*entry)(void*);
+    void *arg;
+    list_head list;
+    uint8_t canary;
+  //};
+  //union data[TASK_SIZE];
+} __attribute__((packed)) task_t;
 
 
 /*------------------semaphore----------------------*/
