@@ -209,11 +209,25 @@ static void kfree(void *ptr) {
   lock_release(&page->lock);
 }
 
+static void *kalloc_safe(size_t size){
+  int i=_intr_read();
+  _intr_write(0);
+  void *ret=kalloc(size);
+  if(i) _intr_write(1);
+  return ret;
+}
+
+static void kfree_safe(void *ptr){
+  int i=_intr_read();
+  _intr_write(0);
+  kfree(ptr);
+  if(i) _intr_write(1);
+}
 
 MODULE_DEF(pmm) = {
   .init  = pmm_init,
-  .alloc = kalloc,
-  .free  = kfree,
+  .alloc = kalloc_safe,
+  .free  = kfree_safe,
 };
 
 
