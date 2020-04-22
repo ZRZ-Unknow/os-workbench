@@ -1,8 +1,6 @@
 #include <common.h>
 
 list_head task_list={NULL,NULL};
-task_t *current=NULL;
-//cpu_local_task cpu_task[MAX_CPU]={NULL};
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
