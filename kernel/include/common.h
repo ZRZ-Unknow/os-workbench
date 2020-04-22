@@ -90,13 +90,16 @@ static inline size_t align_size(size_t size){
 }
 
 /*----------------------handler-----------------------*/
-typedef struct os_irq_handler{
+typedef struct single_handler{
   int seq;
   int event;
   handler_t handler;
   struct os_irq_handler *next;
-}os_irq_handler;
+}single_handler;
 
+typedef struct irq_handler_list{
+  single_handler *head;
+}irq_handler_list;
 
 /*-----------------------debug------------------------*/
 extern spinlock_t printf_lk;

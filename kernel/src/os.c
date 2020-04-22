@@ -1,7 +1,7 @@
 #include <common.h>
 
 spinlock_t printf_lk;
-os_irq_handler *handler_head=NULL;
+irq_handler_list handler_list={NULL};
 
 //#define TEST_MEM
 #ifdef TEST_MEM
