@@ -2,6 +2,10 @@
 #include <klib.h>
 #include <klib-macros.h>
 
+#ifndef MAX_CPU
+ #define MAX_CPU 8
+#endif
+
 #define KB *1024
 #define MB KB*1024
 #define MEM_SIZE (126 MB)
