@@ -92,7 +92,24 @@ static _Context *os_trap(_Event ev,_Context *context){
 
 static void os_on_irq(int seq,int event, handler_t handler){
   //insert a handler into handler_array whose seq form small to big
-  
+  os_handlers.os_handler[os_handlers.handler_num].seq=seq;
+  os_handlers.os_handler[os_handlers.handler_num].event=event;
+  os_handlers.os_handler[os_handlers.handler_num].handler=handler;
+  os_handlers.handler_num++;
+  bool flag=true; 
+  for(int i=0;i<os_handlers.handler_num;i++){
+    if(flag==false) break; 
+    flag=false;
+    for(int j=i+1;j<os_handlers.handler_num;j++){
+      if(os_handlers.os_handler[i].seq>os_handlers.os_handler[j].seq){
+        os_single_handler tmp=os_handlers.os_handler[i];
+        os_handlers.os_handler[i]=os_handlers.os_handler[j];
+        os_handlers.os_handler[j]=tmp;
+        flag=true;
+      }
+    }
+  }
+
 }
 
 MODULE_DEF(os) = {
