@@ -71,9 +71,20 @@ static void os_run() {   //可以随意改动
   }
 }
 
+static _Context *os_trap(_Event ev,_Context *context){
+
+  return NULL;
+}
+
+static void os_on_irq(int seq,int event, handler_t handler){
+  return;
+}
+
 MODULE_DEF(os) = {
   .init = os_init,
   .run  = os_run,
+  .trap = os_trap,
+  .on_irq = os_on_irq,
 };
 /*
 extern mod_os_t __os_obj;  //extern表示定义在别的文件或模块中
