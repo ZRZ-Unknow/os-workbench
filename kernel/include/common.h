@@ -96,6 +96,11 @@ typedef struct task{
   };
 } __attribute__((packed))task_t;
 
+struct cpu_local_task{
+  task_t *current;
+} cpu_task[MAX_CPU];
+
+
 
 /*------------------semaphore----------------------*/
 typedef struct semaphore{
