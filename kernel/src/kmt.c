@@ -1,9 +1,13 @@
 #include <common.h>
 
 list_head task_list={NULL,NULL};
+task_t *current=NULL;
 int task_num=0;
 
 _Context * hello(){_putc('h');return NULL;}
+_Context *kmt_schedule(){
+  return NULL;
+}
 
 void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,hello);
@@ -28,7 +32,11 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
 }
 
 void kmt_teardown(task_t *task){
-  return;
+  list_head *prev=task->list.prev;
+  list_head *next=task->list.next;
+  prev->next=next;
+  if(next) next->prev=prev;
+  pmm->free(task);
 }
 
 
