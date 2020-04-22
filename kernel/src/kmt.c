@@ -3,8 +3,6 @@
 list_head task_list={NULL,NULL};
 int task_num=0;
 
-void producer(void *arg) { while (1) {  _putc('(');  } }
-void consumer(void *arg) { while (1) {  _putc(')');  } }
 _Context * hello(){_putc('h');return NULL;}
 
 void kmt_init(){
