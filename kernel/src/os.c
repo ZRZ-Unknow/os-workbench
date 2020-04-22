@@ -20,7 +20,7 @@ struct workload
 ;
 static struct workload *workload = &wl_typical;
 
-static void mem_test(){
+void mem_test(){
   int begin=uptime();
     for(int i=0;i<N;i++){
       int choice=rand()%workload->sum;
@@ -70,7 +70,36 @@ static void os_init() {  //必须在这里完成所有必要的初始化
 static void os_run() {   //可以随意改动
   while(1){
     #ifdef TEST_MEM
-    mem_test(); 
+int begin=uptime();
+    for(int i=0;i<N;i++){
+      int choice=rand()%workload->sum;
+      int n=0,sum=0;
+      for(int j=0;j<SLAB_TYPE_NUM;j++){
+        if(choice>=sum && choice<sum+workload->prob[j]){
+          n=j;
+          break;
+        }
+        sum+=workload->prob[j];
+      }
+      size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
+      void *ret=pmm->alloc(size);
+      int cpu=_cpu();
+      ptr[i+cpu*N]=ret;
+      lock_acquire(&lk);
+      printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
+      lock_release(&lk);
+    }
+    for(int j=0;j<N;j++){
+      int cpu=_cpu();
+      int n=_ncpu();
+      pmm->free(ptr[j+(n-cpu-1)*N]);
+      lock_acquire(&lk);
+      printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
+      lock_release(&lk);
+    }
+    int end=uptime();
+    printf("time:%d\n",end-begin);
+    assert(0);
     #endif
   }
 }
