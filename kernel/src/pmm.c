@@ -5,7 +5,19 @@ static kmem_cache kmc[8];
 static spinlock_t lock_global;
 int SLAB_SIZE[SLAB_TYPE_NUM]={8,16,32,64,128,256,512,1024,2048,4096};
 
-int get_slab_pos(int size){
+static inline int get_obj_pos(void *addr){
+  page_t *page=get_head_addr(addr);
+  int pos=(addr-page->s_mem)/page->slab_size;
+  return pos;
+}
+
+static inline size_t align_size(size_t size){
+  size_t ret=1;
+  while(ret<size) ret<<=1;
+  return ret;
+}
+
+static int get_slab_pos(int size){
   int pos=-1;
   switch (size){
     case 8: pos=0;break;
@@ -24,7 +36,7 @@ int get_slab_pos(int size){
   return pos;
 }
 //调用前先上锁
-void *get_free_obj(page_t* page){
+static void *get_free_obj(page_t* page){
   void *ret=NULL;
   int bitmap_num= (page->obj_num%32==0) ? (page->obj_num/32) : (page->obj_num/32+1);
   for(int i=0;i<bitmap_num;i++){
@@ -51,7 +63,7 @@ void *get_free_obj(page_t* page){
   return NULL;
 }
 
-page_t *get_free_page(int num,int slab_size,int cpu){
+static page_t *get_free_page(int num,int slab_size,int cpu){
   lock_acquire(&lock_global);
   page_t *mp=mem_start;
   page_t *first_page=NULL;

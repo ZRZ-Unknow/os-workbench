@@ -60,13 +60,6 @@ typedef struct kmem_cache{
   list_head *freepage[SLAB_TYPE_NUM];
 }kmem_cache;
 
-/*--------------------pmm---------------------------*/
-
-/*void debug_print();
-void debug_slab_print(page_t *page);
-void *get_free_obj(page_t* page);
-page_t *get_free_page(int num,int slab_size,int cpu);*/
-
 /*--------------------utils-------------------------*/
 #define list_entry(ptr, type, member) \
   ((type *) \
@@ -78,17 +71,6 @@ page_t *get_free_page(int num,int slab_size,int cpu);*/
 #define getbit(x,pos)   ((x) >> (pos)&1)    //取x的pos位
    //intptr_t位数为平台位数，void在x86为4字节，在x86_64为8字节，而int在两个平台都是4字节
 
-static inline int get_obj_pos(void *addr){
-  page_t *page=get_head_addr(addr);
-  int pos=(addr-page->s_mem)/page->slab_size;
-  return pos;
-}
-
-static inline size_t align_size(size_t size){
-  size_t ret=1;
-  while(ret<size) ret<<=1;
-  return ret;
-}
 
 /*----------------------handler-----------------------*/
 #define MAX_HANDLER_NUM 32
