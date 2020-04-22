@@ -5,13 +5,21 @@ list_head task_list={NULL,NULL};
 
 int task_num=0;
 
-_Context * hello(){_putc('h');return NULL;}
-_Context *kmt_schedule(){
+
+_Context *kmt_context_save(_Event ev,_Context *context){
+  if(current){
+    current->cpu=-1;
+    current->status=SLEEP;
+    current->context=context;
+  } 
+  return NULL;
+}
+_Context *kmt_schedule(_Event ev,_Context *context){
   return NULL;
 }
 
 void kmt_init(){
-  os->on_irq(INI_MIN,_EVENT_NULL,hello);
+
 }
 
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
