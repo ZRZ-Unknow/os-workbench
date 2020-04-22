@@ -3,7 +3,7 @@
 spinlock_t printf_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
-//#define TEST_MEM
+#define TEST_MEM
 #ifdef TEST_MEM
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
