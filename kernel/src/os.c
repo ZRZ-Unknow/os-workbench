@@ -4,7 +4,7 @@
 spinlock_t lk;
 
 #ifdef TEST_MEM
-spinlock_t test_lk;
+//spinlock_t test_lk;
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
 int N=300000;
@@ -60,7 +60,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   
   #ifdef TEST_MEM
   srand(uptime());
-  lock_init(&test_lk,"test_lk");
+  //lock_init(&test_lk,"test_lk");
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
     workload->sum+=workload->prob[i];
   #endif
