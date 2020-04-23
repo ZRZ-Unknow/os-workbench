@@ -20,6 +20,7 @@ _Context *kmt_context_save(_Event ev,_Context *context){
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
   int id=-1;
+  if(!current) return last_task[_cpu()].context;
   if(current) id=current->pid;
   list_head *lh=task_list.next;
   while(lh!=NULL){
