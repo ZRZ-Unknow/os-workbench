@@ -12,21 +12,6 @@ _Context *kmt_context_save(_Event ev,_Context *context){
     current->status=SLEEP;
     current->context=context;
   }
-  else{
-    int i=0;
-    list_head *lh=task_list.next;
-    while(lh!=NULL){
-      if(i==_cpu()){
-        task_t *task=list_entry(lh,task_t,list);
-        current=task;
-        current->cpu=_cpu();
-        current->status=RUN;
-        break;
-      }
-      i++;
-      lh=lh->next;
-    }
-  }
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
