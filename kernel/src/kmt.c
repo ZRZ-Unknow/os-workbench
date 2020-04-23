@@ -75,7 +75,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   lh->next=&task->list;
   task->list.prev=lh;
   task->list.next=NULL;
-  kmt_task_print();
+  //kmt_task_print();
   return 0;
 }
 
