@@ -78,7 +78,7 @@ static void os_run() {   //可以随意改动
     #ifdef TEST_MEM
     mem_test();
     #endif
-    _yield();
+    //_yield();
   }
 }
 
