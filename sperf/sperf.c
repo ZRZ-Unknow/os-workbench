@@ -20,7 +20,6 @@ typedef struct system_call{
 double total_time=0;
 int syscall_num=0;
 system_call sys_call[NUM];
-char div_0[10]="\0\0\0\0\0\0\0\0\0\0";
 
 void debugprint(){
   for(int i=0;i<syscall_num;i++){
