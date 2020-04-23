@@ -45,7 +45,7 @@ void kmt_task_print(){
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
   task->pid=task_num++;
-  task->cpu=_cpu();
+  task->cpu=-1;
   task->status=SLEEP;
   task->name=name;
   task->entry=entry;
