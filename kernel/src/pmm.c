@@ -231,6 +231,7 @@ static void *kalloc_safe(size_t size){
 
 static void kfree_safe(void *ptr){
   int i=_intr_read();
+  printf("wirte %d",_intr_read());
   _intr_write(0);
   kfree(ptr);
   if(i) _intr_write(1);
