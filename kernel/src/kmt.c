@@ -50,7 +50,6 @@ _Context *kmt_schedule_timer(_Event ev,_Context *context){
 }
 void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
-  os->on_irq(-1,_EVENT_IRQ_TIMER,kmt_schedule_timer);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
 void kmt_task_print(){

@@ -72,15 +72,15 @@ static void os_init() {  //必须在这里完成所有必要的初始化
      
 extern void kmt_task_print();
 static void os_run() {   //可以随意改动
-  lock_acquire(&printf_lk);
+  //lock_acquire(&printf_lk);
   printf("Hello from cpu%d\n",_cpu());
-  lock_release(&printf_lk);
+  //lock_release(&printf_lk);
   _intr_write(1);
   while(1){
     #ifdef TEST_MEM
     mem_test();
     #endif
-    kmt_task_print();
+    //kmt_task_print();
     _yield();
   }
 }
