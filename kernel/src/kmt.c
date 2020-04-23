@@ -1,6 +1,7 @@
 #include <common.h>
 
 list_head task_list={NULL,NULL};
+task_t last_task[MAX_CPU];
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
@@ -11,6 +12,9 @@ _Context *kmt_context_save(_Event ev,_Context *context){
     current->cpu=-1;
     current->status=SLEEP;
     current->context=context;
+  }
+  else{
+    last_task[_cpu()].context=context;
   }
   return NULL;
 }

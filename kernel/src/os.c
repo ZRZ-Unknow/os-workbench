@@ -76,13 +76,13 @@ static void os_run() {   //可以随意改动
   printf("Hello from cpu%d\n",_cpu());
   lock_release(&printf_lk);
   _intr_write(1);
-  //while(1){
+  while(1){
     #ifdef TEST_MEM
     mem_test();
     #endif
     kmt_task_print();
     _yield();
-  //}
+  }
 }
 
 /*类似与thread-os-mp.c中的on_interrupt，每次中断后，AM会保存现场，然后调用os_trap（可以进行进程切换等）进行中断处理，os_trap
