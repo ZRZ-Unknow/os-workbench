@@ -91,7 +91,7 @@ static _Context *os_trap(_Event ev,_Context *context){
   for(int i=0;i<os_handlers.handler_num;i++){
     if(os_handlers.os_handler[i].event==_EVENT_NULL || os_handlers.os_handler[i].event==ev.event){
       _Context *r=os_handlers.os_handler[i].handler(ev,context);
-      Assert(r && next , "returning multiple contexts");
+      //Assert(r && next , "returning multiple contexts");
       if(r) next=r;
     }
   }
