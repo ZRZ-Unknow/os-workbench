@@ -80,8 +80,8 @@ static void os_run() {   //可以随意改动
     #ifdef TEST_MEM
     mem_test();
     #endif
-    //kmt_task_print();
-    //_yield();
+    kmt_task_print();
+    _yield();
   }
 }
 
