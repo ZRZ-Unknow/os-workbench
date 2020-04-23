@@ -151,12 +151,22 @@ extern spinlock_t printf_lk;
 #ifdef panic
 # undef panic
 #endif
+#ifdef panic_on
+# undef panic_on
+#endif
 
 #define panic(format, ...) \
   do { \
     Log("\33[1;31msystem panic: " format, ## __VA_ARGS__); \
     _halt(1); \
   } while (0)
+
+#define panic_on(cond,format,...) \
+  do{ \
+    if(cond) { \
+      panic(format); \
+    }  \
+  }while(0)
 
 #define assert(cond) \
   do { \
