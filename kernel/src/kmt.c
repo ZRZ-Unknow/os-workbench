@@ -32,9 +32,25 @@ _Context *kmt_schedule(_Event ev,_Context *context){
   Log("switch to task %s,%d",current->name,current->pid);
   return ret;
 }
-
+_Context *kmt_schedule_timer(_Event ev,_Context *context){
+  int id=-1;
+  if(current) id=current->pid;
+  list_head *lh=task_list.next;
+  while(lh!=NULL){
+    task_t *task=list_entry(lh,task_t,list);
+    if(task->status==SLEEP && task->pid!=id){
+      Log("task %s,%d,id %d",task->name,task->pid,id);
+      current=task;
+      current->cpu=_cpu();
+      current->status=RUN;
+      break;
+    }
+  }
+  return NULL;
+}
 void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
+  os->on_irq(-1,_EVENT_IRQ_TIMER,kmt_schedule_timer);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
 void kmt_task_print(){
