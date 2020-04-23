@@ -1,11 +1,10 @@
 #include <common.h>
 
 list_head task_list={NULL,NULL};
-task_t last_task[MAX_CPU];
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
-void func(){while(1) printf("ddd\n");}
+void func(){while(1) _yield();}
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
@@ -13,14 +12,10 @@ _Context *kmt_context_save(_Event ev,_Context *context){
     current->status=SLEEP;
     current->context=context;
   }
-  else{
-    last_task[_cpu()].context=context;
-  }
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
   int id=-1;
-  if(!current) return last_task[_cpu()].context;
   if(current) id=current->pid;
   list_head *lh=task_list.next;
   while(lh!=NULL){
