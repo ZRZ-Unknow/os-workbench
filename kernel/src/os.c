@@ -93,7 +93,7 @@ static _Context *os_trap(_Event ev,_Context *context){
       if(r) next=r;
     }
   }
-  Assert(!next,"returning NULL context");
+  //Assert(!next,"returning NULL context");
   return next;
 }
 
