@@ -76,6 +76,7 @@ static void os_run() {   //可以随意改动
   printf("Hello from cpu%d\n",_cpu());
   //lock_release(&printf_lk);
   _intr_write(1);
+  printf("find whether intr is 1:%d",_intr_read());
   while(1){
     #ifdef TEST_MEM
     mem_test();
