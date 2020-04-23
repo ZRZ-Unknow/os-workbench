@@ -223,9 +223,11 @@ static void kfree(void *ptr) {
 
 static void *kalloc_safe(size_t size){
   int i=_intr_read();
+  printf("wirte %d",_intr_read());
   _intr_write(0); //关闭中断
   void *ret=kalloc(size);
   if(i) _intr_write(1);   //打开中断
+printf("wirte %d",_intr_read());
   return ret;
 }
 
