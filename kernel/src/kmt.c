@@ -16,11 +16,7 @@ _Context *kmt_context_save(_Event ev,_Context *context){
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
   int id=-1;
-  if(current){
-    current->cpu=-1;
-    current->status=SLEEP;
-    id=current->pid;
-  }
+  if(current) id=current->pid;
   list_head *lh=task_list.next;
   while(lh!=NULL){
     task_t *task=list_entry(lh,task_t,list);
