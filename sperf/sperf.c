@@ -58,7 +58,7 @@ void display(){
     else if(sys_call[i].time/total_time>0.01) printf("%20s \033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else printf("%20s \033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
-  for(int i=0;i<80;i++) printf("%c",'\0');//putchar('\0');
+  for(int i=0;i<80;i++) putc('\0',stdout);
   fflush(stdout);
 }
 
@@ -120,7 +120,6 @@ int main(int argc, char *argv[]) {
   else{
     close(fildes[1]);
     dup2(fildes[0],STDIN_FILENO);
-    //FILE *fp=fdopen(fildes[0],"r");
     char buf[4096];
     char *pattern="<([0-9]*\\.[0-9]*)>";
     regex_t reg;
@@ -152,9 +151,7 @@ int main(int argc, char *argv[]) {
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
         //printf("%s:%f\n",name_buf,t);
-        if(name_buf[0]=='\0' || t<=0){
-          //printf("%s\n",buf);
-          //assert(0);
+        if(name_buf[0]=='\0'){
           memset(buf,'\0',sizeof(buf));
           continue;
         }
@@ -175,7 +172,6 @@ int main(int argc, char *argv[]) {
     sort();
     display();
     regfree(&reg);
-    //fclose(fp);
     //printf("%s,%s,%s,%s\n",exec_path,exec_argv[0],exec_argv[1],exec_argv[2]);
   }
   return 0;
