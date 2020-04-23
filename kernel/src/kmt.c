@@ -4,14 +4,26 @@ list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
-
+void func(){while(1);}
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
     current->cpu=-1;
     current->status=SLEEP;
     current->context=context;
-  } 
+  }
+  else{
+    list_head *lh=task_list.next;
+    while(lh!=NULL){
+      task_t *task=list_entry(lh,task_t,list);
+      if(task->status==SLEEP){
+        current=task;
+        current->cpu=_cpu();
+        current->status=RUN;
+        break;
+      }
+    }
+  }
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){

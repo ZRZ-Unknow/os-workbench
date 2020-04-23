@@ -65,9 +65,9 @@ typedef struct kmem_cache{
 
 /*----------------------kmt-----------------------*/
 #define MAX_HANDLER_NUM 32
-#define INIT 0
+#define SLEEP 0
 #define RUN 1
-#define SLEEP 2
+#define INIT 2
 #define INI_MIN -9999
 #define INI_MAX 9999
 
