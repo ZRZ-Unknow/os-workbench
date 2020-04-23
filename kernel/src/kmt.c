@@ -12,22 +12,27 @@ _Context *kmt_context_save(_Event ev,_Context *context){
     current->status=SLEEP;
     current->context=context;
   }
-  else{
-    list_head *lh=task_list.next;
-    while(lh!=NULL){
-      task_t *task=list_entry(lh,task_t,list);
-      if(task->status==SLEEP){
-        current=task;
-        current->cpu=_cpu();
-        current->status=RUN;
-        break;
-      }
-    }
-  }
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
-  return NULL;
+  int id=-1;
+  if(current){
+    current->cpu=-1;
+    current->status=SLEEP;
+    id=current->pid;
+  }
+  list_head *lh=task_list.next;
+  while(lh!=NULL){
+    task_t *task=list_entry(lh,task_t,list);
+    if(task->status==SLEEP && task->pid!=id){
+      current=task;
+      current->cpu=_cpu();
+      current->status=RUN;
+      break;
+    }
+  }
+  _Context *ret=ret=current->context;
+  return ret;
 }
 
 void kmt_init(){
@@ -37,7 +42,7 @@ void kmt_init(){
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
   task->pid=task_num++;
   task->cpu=_cpu();
-  task->status=INIT;
+  task->status=SLEEP;
   task->name=name;
   task->entry=entry;
   task->arg=arg;
