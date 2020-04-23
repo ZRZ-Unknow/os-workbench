@@ -21,7 +21,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
   while(lh!=NULL){
     task_t *task=list_entry(lh,task_t,list);
     if(task->status==SLEEP && task->pid!=id){
-      Log("task %s,%d,id %d",task->name,task->pid,id);
+      //Log("task %s,%d,id %d",task->name,task->pid,id);
       current=task;
       current->cpu=_cpu();
       current->status=RUN;
@@ -29,7 +29,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     }
   }
   _Context *ret=ret=current->context;
-  Log("switch to task %s,%d",current->name,current->pid);
+  //Log("switch to task %s,%d",current->name,current->pid);
   return ret;
 }
 _Context *kmt_schedule_timer(_Event ev,_Context *context){
