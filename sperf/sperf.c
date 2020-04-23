@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
           //assert(0);
           memset(buf,'\0',sizeof(buf));
           continue;
-        //}
+        }
         insert(name_buf,t);
       }
       else{
