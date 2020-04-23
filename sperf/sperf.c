@@ -129,8 +129,6 @@ int main(int argc, char *argv[]) {
     time_t begin,end;
     begin=time(NULL);
     while(fgets(buf,4096,stdin)!=NULL){
-      if(strncmp(buf,"select",6)==0)
-        printf("%s\n",buf);
       ret=regexec(&reg,buf,1,&pmatch,0);
       if(!ret){
         char time_buf[256],name_buf[256];
@@ -154,7 +152,7 @@ int main(int argc, char *argv[]) {
         //for(int i=0;i<strlen(name_buf);i++)
           //name_buf[i]=tolower(name_buf[i]);
         //printf("%s:%f\n",name_buf,t);
-        if(name_buf[0]=='\0' || t==0 || t>1){
+        if(name_buf[0]=='\0'){
           //printf("%s\n",buf);
           //assert(0);
           memset(buf,'\0',sizeof(buf));
