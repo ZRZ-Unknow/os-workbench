@@ -59,7 +59,7 @@ void display(){
     else if(sys_call[i].time/total_time>0.01) printf("%20s \033[1;32m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
     else printf("%20s \033[1;30m(%9.6lf%%)\033[0m\n",sys_call[i].name,100*sys_call[i].time/total_time);
   }
-  for(int i=0;i<80;i++) _putc('\0');
+  for(int i=0;i<80;i++) putchar('\0');
   fflush(stdout);
 }
 
