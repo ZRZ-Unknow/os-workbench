@@ -54,7 +54,7 @@ static void mem_test(){
 }
 #endif
 
-void producer(void *arg) { while (1) {  printf("ddddddddddddddddddddddddddddd\n");  } }
+void producer(void *arg) { while (1) {  _putc('(');  } }
 void consumer(void *arg) { while (1) {  printf("cccccccccccccccccccccccccccccc\n");  } }
 
 static void os_init() {  //必须在这里完成所有必要的初始化
