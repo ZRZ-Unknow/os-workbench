@@ -35,7 +35,14 @@ void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
-
+void kmt_task_print(){
+  list_head *lh=task_list.next;
+  while(lh!=NULL){
+    task_t *task=list_entry(lh,task_t,list);
+    Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
+    lh=lh->next;
+  }
+}
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
   task->pid=task_num++;
   task->cpu=_cpu();
@@ -51,6 +58,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   lh->next=&task->list;
   task->list.prev=lh;
   task->list.next=NULL;
+  kmt_task_print();
   return 0;
 }
 
