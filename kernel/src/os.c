@@ -62,6 +62,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   pmm->init();
   kmt->init();
   kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
+  kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   #ifdef TEST_MEM
   srand(uptime());
   for(int i=0;i<SLAB_TYPE_NUM;i++) 

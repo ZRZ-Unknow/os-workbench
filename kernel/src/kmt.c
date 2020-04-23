@@ -4,7 +4,7 @@ list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
-void func(){while(1);}
+void func(){while(1) printf("ddd\n");}
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
@@ -37,7 +37,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
 
 void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
-  os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule); 
+  os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
 
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
