@@ -70,7 +70,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   #endif
 }
      
-
+extern void kmt_task_print();
 static void os_run() {   //可以随意改动
   lock_acquire(&printf_lk);
   printf("Hello from cpu%d\n",_cpu());
@@ -80,6 +80,7 @@ static void os_run() {   //可以随意改动
     #ifdef TEST_MEM
     mem_test();
     #endif
+    kmt_task_print();
     _yield();
   }
 }
