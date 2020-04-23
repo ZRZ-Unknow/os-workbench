@@ -22,6 +22,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     current=task;
     current->cpu=_cpu();
     current->status=RUN;
+    printf("is intr wirte %d\n",_intr_read());
   }
   else{
     int id=current->pid;
