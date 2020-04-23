@@ -28,6 +28,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     }
   }
   _Context *ret=ret=current->context;
+  Log("switch to task %s,%d",current->name,current->pid);
   return ret;
 }
 
