@@ -35,8 +35,9 @@ int holding(spinlock_t *lk){
 void pushcli(void){
     //uint32_t eflags=get_efl();
     //cli();
+    int i=_intr_read();
     _intr_write(0);
-    if(ncli[_cpu()]==0) intena[_cpu()]= _intr_read();
+    if(ncli[_cpu()]==0) intena[_cpu()]= i;
     ncli[_cpu()]+=1;
 }
 
