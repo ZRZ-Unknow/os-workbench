@@ -51,7 +51,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       lh=lh->next;
     }
   }
-  if(!flag){
+  if(!flag){  //如果没有sleep的线程，则继续执行原线程不变
     if(current){
       current->cpu=_cpu();
       current->status=RUN;
