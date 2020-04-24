@@ -12,6 +12,9 @@ _Context *kmt_context_save(_Event ev,_Context *context){
     current->status=SLEEP;
     current->context=context;
   }
+  else{
+    idle_task[_cpu()].context=context;
+  }
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
@@ -48,10 +51,15 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       lh=lh->next;
     }
   }
-  assert(current);
+  //assert(current);
   if(!flag){
-    current->cpu=_cpu();
-    current->status=RUN;
+    if(current){
+      current->cpu=_cpu();
+      current->status=RUN;
+    }
+    else{
+      return idle_task[_cpu()].context;
+    }
   }
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
   return current->context;
