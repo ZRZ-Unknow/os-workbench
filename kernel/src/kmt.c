@@ -14,19 +14,22 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
-  int pid=-1;
-  if(current) pid=current->pid;
-  list_head *lh=task_list.next;
-  while(lh!=NULL){
-    task_t *task=list_entry(lh,task_t,list);
-    if(task->status==SLEEP && task->pid!=pid){
-      Log("task %s,pid:%d",task->name,task->pid);
-      current=task;
-      current->cpu=_cpu();
-      current->status=RUN;
-      break;
+  if(current && current->list.next!=NULL) current=list_entry(current->list.next,task_t,list);
+  else{
+    int pid=-1;
+    if(current) pid=current->pid;
+    list_head *lh=task_list.next;
+    while(lh!=NULL){
+      task_t *task=list_entry(lh,task_t,list);
+      if(task->status==SLEEP && task->pid!=pid){
+        Log("task %s,pid:%d",task->name,task->pid);
+        current=task;
+        current->cpu=_cpu();
+        current->status=RUN;
+        break;
+      }
+      lh=lh->next;
     }
-    lh=lh->next;
   }
   assert(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
