@@ -3,7 +3,7 @@
 spinlock_t printf_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
-#define TEST_MEM
+//#define TEST_MEM
 #ifdef TEST_MEM
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
 void *ptr[800000];
@@ -75,8 +75,7 @@ static void os_run() {   //可以随意改动
   lock_acquire(&printf_lk);
   printf("Hello from cpu%d\n",_cpu());
   lock_release(&printf_lk);
-  //_intr_write(1);
-  printf("find whether intr is 1:%d",_intr_read());
+  _intr_write(1);
   while(1){
     #ifdef TEST_MEM
     mem_test();
