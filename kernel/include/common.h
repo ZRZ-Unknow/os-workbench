@@ -104,7 +104,7 @@ struct cpu_local_task{
 
 /*------------------semaphore----------------------*/
 typedef struct semaphore{
-  int a;
+  //int a;
 }sem_t;
 
 void sem_init(sem_t *sem, const char *name, int value);
