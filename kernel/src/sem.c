@@ -30,6 +30,7 @@ void sem_signal(sem_t *sem){
     if(next) next->prev=&sem->blocked_task;
     task->sem_list.prev=NULL;
     task->sem_list.next=NULL;
+    task->status=SLEEP;
   }
   lock_release(&sem->lock);
 }
