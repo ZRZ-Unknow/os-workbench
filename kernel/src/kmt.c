@@ -87,6 +87,7 @@ void kmt_task_print(){
   list_head *lh=task_list.next;
   while(lh!=NULL){
     task_t *task=list_entry(lh,task_t,list);
+    task->name=task->name;
     Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
     lh=lh->next;
   }
