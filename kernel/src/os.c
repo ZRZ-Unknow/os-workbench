@@ -72,8 +72,8 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   kmt->init();
   kmt->create(pmm->alloc(sizeof(task_t)),"A",func,"A"); 
   kmt->create(pmm->alloc(sizeof(task_t)),"B",func,"B");
-  kmt->create(pmm->alloc(sizeof(task_t)),"C",func,"C");
-  kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
+  //kmt->create(pmm->alloc(sizeof(task_t)),"C",func,"C");
+  //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
   #ifdef TEST_MEM
   srand(uptime());
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
