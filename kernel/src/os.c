@@ -62,7 +62,7 @@ void func(void *arg){
     lock_acquire(&printf_lk);
     printf("hello frome thread %s,cpu:%d\n",arg,_cpu());
     lock_release(&printf_lk);
-    //for (int volatile i = 0; i < 100000; i++) ; 
+    for (int volatile i = 0; i < 100000; i++) ; 
   }
 }
 static void os_init() {  //必须在这里完成所有必要的初始化
