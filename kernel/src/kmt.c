@@ -2,7 +2,7 @@
 
 list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
-
+task_t idle_task[MAX_CPU];
 int task_num=0;
 spinlock_t kmt_lk;
 
@@ -59,6 +59,13 @@ _Context *kmt_schedule(_Event ev,_Context *context){
 
 void kmt_init(){
   lock_init(&kmt_lk,"kmt_lk");
+  for(int i=0;i<_ncpu();i++){
+    idle_task[i].name="idle";
+    idle_task[i].cpu=-2;
+    idle_task[i].pid=-(i+1);
+    idle_task[i].status=SLEEP;
+    idle_task[i].canary=MAGIC;
+  }
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
