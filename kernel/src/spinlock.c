@@ -42,5 +42,5 @@ void pushcli(void){
 void popcli(void){
     if(_intr_read()) Spanic("popcli interruptible");
     if(--ncli[_cpu()] <0 ) Spanic("popcli");
-    if(ncli[_cpu()]==0 && intena[_cpu()]) _intr_write(1);
+    if(ncli[_cpu()]==0 && intena[_cpu()]) {intena[_cpu()]=0;_intr_write(1);}
 }
