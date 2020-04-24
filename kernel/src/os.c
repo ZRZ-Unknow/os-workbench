@@ -104,9 +104,9 @@ static void os_init() {  //必须在这里完成所有必要的初始化
      
 extern void kmt_task_print();
 static void os_run() {   //可以随意改动
-  lock_acquire(&printf_lk);
-  printf("Hello from cpu%d\n",_cpu());
-  lock_release(&printf_lk);
+  //lock_acquire(&printf_lk);
+  //printf("Hello from cpu%d\n",_cpu());
+  //lock_release(&printf_lk);
   _intr_write(1);
   while(1){
     #ifdef TEST_MEM
@@ -114,7 +114,7 @@ static void os_run() {   //可以随意改动
     #endif
     //kmt_task_print();
     //_yield();
-  }
+  };
 }
 
 /*类似与thread-os-mp.c中的on_interrupt，每次中断后，AM会保存现场，然后调用os_trap进行中断处理，os_trap
