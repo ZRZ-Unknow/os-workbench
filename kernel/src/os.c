@@ -58,14 +58,20 @@ sem_t empty,fill;
 void producer(void *arg){
   while(1){
     kmt->sem_wait(&empty);
-    _putc('(');  
+    //_putc('(');  
+    lock_acquire(&printf_lk);
+    printf("hello producer\n");
+    lock_release(&printf_lk);
     kmt->sem_signal(&fill);
   } 
 }
 void consumer(void *arg){
   while(1){
     kmt->sem_wait(&fill);
-    _putc(')');  
+    //_putc(')'); 
+    lock_acquire(&printf_lk);
+    printf("hello consumer\n");
+    lock_release(&printf_lk);
     kmt->sem_signal(&empty);
   } 
 }
