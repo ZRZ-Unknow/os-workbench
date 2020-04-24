@@ -5,7 +5,6 @@ list_head task_list={NULL,NULL};
 
 int task_num=0;
 void func(){while(1) _yield();}
-task_t os_task[2];
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
@@ -16,30 +15,6 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
-  /*if(!current) {
-    list_head *lh=task_list.next;
-    task_t *task=list_entry(lh,task_t,list);
-    current=task;
-    current->cpu=_cpu();
-    current->status=RUN;
-    Log("switch to %s",current->name);
-  }
-  else{
-    int pid=current->pid;
-    list_head *lh=task_list.next;
-    while(lh!=NULL){
-      task_t *task=list_entry(lh,task_t,list);
-      if(task->status==SLEEP && task->pid!=id){
-        Log("task %s,%d,id %d",task->name,task->pid,id);
-        current=task;
-        current->cpu=_cpu();
-        current->status=RUN;
-        break;
-      }
-      lh=lh->next;
-    }
-    Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
-  }*/
   int pid=-1;
   if(current) pid=current->pid;
   list_head *lh=task_list.next;
@@ -52,27 +27,10 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       current->status=RUN;
       break;
     }
-    lh=lh->next;
   }
   assert(current);
-  Log("switch to task:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
+  Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
   return current->context;
-}
-_Context *kmt_schedule_timer(_Event ev,_Context *context){
-  int id=-1;
-  if(current) id=current->pid;
-  list_head *lh=task_list.next;
-  while(lh!=NULL){
-    task_t *task=list_entry(lh,task_t,list);
-    if(task->status==SLEEP && task->pid!=id){
-      Log("task %s,%d,id %d",task->name,task->pid,id);
-      current=task;
-      current->cpu=_cpu();
-      current->status=RUN;
-      break;
-    }
-  }
-  return NULL;
 }
 void kmt_init(){
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
