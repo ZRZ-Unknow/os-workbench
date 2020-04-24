@@ -15,12 +15,23 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
+  bool flag=false;
   if(current && current->list.next!=NULL){
-    current=list_entry(current->list.next,task_t,list);
-    current->cpu=_cpu();
-    current->status=RUN;
+    list_head *lh=current->list.next;
+    while(lh!=NULL){
+      task_t *task=list_entry(lh,task_t,list);
+      if(task->status==SLEEP){
+        Log("task %s,pid:%d",task->name,task->pid);
+        current=task;
+        current->cpu=_cpu();
+        current->status=RUN;
+        flag=true;
+        break;
+      }
+      lh=lh->next;
+    }
   }
-  else{
+  if(!flag){
     int pid=-1;
     if(current) pid=current->pid;
     list_head *lh=task_list.next;
