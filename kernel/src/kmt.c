@@ -22,7 +22,6 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     current=task;
     current->cpu=_cpu();
     current->status=RUN;
-    printf("is intr wirte %d\n",_intr_read());
   }
   else{
     int id=current->pid;
@@ -78,8 +77,8 @@ void kmt_init(){
 void kmt_task_print(){
   list_head *lh=task_list.next;
   while(lh!=NULL){
-    //task_t *task=list_entry(lh,task_t,list);
-    //Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
+    task_t *task=list_entry(lh,task_t,list);
+    Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
     lh=lh->next;
   }
 }
