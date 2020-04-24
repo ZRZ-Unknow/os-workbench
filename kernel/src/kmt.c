@@ -14,7 +14,11 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
-  if(current && current->list.next!=NULL) current=list_entry(current->list.next,task_t,list);
+  if(current && current->list.next!=NULL){
+    current=list_entry(current->list.next,task_t,list);
+    current->cpu=_cpu();
+    current->status=RUN;
+  }
   else{
     int pid=-1;
     if(current) pid=current->pid;
