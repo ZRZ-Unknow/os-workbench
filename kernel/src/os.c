@@ -4,6 +4,8 @@ spinlock_t printf_lk;
 spinlock_t os_trap_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
+#define TEST_KMT
+
 //#define TEST_MEM
 #ifdef TEST_MEM
 extern int SLAB_SIZE[SLAB_TYPE_NUM];
@@ -54,6 +56,8 @@ static void mem_test(){
     assert(0);
 }
 #endif
+
+#ifdef TEST_KMT
 sem_t empty,fill;
 void producer(void *arg){
   while(1){
@@ -83,18 +87,23 @@ void func(void *arg){
     for (int volatile i = 0; i < 100000; i++) ; 
   }
 }
+#endif
+
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
   lock_init(&os_trap_lk,"os_trap_lk");
   pmm->init();
   kmt->init();
 
+  #ifdef TEST_KMT
   kmt->sem_init(&empty,"empty",5);
   kmt->sem_init(&fill,"fill",0);
   kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   //kmt->create(pmm->alloc(sizeof(task_t)),"C",func,"C");
   //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
+  #endif
+
   #ifdef TEST_MEM
   srand(uptime());
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
