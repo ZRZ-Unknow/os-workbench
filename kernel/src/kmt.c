@@ -4,7 +4,6 @@ list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
-void func(){while(1) _yield();}
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
