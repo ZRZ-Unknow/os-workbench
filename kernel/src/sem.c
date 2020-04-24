@@ -33,7 +33,8 @@ void sem_signal(sem_t *sem){
   sem->count++;
   if(sem->blocked_task.next!=NULL){
     //delete the first task in sem->blocked_list
-    lock_acquire(&os_trap_lk);
+    int i=holding(&os_trap_lk);
+    if(!i) lock_acquire(&os_trap_lk);
     list_head *lh=sem->blocked_task.next;
     task_t *task=list_entry(lh,task_t,sem_list);
     list_head *next=lh->next;
@@ -42,7 +43,7 @@ void sem_signal(sem_t *sem){
     task->sem_list.prev=NULL;
     task->sem_list.next=NULL;
     task->status=SLEEP;
-    lock_release(&os_trap_lk);
+    if(!i) lock_release(&os_trap_lk);
   }
   lock_release(&sem->lock);
 }
