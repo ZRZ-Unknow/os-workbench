@@ -22,6 +22,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     current=task;
     current->cpu=_cpu();
     current->status=RUN;
+    Log("switch to %s",current->name);
   }
   else{
     int id=current->pid;
@@ -36,6 +37,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
         break;
       }
     }
+    Log("switch to a %s",current->name);
   }
   /*int id=-1;
   if(current) id=current->pid;
