@@ -56,9 +56,9 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       current->cpu=_cpu();
       current->status=RUN;
     }
-    else{
-      return idle_task[_cpu()].context;
-    }
+    //else{
+      //return idle_task[_cpu()].context;
+    //}
   }
   assert(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
