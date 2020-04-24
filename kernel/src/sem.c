@@ -22,5 +22,14 @@ void sem_wait(sem_t *sem){
 void sem_signal(sem_t *sem){
   lock_acquire(&sem->lock);
   sem->count++;
+  if(sem->blocked_task.next!=NULL){
+    list_head *lh=sem->blocked_task.next;
+    task_t *task=list_entry(lh,task_t,sem_list);
+    list_head *next=lh->next;
+    sem->blocked_task.next=next;
+    if(next) next->prev=&sem->blocked_task;
+    task->sem_list.prev=NULL;
+    task->sem_list.next=NULL;
+  }
   lock_release(&sem->lock);
 }

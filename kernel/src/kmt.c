@@ -100,6 +100,8 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   task->arg=arg;
   _Area stack=(_Area){&task->canary+1,task+1};
   task->context=_kcontext(stack,entry,arg);
+  task->sem_list.prev=NULL;
+  task->sem_list.next=NULL;
   task->canary=MAGIC;
   
   lock_acquire(&kmt_lk);
