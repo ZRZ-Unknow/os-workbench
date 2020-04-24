@@ -20,5 +20,7 @@ void sem_wait(sem_t *sem){
   else lock_release(&sem->lock);
 }
 void sem_signal(sem_t *sem){
-    return;
+  lock_acquire(&sem->lock);
+  sem->count++;
+  lock_release(&sem->lock);
 }
