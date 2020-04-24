@@ -6,11 +6,15 @@ task_t idle_task[MAX_CPU];
 int task_num=0;
 spinlock_t kmt_lk;
 
+static void protect_canary(task_t *task){
+  assert(task->canary==MAGIC);
+}
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
     current->cpu=-1;
     current->status=SLEEP;
     current->context=context;
+    protect_canary(current);
   }
   else{
     idle_task[_cpu()].context=context;
@@ -23,6 +27,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     list_head *lh=current->list.next;
     while(lh!=NULL){
       task_t *task=list_entry(lh,task_t,list);
+      protect_canary(task);
       if(task->status==SLEEP){
         Log("task %s,pid:%d",task->name,task->pid);
         current=task;
@@ -40,6 +45,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     list_head *lh=task_list.next;
     while(lh!=NULL){
       task_t *task=list_entry(lh,task_t,list);
+      protect_canary(task);
       if(task->status==SLEEP && task->pid!=pid){
         Log("task %s,pid:%d",task->name,task->pid);
         current=task;
@@ -62,6 +68,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     }
   }
   assert(current);
+  protect_canary(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
   return current->context;
 }
