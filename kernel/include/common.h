@@ -67,7 +67,7 @@ typedef struct kmem_cache{
 #define MAX_HANDLER_NUM 32
 #define SLEEP 0
 #define RUN 1
-#define INIT 2
+#define WAIT 2
 #define INI_MIN -9999
 #define INI_MAX 9999
 
@@ -105,7 +105,7 @@ struct cpu_local_task{
 /*------------------semaphore----------------------*/
 typedef struct semaphore{
   const char *name;
-  int value;
+  int count;
   spinlock_t lock;
   list_head blocked_task;
 }sem_t;
