@@ -1,6 +1,7 @@
 #include <common.h>
 
 #define current cpu_task[_cpu()].current
+extern spinlock_t os_trap_lk;
 
 void sem_init(sem_t *sem, const char *name, int value){
   sem->name=name;
@@ -13,6 +14,7 @@ void sem_wait(sem_t *sem){
   lock_acquire(&sem->lock);
   sem->count--;
   if(sem->count<0){
+    lock_acquire(&os_trap_lk);
     current->status=WAIT;
     //add current to sem->blocked_list
     list_head *lh=&sem->blocked_task;
@@ -20,6 +22,7 @@ void sem_wait(sem_t *sem){
     lh->next=&current->sem_list;
     current->sem_list.prev=lh;
     current->sem_list.next=NULL;
+    lock_release(&os_trap_lk);
     lock_release(&sem->lock);
     _yield();
   }
@@ -30,6 +33,7 @@ void sem_signal(sem_t *sem){
   sem->count++;
   if(sem->blocked_task.next!=NULL){
     //delete the first task in sem->blocked_list
+    lock_acquire(&os_trap_lk);
     list_head *lh=sem->blocked_task.next;
     task_t *task=list_entry(lh,task_t,sem_list);
     list_head *next=lh->next;
@@ -38,6 +42,7 @@ void sem_signal(sem_t *sem){
     task->sem_list.prev=NULL;
     task->sem_list.next=NULL;
     task->status=SLEEP;
+    lock_release(&os_trap_lk);
   }
   lock_release(&sem->lock);
 }
