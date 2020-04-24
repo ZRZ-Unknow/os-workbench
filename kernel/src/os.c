@@ -55,7 +55,7 @@ static void mem_test(){
 #endif
 
 void producer(void *arg) { while (1) {  _putc('(');  } }
-void consumer(void *arg) { while (1) {  printf("cccccccccccccccccccccccccccccc\n");  } }
+void consumer(void *arg) { while (1) {  _putc(')');  } }
 
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");

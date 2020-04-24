@@ -16,7 +16,7 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
-  if(!current) {
+  /*if(!current) {
     list_head *lh=task_list.next;
     task_t *task=list_entry(lh,task_t,list);
     current=task;
@@ -25,12 +25,12 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     Log("switch to %s",current->name);
   }
   else{
-    int id=current->pid;
+    int pid=current->pid;
     list_head *lh=task_list.next;
     while(lh!=NULL){
       task_t *task=list_entry(lh,task_t,list);
       if(task->status==SLEEP && task->pid!=id){
-        //Log("task %s,%d,id %d",task->name,task->pid,id);
+        Log("task %s,%d,id %d",task->name,task->pid,id);
         current=task;
         current->cpu=_cpu();
         current->status=RUN;
@@ -38,23 +38,23 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       }
       lh=lh->next;
     }
-    Log("switch to a %s",current->name);
-  }
-  /*int id=-1;
-  if(current) id=current->pid;
+    Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
+  }*/
+  int pid=-1;
+  if(current) pid=current->pid;
   list_head *lh=task_list.next;
   while(lh!=NULL){
     task_t *task=list_entry(lh,task_t,list);
-    if(task->status==SLEEP && task->pid!=id){
-      //Log("task %s,%d,id %d",task->name,task->pid,id);
+    if(task->status==SLEEP && task->pid!=pid){
+      Log("task %s,pid:%d",task->name,task->pid);
       current=task;
       current->cpu=_cpu();
       current->status=RUN;
       break;
     }
   }
-  _Context *ret=ret=current->context;*/
-  //Log("switch to task %s,%d",current->name,current->pid);
+  assert(current);
+  Log("switch to task:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
   return current->context;
 }
 _Context *kmt_schedule_timer(_Event ev,_Context *context){
