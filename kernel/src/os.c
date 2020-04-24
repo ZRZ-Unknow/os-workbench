@@ -56,13 +56,21 @@ static void mem_test(){
 
 void producer(void *arg) { while (1) {  _putc('(');  } }
 void consumer(void *arg) { while (1) {  _putc(')');  } }
-
+void func(void *arg){
+  while(1){
+    lock_acquire(&printf_lk);
+    printf("hello frome thread %s,cpu:%d\n",arg,_cpu());
+    lock_release(&printf_lk);
+    for (int volatile i = 0; i < 100000; i++) ; 
+  }
+}
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
   pmm->init();
   kmt->init();
-  kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
-  kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
+  kmt->create(pmm->alloc(sizeof(task_t)),"A",func,"A"); 
+  kmt->create(pmm->alloc(sizeof(task_t)),"B",func,"B");
+  kmt->create(pmm->alloc(sizeof(task_t)),"C",func,"C");
   #ifdef TEST_MEM
   srand(uptime());
   for(int i=0;i<SLAB_TYPE_NUM;i++) 
@@ -119,7 +127,6 @@ static void os_on_irq(int seq,int event, handler_t handler){
       }
     }
   }
-
 }
 
 MODULE_DEF(os) = {
