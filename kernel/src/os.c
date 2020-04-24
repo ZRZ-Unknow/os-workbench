@@ -54,9 +54,21 @@ static void mem_test(){
     assert(0);
 }
 #endif
-
-void producer(void *arg) { while (1) {  _putc('(');  } }
-void consumer(void *arg) { while (1) {  _putc(')');  } }
+sem_t empty,fill;
+void producer(void *arg){
+  while(1){
+    kmt->sem_wait(&empty);
+    _putc('(');  
+    kmt->sem_signal(&fill);
+  } 
+}
+void consumer(void *arg){
+  while(1){
+    kmt->sem_wait(&fill);
+    _putc(')');  
+    kmt->sem_signal(&empty);
+  } 
+}
 void func(void *arg){
   while(1){
     lock_acquire(&printf_lk);
@@ -70,8 +82,11 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&os_trap_lk,"os_trap_lk");
   pmm->init();
   kmt->init();
-  kmt->create(pmm->alloc(sizeof(task_t)),"A",func,"A"); 
-  kmt->create(pmm->alloc(sizeof(task_t)),"B",func,"B");
+
+  kmt->sem_init(&empty,"empty",5);
+  kmt->sem_init(&fill,"fill",0);
+  kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
+  kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   //kmt->create(pmm->alloc(sizeof(task_t)),"C",func,"C");
   //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
   #ifdef TEST_MEM
