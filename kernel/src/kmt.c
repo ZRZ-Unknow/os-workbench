@@ -52,6 +52,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       current->status=RUN;
       break;
     }
+    lh=lh->next;
   }
   assert(current);
   Log("switch to task:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
