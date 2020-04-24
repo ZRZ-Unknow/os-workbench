@@ -60,7 +60,7 @@ void consumer(void *arg) { while (1) {  _putc(')');  } }
 void func(void *arg){
   while(1){
     lock_acquire(&printf_lk);
-    printf("hello frome thread %s,cpu:%d\n",arg,_cpu());
+    printf("hello from thread %s,cpu:%d\n",arg,_cpu());
     lock_release(&printf_lk);
     for (int volatile i = 0; i < 100000; i++) ; 
   }

@@ -42,12 +42,17 @@ _Context *kmt_schedule(_Event ev,_Context *context){
         current=task;
         current->cpu=_cpu();
         current->status=RUN;
+        flag=true;
         break;
       }
       lh=lh->next;
     }
   }
   assert(current);
+  if(!flag){
+    current->cpu=_cpu();
+    current->status=RUN;
+  }
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
   return current->context;
 }
