@@ -1,6 +1,7 @@
 #include <common.h>
 
 spinlock_t printf_lk;
+spinlock_t os_trap_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
 //#define TEST_MEM
@@ -66,6 +67,7 @@ void func(void *arg){
 }
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
+  lock_init(&os_trap_lk,"os_trap_lk");
   pmm->init();
   kmt->init();
   kmt->create(pmm->alloc(sizeof(task_t)),"A",func,"A"); 
@@ -98,6 +100,7 @@ static void os_run() {   //可以随意改动
   返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
   _Context *next=NULL;
+  lock_acquire(&os_trap_lk);
   for(int i=0;i<os_handlers.handler_num;i++){
     if(os_handlers.os_handler[i].event==_EVENT_NULL || os_handlers.os_handler[i].event==ev.event){
       _Context *r=os_handlers.os_handler[i].handler(ev,context);
@@ -105,6 +108,7 @@ static _Context *os_trap(_Event ev,_Context *context){
       if(r) next=r;
     }
   }
+  lock_release(&os_trap_lk);
   panic_on(!next,"returning NULL context");
   return next;
 }
