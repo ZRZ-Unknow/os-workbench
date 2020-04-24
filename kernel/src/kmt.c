@@ -36,6 +36,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
         current->status=RUN;
         break;
       }
+      lh=lh->next;
     }
     Log("switch to a %s",current->name);
   }
