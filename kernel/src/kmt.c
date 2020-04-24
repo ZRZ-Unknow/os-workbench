@@ -4,6 +4,7 @@ list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
 
 int task_num=0;
+spinlock_t kmt_lk;
 
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
@@ -41,6 +42,7 @@ _Context *kmt_schedule(_Event ev,_Context *context){
 }
 
 void kmt_init(){
+  lock_init(&kmt_lk,"kmt_lk");
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
@@ -54,7 +56,7 @@ void kmt_task_print(){
   }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
-  task->pid=task_num++;
+  
   task->cpu=-1;
   task->status=SLEEP;
   task->name=name;
@@ -63,21 +65,27 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   _Area stack=(_Area){&task->canary+1,task+1};
   task->context=_kcontext(stack,entry,arg);
   task->canary=MAGIC;
+  
+  lock_acquire(&kmt_lk);
+  task->pid=task_num++;
   list_head *lh=&task_list;
   while(lh->next!=NULL) lh=lh->next;
   lh->next=&task->list;
   task->list.prev=lh;
   task->list.next=NULL;
+  lock_release(&kmt_lk);
   //kmt_task_print();
   return 0;
 }
 
 void kmt_teardown(task_t *task){
+  lock_acquire(&kmt_lk);
   list_head *prev=task->list.prev;
   list_head *next=task->list.next;
   prev->next=next;
   if(next) next->prev=prev;
   pmm->free(task);
+  lock_release(&kmt_lk);
 }
 
 
