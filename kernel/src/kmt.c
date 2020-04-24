@@ -56,9 +56,10 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       current->cpu=_cpu();
       current->status=RUN;
     }
-    //else{
-      //return idle_task[_cpu()].context;
-    //}
+    else{
+      Log("cpu%d switch to a idle task",_cpu());
+      return idle_task[_cpu()].context;
+    }
   }
   assert(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
@@ -69,10 +70,7 @@ void kmt_init(){
   lock_init(&kmt_lk,"kmt_lk");
   for(int i=0;i<_ncpu();i++){
     idle_task[i].name="idle";
-    idle_task[i].cpu=-2;
-    idle_task[i].pid=-(i+1);
-    idle_task[i].status=SLEEP;
-    idle_task[i].canary=MAGIC;
+    idle_task[i].context=NULL;
   }
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
