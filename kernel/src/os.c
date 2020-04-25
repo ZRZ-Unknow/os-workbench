@@ -89,6 +89,7 @@ void func(void *arg){
 }
 #endif
 
+extern void kmt_task_print();
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
   lock_init(&os_trap_lk,"os_trap_lk");
@@ -103,6 +104,8 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   for(int i=0;i<10;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),"A"+i,func,"A"+i);
   }
+  kmt_task_print();
+  assert(0);
   //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
   #endif
 
@@ -113,7 +116,6 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   #endif
 }
      
-extern void kmt_task_print();
 static void os_run() {   //可以随意改动
   //lock_acquire(&printf_lk);
   //printf("Hello from cpu%d\n",_cpu());
@@ -123,8 +125,7 @@ static void os_run() {   //可以随意改动
     #ifdef TEST_MEM
     mem_test();
     #endif
-    kmt_task_print();
-    assert(0);
+    //kmt_task_print();
     //_yield();
   };
 }
