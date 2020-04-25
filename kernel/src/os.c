@@ -96,12 +96,12 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   kmt->init();
 
   #ifdef TEST_KMT
-  kmt->sem_init(&empty,"empty",5);
-  kmt->sem_init(&fill,"fill",0);
+  //kmt->sem_init(&empty,"empty",5);
+  //kmt->sem_init(&fill,"fill",0);
   //kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   //kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   for(int i=0;i<10;i++){
-    kmt->create(pmm->alloc(sizeof(task_t)),"A"+i,func,"C"+i);
+    kmt->create(pmm->alloc(sizeof(task_t)),"A"+i,func,"A"+i);
   }
   //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
   #endif
