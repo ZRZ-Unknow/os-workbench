@@ -88,7 +88,7 @@ void func(void *arg){
   }
 }
 #endif
-
+const char *name[]={"A","B","C","D","E","F","G","H","I","J"};
 extern void kmt_task_print();
 static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&printf_lk,"printf_lock");
@@ -102,7 +102,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   //kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   //kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   for(int i=0;i<10;i++){
-    kmt->create(pmm->alloc(sizeof(task_t)),"A"+i,func,"A"+i);
+    kmt->create(pmm->alloc(sizeof(task_t)),name[i],func,(void*)name[i]);
   }
   printf("dddddddddddddddddddddddddddddddddddddddddddd\n");
   kmt_task_print();
