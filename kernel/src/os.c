@@ -64,7 +64,7 @@ void producer(void *arg){
     kmt->sem_wait(&empty);
     //_putc('(');  
     lock_acquire(&printf_lk);
-    printf("\33[1;32mhello producer\33[0m\n");
+    //printf("\33[1;32mhello producer\33[0m\n");
     lock_release(&printf_lk);
     kmt->sem_signal(&fill);
   } 
@@ -74,7 +74,7 @@ void consumer(void *arg){
     kmt->sem_wait(&fill);
     //_putc(')'); 
     lock_acquire(&printf_lk);
-    printf("\33[1;33mhello consumer\33[0m\n");
+    //printf("\33[1;33mhello consumer\33[0m\n");
     lock_release(&printf_lk);
     kmt->sem_signal(&empty);
   } 
