@@ -107,7 +107,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   printf("dddddddddddddddddddddddddddddddddddddddddddd\n");
   kmt_task_print();
   printf("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk\n");
-  assert(0);
+  //assert(0);
   //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
   #endif
 
