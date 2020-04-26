@@ -4,7 +4,7 @@ spinlock_t printf_lk;
 spinlock_t os_trap_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
-#define TEST_KMT
+//#define TEST_KMT
 
 //#define TEST_MEM
 #ifdef TEST_MEM
