@@ -8,7 +8,7 @@ void sem_task_debug_print(sem_t *sem){
   while(lh!=NULL){
     #ifdef DEBUG
     task_t *task=list_entry(lh,task_t,sem_list);
-    Log("task:%s,pid:%d,cpu:%s,status:%d,",task->name,task->pid,task->cpu,task->status);
+    Log("task:%s,pid:%d,cpu:%d,status:%d,",task->name,task->pid,task->cpu,task->status);
     #endif
     lh=lh->next;
   }
