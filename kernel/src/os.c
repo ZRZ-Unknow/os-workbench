@@ -62,6 +62,7 @@ sem_t empty,fill;
 void producer(void *arg){
   while(1){
     kmt->sem_wait(&empty);
+    for(int volatile i = 0; i < 100000; i++) ; 
     _putc('(');  
     /*lock_acquire(&printf_lk);
     printf("\33[1;32mhello producer\33[0m\n");
@@ -72,7 +73,8 @@ void producer(void *arg){
 void consumer(void *arg){
   while(1){
     kmt->sem_wait(&fill);
-    _putc(')'); 
+    _putc(')');
+    for (int volatile i = 0; i < 100000; i++) ; 
     /*lock_acquire(&printf_lk);
     printf("\33[1;33mhello consumer\33[0m\n");
     lock_release(&printf_lk);*/
@@ -99,6 +101,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   kmt->init();
 
   #ifdef TEST_KMT
+  srand(uptime());
   kmt->sem_init(&empty,"empty",5);
   kmt->sem_init(&fill,"fill",0);
   for(int i=0;i<4;i++){
