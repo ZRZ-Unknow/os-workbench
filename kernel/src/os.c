@@ -101,7 +101,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   //kmt->sem_init(&fill,"fill",0);
   //kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   //kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
-  for(int i=0;i<8;i++){
+  for(int i=0;i<20;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),name[i%10],func,(void*)name[i%10]);
   }
   printf("dddddddddddddddddddddddddddddddddddddddddddd\n");
