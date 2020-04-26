@@ -32,7 +32,7 @@ _Context *kmt_schedule_simple(_Event ev,_Context *context){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
       if(task->status==SLEEP && task->cpu==_cpu()){
-        Log("task %s,pid:%d",task->name,task->pid);
+        //Log("task %s,pid:%d",task->name,task->pid);
         current=task;
         current->status=RUN;
         flag=true;
@@ -49,7 +49,7 @@ _Context *kmt_schedule_simple(_Event ev,_Context *context){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
       if(task->status==SLEEP && task->pid!=pid && task->cpu==_cpu()){
-        Log("task %s,pid:%d",task->name,task->pid);
+        //Log("task %s,pid:%d",task->name,task->pid);
         current=task;
         current->status=RUN;
         flag=true;
@@ -64,7 +64,7 @@ _Context *kmt_schedule_simple(_Event ev,_Context *context){
       current->status=RUN;
     }
     else{
-      Log("cpu%d switch to a idle task",_cpu());
+      //Log("cpu%d switch to a idle task",_cpu());
       //lock_release(&kmt_lk);
       return cur_idle;
     }
