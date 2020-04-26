@@ -3,6 +3,17 @@
 #define current cpu_task[_cpu()].current
 extern spinlock_t os_trap_lk;
 
+void sem_task_debug_print(sem_t *sem){
+  list_head *lh=sem->blocked_task.next;
+  while(lh!=NULL){
+    #ifdef DEBUG
+    task_t *task=list_entry(lh,task_t,list);
+    Log("task:%s,pid:%d,cpu:%s,status:%d,",task->name,task->pid,task->cpu,task->status);
+    #endif
+    lh=lh->next;
+  }
+}
+
 void sem_init(sem_t *sem, const char *name, int value){
   sem->name=name;
   sem->count=value;

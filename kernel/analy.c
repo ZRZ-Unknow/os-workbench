@@ -5,7 +5,7 @@
 
 int main(){
   FILE *fp=fopen("./a.txt","r");
-  char txt[4096];
+  char txt[4096*4];
   fread(&txt[0],sizeof(txt),1,fp);
   fclose(fp);
   int count=0;
