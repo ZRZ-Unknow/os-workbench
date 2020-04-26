@@ -30,6 +30,7 @@ _Context *kmt_schedule_simple(_Event ev,_Context *context){
   if(!current){
     list_head *lh=task_list.next;
     task_t *task=list_entry(lh,task_t,list);
+    current=task;
     protect_canary(task);
   }
   list_head *lh=current->list.next;
