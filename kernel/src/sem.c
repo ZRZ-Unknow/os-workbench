@@ -14,15 +14,19 @@ void sem_wait(sem_t *sem){
   lock_acquire(&sem->lock);
   Assert(sem->count>=0,"sem %s count:%d",sem->name,sem->count);
   if(sem->count==0){
+    bool added=false;
     lock_acquire(&os_trap_lk);
-    current->status=WAIT;
+    if(current->status==WAIT) added=true;
+    else current->status=WAIT;
     lock_release(&os_trap_lk);
     //add current to sem->blocked_list
-    list_head *lh=&sem->blocked_task;
-    while(lh->next!=NULL)  lh=lh->next;
-    lh->next=&current->sem_list;
-    current->sem_list.prev=lh;
-    current->sem_list.next=NULL;
+    if(added==false){
+      list_head *lh=&sem->blocked_task;
+      while(lh->next!=NULL)  lh=lh->next;
+      lh->next=&current->sem_list;
+      current->sem_list.prev=lh;
+      current->sem_list.next=NULL;
+    }
     //lock_release(&os_trap_lk);
     lock_release(&sem->lock);
     _yield();
