@@ -88,6 +88,7 @@ void func(void *arg){
     for (int volatile i = 0; i < 100000; i++) ; 
   }
 }
+void yielder()  { while (1) _yield(); }
 #endif
 const char *name[]={"A","B","C","D","E","F","G","H","I","J"};
 extern void kmt_task_print();
@@ -102,8 +103,11 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   //kmt->sem_init(&fill,"fill",0);
   //kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   //kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
-  for(int i=0;i<4;i++){
+  for(int i=0;i<20;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),name[i%10],func,(void*)name[i%10]);
+  }
+  for(int i=0;i<4;i++){
+    kmt->create(pmm->alloc(sizeof(task_t)),"yield",yielder,NULL);
   }
   kmt_task_print();
   //assert(0);
