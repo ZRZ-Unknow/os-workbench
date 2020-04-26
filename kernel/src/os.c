@@ -85,7 +85,7 @@ void func(void *arg){
   bool flag=false;
   while(1){
     kmt->spin_lock(&printf_lk);
-    printf("hello from thread %s,cpu:%d\n",arg,_cpu());
+    //printf("hello from thread %s,cpu:%d\n",arg,_cpu());
     kmt->spin_unlock(&printf_lk);
     _yield();
     for (int volatile i = 0; i < 100000; i++) ; 
