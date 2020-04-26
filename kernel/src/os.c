@@ -126,7 +126,7 @@ static void os_run() {   //可以随意改动
     mem_test();
     #endif
     //kmt_task_print();
-    //_yield();
+    _yield();
   };
 }
 
