@@ -29,6 +29,7 @@ void sem_wait(sem_t *sem){
     lock_acquire(&os_trap_lk);
     if(current->status==WAIT) added=true;
     else current->status=WAIT;
+    sem_task_debug_print(sem);
     lock_release(&os_trap_lk);
     //add current to sem->blocked_list
     if(added==false){
