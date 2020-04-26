@@ -133,7 +133,7 @@ static void os_run() {   //可以随意改动
   返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
   _Context *next=NULL;
-  if(holding(&os_trap_lk)) return context;
+  //if(holding(&os_trap_lk)) return context;
   lock_acquire(&os_trap_lk);
   for(int i=0;i<os_handlers.handler_num;i++){
     if(os_handlers.os_handler[i].event==_EVENT_NULL || os_handlers.os_handler[i].event==ev.event){
