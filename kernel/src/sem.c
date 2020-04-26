@@ -12,8 +12,8 @@ void sem_init(sem_t *sem, const char *name, int value){
 }
 void sem_wait(sem_t *sem){
   lock_acquire(&sem->lock);
-  sem->count--;
-  if(sem->count<0){
+  Assert(sem->count<0,"count<0");
+  if(sem->count==0){
     lock_acquire(&os_trap_lk);
     current->status=WAIT;
     lock_release(&os_trap_lk);
@@ -27,7 +27,10 @@ void sem_wait(sem_t *sem){
     lock_release(&sem->lock);
     _yield();
   }
-  else lock_release(&sem->lock);
+  else{
+    sem->count--;
+    lock_release(&sem->lock);
+  }
 }
 void sem_signal(sem_t *sem){
   lock_acquire(&sem->lock);
