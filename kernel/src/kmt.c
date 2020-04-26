@@ -10,6 +10,7 @@ static void protect_canary(task_t *task){
   Assert(task->canary==MAGIC,"canary being damaged!");
 }
 _Context *kmt_context_save(_Event ev,_Context *context){
+  lock_acquire(&kmt_lk);
   if(current){
     current->cpu=-1;
     current->status=SLEEP;
@@ -19,9 +20,11 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   else{
     idle_task[_cpu()].context=context;
   }
+  lock_release(&kmt_lk);
   return NULL;
 }
 _Context *kmt_schedule(_Event ev,_Context *context){
+  lock_acquire(&kmt_lk);
   bool flag=false;
   if(current && current->list.next!=NULL){
     list_head *lh=current->list.next;
@@ -64,12 +67,14 @@ _Context *kmt_schedule(_Event ev,_Context *context){
     }
     else{
       Log("cpu%d switch to a idle task",_cpu());
+      lock_release(&kmt_lk);
       return idle_task[_cpu()].context;
     }
   }
   assert(current);
   protect_canary(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
+  lock_release(&kmt_lk);
   return current->context;
 }
 
