@@ -4,14 +4,15 @@
 extern spinlock_t os_trap_lk;
 
 void sem_task_debug_print(sem_t *sem){
+  #ifdef DEBUG
   list_head *lh=sem->blocked_task.next;
   while(lh!=NULL){
-    #ifdef DEBUG
+    
     task_t *task=list_entry(lh,task_t,sem_list);
     Log("task:%s,pid:%d,cpu:%d,status:%d,",task->name,task->pid,task->cpu,task->status);
-    #endif
     lh=lh->next;
   }
+  #endif
 }
 
 void sem_init(sem_t *sem, const char *name, int value){
@@ -29,7 +30,7 @@ void sem_wait(sem_t *sem){
     lock_acquire(&os_trap_lk);
     if(current->status==WAIT) added=true;
     else current->status=WAIT;
-    sem_task_debug_print(sem);
+    //sem_task_debug_print(sem);
     lock_release(&os_trap_lk);
     //add current to sem->blocked_list
     if(added==false){
