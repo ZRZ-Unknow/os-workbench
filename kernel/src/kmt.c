@@ -66,6 +66,7 @@ _Context *kmt_schedule_simple(_Event ev,_Context *context){
     else{
       //Log("cpu%d switch to a idle task",_cpu());
       //lock_release(&kmt_lk);
+      current=NULL;
       return cur_idle;
     }
   }

@@ -99,6 +99,7 @@ typedef struct task{
 
 struct cpu_local_task{
   task_t *current;
+  //task_t idle_task;
   _Context *idle;
 } cpu_task[MAX_CPU];
 
