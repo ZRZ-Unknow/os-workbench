@@ -106,7 +106,7 @@ void kmt_init(){
     idle_task[i].context=NULL;
   }
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
-  os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
+  os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule_simple);
 }
 
 void kmt_task_print(){
