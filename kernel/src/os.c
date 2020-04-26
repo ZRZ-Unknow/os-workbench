@@ -81,9 +81,9 @@ void consumer(void *arg){
 }
 void func(void *arg){
   while(1){
-    lock_acquire(&printf_lk);
+    kmt->spin_lock(&printf_lk);
     printf("hello from thread %s,cpu:%d\n",arg,_cpu());
-    lock_release(&printf_lk);
+    kmt->spin_unlock(&printf_lk);
     for (int volatile i = 0; i < 100000; i++) ; 
   }
 }
@@ -132,7 +132,6 @@ static void os_run() {   //可以随意改动
 /*类似与thread-os-mp.c中的on_interrupt，每次中断后，AM会保存现场，然后调用os_trap进行中断处理，os_trap
   返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
-  if(_cpu()>0) return context;
   _Context *next=NULL;
   //if(holding(&os_trap_lk)) return context;
   lock_acquire(&os_trap_lk);
