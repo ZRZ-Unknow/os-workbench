@@ -23,6 +23,27 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   lock_release(&kmt_lk);
   return NULL;
 }
+
+_Context *kmt_schedule_simple(_Event ev,_Context *context){
+  if(task_list.next==NULL) return idle_task[_cpu()].context;
+  bool flag=false;
+  if(!current){
+    list_head *lh=task_list.next;
+    task_t *task=list_entry(lh,task_t,list);
+    protect_canary(task);
+  }
+  list_head *lh=current->list.next;
+  while(lh!=NULL){
+    if(current->pid%_ncpu()==_cpu()){
+      flag=true;
+      break;
+    }
+    current=list_entry(lh,task_t,list);
+    lh=lh->next;
+  }
+  if(flag) return current->context;
+  else return idle_task[_cpu()].context;
+}
 _Context *kmt_schedule(_Event ev,_Context *context){
   lock_acquire(&kmt_lk);
   bool flag=false;
