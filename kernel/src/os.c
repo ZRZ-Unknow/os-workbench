@@ -5,58 +5,6 @@ spinlock_t os_trap_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
 #define TEST_KMT
-
-//#define TEST_MEM
-#ifdef TEST_MEM
-extern int SLAB_SIZE[SLAB_TYPE_NUM];
-void *ptr[800000];
-int N=300000;
-
-struct workload {
-  int prob[SLAB_TYPE_NUM], sum; // sum = prob[0] + prob[1] + ... prob[N-1]
-};
-
-struct workload
-  wl_typical = {.prob = {10,10,20,40,50,15,5,2,1,1},.sum=0 },
-  wl_stress  = {.prob = {0,0,0,300,400,200,100,2,1,1},.sum=0 },
-  wl_page    = {.prob = {0,0,0,0,20,10,20,80,100,80},.sum=0 }
-;
-static struct workload *workload = &wl_typical;
-
-static void mem_test(){
-  int begin=uptime();
-    for(int i=0;i<N;i++){
-      int choice=rand()%workload->sum;
-      int n=0,sum=0;
-      for(int j=0;j<SLAB_TYPE_NUM;j++){
-        if(choice>=sum && choice<sum+workload->prob[j]){
-          n=j;
-          break;
-        }
-        sum+=workload->prob[j];
-      }
-      size_t size= (n==0) ? rand()%SLAB_SIZE[n] : (SLAB_SIZE[n-1]+rand()%(SLAB_SIZE[n]-SLAB_SIZE[n-1]));
-      void *ret=pmm->alloc(size);
-      int cpu=_cpu();
-      ptr[i+cpu*N]=ret;
-      lock_acquire(&printf_lk);
-      printf("cpu %d alloc [%p,%p),size:%d\n",_cpu(),ret,ret+size,size);
-      lock_release(&printf_lk);
-    }
-    for(int j=0;j<N;j++){
-      int cpu=_cpu();
-      int n=_ncpu();
-      pmm->free(ptr[j+(n-cpu-1)*N]);
-      lock_acquire(&printf_lk);
-      printf("cpu %d free [%p,?)\n",cpu,ptr[j+(n-cpu-1)*N]);
-      lock_release(&printf_lk);
-    }
-    int end=uptime();
-    printf("time:%d\n",end-begin);
-    assert(0);
-}
-#endif
-
 #ifdef TEST_KMT
 sem_t empty,fill;
 void producer(void *arg){
@@ -105,7 +53,7 @@ void yielder()  { while (1) _yield(); }
 const char *name[]={"A","B","C","D","E","F","G","H","I","J"};
 extern void kmt_task_print();
 static void os_init() {  //必须在这里完成所有必要的初始化
-  lock_init(&printf_lk,"printf_lock");
+  lock_init(&printf_lk,"printf_lk");
   lock_init(&os_trap_lk,"os_trap_lk");
   pmm->init();
   kmt->init();
@@ -127,27 +75,12 @@ static void os_init() {  //必须在这里完成所有必要的初始化
     kmt->create(pmm->alloc(sizeof(task_t)),"yield",yielder,NULL);
   }
   kmt_task_print();
-  //assert(0);
-  //kmt->create(pmm->alloc(sizeof(task_t)),"D",func,"D");
-  #endif
-
-  #ifdef TEST_MEM
-  srand(uptime());
-  for(int i=0;i<SLAB_TYPE_NUM;i++) 
-    workload->sum+=workload->prob[i];
   #endif
 }
      
 static void os_run() {   //可以随意改动
-  //lock_acquire(&printf_lk);
-  //printf("Hello from cpu%d\n",_cpu());
-  //lock_release(&printf_lk);
   _intr_write(1);
   while(1){
-    #ifdef TEST_MEM
-    mem_test();
-    #endif
-    //kmt_task_print();
     _yield();
   };
 }
@@ -196,11 +129,3 @@ MODULE_DEF(os) = {
   .trap = os_trap,
   .on_irq = os_on_irq,
 };
-/*
-extern mod_os_t __os_obj;  //extern表示定义在别的文件或模块中
-mod_os_t *os = &__os_obj;
-mod_os_t __os_obj = {
-  .init = os_init,
-  .run = os_run,
-};
-*/

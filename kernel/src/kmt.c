@@ -1,16 +1,28 @@
 #include <common.h>
 
-list_head task_list={NULL,NULL};
 #define current cpu_task[_cpu()].current
 #define cur_idle cpu_task[_cpu()].idle
+
 static int task_num=0;
-spinlock_t kmt_lk;
+static list_head task_list={NULL,NULL};
 extern spinlock_t os_trap_lk;
+
+void kmt_task_print(){
+  list_head *lh=task_list.next;
+  while(lh!=NULL){
+    #ifdef DEBUG
+    task_t *task=list_entry(lh,task_t,list);
+    Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
+    #endif
+    lh=lh->next;
+  }
+}
+
 static void protect_canary(task_t *task){
   Assert(task->canary==MAGIC,"canary being damaged!");
 }
-_Context *kmt_context_save(_Event ev,_Context *context){
-  //lock_acquire(&kmt_lk);
+
+static _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
     current->status=SLEEP;
     current->context=context;
@@ -19,12 +31,10 @@ _Context *kmt_context_save(_Event ev,_Context *context){
   else{
     cur_idle=context;
   }
-  //lock_release(&kmt_lk);
   return NULL;
 }
 
-_Context *kmt_schedule(_Event ev,_Context *context){
-  //lock_acquire(&kmt_lk);
+static _Context *kmt_schedule(_Event ev,_Context *context){
   bool flag=false;
   if(current && current->list.next!=NULL){
     list_head *lh=current->list.next;
@@ -32,7 +42,6 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
       if(task->status==SLEEP && task->cpu==_cpu()){
-        //Log("task %s,pid:%d",task->name,task->pid);
         current=task;
         current->status=RUN;
         flag=true;
@@ -49,7 +58,6 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
       if(task->status==SLEEP && task->pid!=pid && task->cpu==_cpu()){
-        //Log("task %s,pid:%d",task->name,task->pid);
         current=task;
         current->status=RUN;
         flag=true;
@@ -64,8 +72,6 @@ _Context *kmt_schedule(_Event ev,_Context *context){
       current->status=RUN;
     }
     else{
-      //Log("cpu%d switch to a idle task",_cpu());
-      //lock_release(&kmt_lk);
       current=NULL;
       return cur_idle;
     }
@@ -73,12 +79,11 @@ _Context *kmt_schedule(_Event ev,_Context *context){
   assert(current);
   protect_canary(current);
   Log("switch to thread:%s,pid:%d,cpu:%d",current->name,current->pid,current->cpu);
-  //lock_release(&kmt_lk);
   return current->context;
 }
 
-void kmt_init(){
-  lock_init(&kmt_lk,"kmt_lk");
+static void kmt_init(){
+  //lock_init(&kmt_lk,"kmt_lk");
   for(int i=0;i<_ncpu();i++){
     current=NULL;
     cur_idle=NULL;
@@ -87,16 +92,7 @@ void kmt_init(){
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
 }
 
-void kmt_task_print(){
-  list_head *lh=task_list.next;
-  while(lh!=NULL){
-    task_t *task=list_entry(lh,task_t,list);
-    task->name=task->name;
-    Log("task pid:%d,cpu:%d,status:%d,name:%s",task->pid,task->cpu,task->status,task->name);
-    lh=lh->next;
-  }
-}
-int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
+static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
   
   task->status=SLEEP;
   task->name=name;
@@ -108,7 +104,6 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   task->sem_list.next=NULL;
   task->canary=MAGIC;
   
-  //lock_acquire(&kmt_lk);
   lock_acquire(&os_trap_lk);
   task->pid=task_num++;
   task->cpu=task->pid % _ncpu();     
@@ -118,23 +113,18 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
   task->list.prev=lh;
   task->list.next=NULL;
   lock_release(&os_trap_lk);
-  //lock_release(&kmt_lk);
-  //kmt_task_print();
   return 0;
 }
 
 void kmt_teardown(task_t *task){
-  //lock_acquire(&kmt_lk);
   lock_acquire(&os_trap_lk);
   list_head *prev=task->list.prev;
   list_head *next=task->list.next;
   prev->next=next;
   if(next) next->prev=prev;
   pmm->free(task);
-  //lock_release(&kmt_lk);
   lock_release(&os_trap_lk);
 }
-
 
 
 
