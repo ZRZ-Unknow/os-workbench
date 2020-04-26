@@ -91,6 +91,7 @@ typedef struct task{
       _Context *context;
       list_head list;
       list_head sem_list;
+      struct task *next;
       uint32_t canary;
     };
     uint8_t data[TASK_SIZE];
