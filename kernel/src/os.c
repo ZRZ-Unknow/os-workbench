@@ -4,7 +4,7 @@ spinlock_t printf_lk;
 spinlock_t os_trap_lk;
 static os_handler_array os_handlers={.handler_num=0};
 
-//#define TEST_KMT
+#define TEST_KMT
 
 //#define TEST_MEM
 #ifdef TEST_MEM
@@ -82,12 +82,22 @@ void consumer(void *arg){
   } 
 }
 void func(void *arg){
+  bool flag=false;
   while(1){
     kmt->spin_lock(&printf_lk);
     printf("hello from thread %s,cpu:%d\n",arg,_cpu());
     kmt->spin_unlock(&printf_lk);
     _yield();
     for (int volatile i = 0; i < 100000; i++) ; 
+    if(flag==false){
+      for(int i=0;i<4;i++){
+        kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
+      }
+      for(int i=0;i<5;i++){
+        kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
+      }
+      flag=true;
+    }
   }
 }
 void yielder()  { while (1) _yield(); }
@@ -107,13 +117,13 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   for(int i=0;i<4;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),"producer",producer,NULL); 
   }
-  for(int i=0;i<50;i++){
+  for(int i=0;i<5;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),"consumer",consumer,NULL);
   }
-  /*for(int i=0;i<20;i++){
+  for(int i=0;i<10;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),name[i%10],func,(void*)name[i%10]);
-  }*/
-  for(int i=0;i<4;i++){
+  }
+  for(int i=0;i<30;i++){
     kmt->create(pmm->alloc(sizeof(task_t)),"yield",yielder,NULL);
   }
   kmt_task_print();
