@@ -68,8 +68,8 @@ typedef struct kmem_cache{
 #define SLEEP 0
 #define RUN 1
 #define WAIT 2
-#define INI_MIN -9999
-#define INI_MAX 9999
+#define INI_MIN -9999999
+#define INI_MAX  9999999
 
 typedef struct os_single_handler{
   int seq;
@@ -110,7 +110,7 @@ typedef struct semaphore{
   const char *name;
   int count;
   spinlock_t lock;
-  list_head blocked_task;
+  list_head blocked_task;  //被阻塞的task
 }sem_t;
 
 void sem_init(sem_t *sem, const char *name, int value);
