@@ -132,7 +132,7 @@ void sem_signal(sem_t *sem);
 
 /*-----------------------debug------------------------*/
 extern spinlock_t printf_lk;
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define Log(format, ...) \
