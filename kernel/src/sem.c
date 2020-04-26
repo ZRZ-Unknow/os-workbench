@@ -12,7 +12,7 @@ void sem_init(sem_t *sem, const char *name, int value){
 }
 void sem_wait(sem_t *sem){
   lock_acquire(&sem->lock);
-  Assert(sem->count<0,"count<0");
+  Assert(sem->count<0,"sem %s count<0",sem->name);
   if(sem->count==0){
     lock_acquire(&os_trap_lk);
     current->status=WAIT;
