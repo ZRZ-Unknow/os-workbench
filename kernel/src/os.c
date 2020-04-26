@@ -133,8 +133,8 @@ static void os_run() {   //可以随意改动
 /*类似与thread-os-mp.c中的on_interrupt，每次中断后，AM会保存现场，然后调用os_trap进行中断处理，os_trap
   返回后，AM会恢复现场*/
 static _Context *os_trap(_Event ev,_Context *context){
-  //if(holding(&os_trap_lk)) return context;
   _Context *next=NULL;
+  if(holding(&os_trap_lk)) return context;
   lock_acquire(&os_trap_lk);
   for(int i=0;i<os_handlers.handler_num;i++){
     if(os_handlers.os_handler[i].event==_EVENT_NULL || os_handlers.os_handler[i].event==ev.event){
