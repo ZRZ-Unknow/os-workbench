@@ -7,7 +7,7 @@ int task_num=0;
 spinlock_t kmt_lk;
 
 static void protect_canary(task_t *task){
-  assert(task->canary==MAGIC);
+  Assert(task->canary==MAGIC,"canary being damaged!");
 }
 _Context *kmt_context_save(_Event ev,_Context *context){
   if(current){
