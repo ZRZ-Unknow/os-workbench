@@ -1,7 +1,7 @@
 #include <common.h>
 
-#define current cpu_task[_cpu()].current
-#define cur_idle cpu_task[_cpu()].idle
+#define current (cpu_task[_cpu()].current)
+#define cur_idle (&(cpu_task[_cpu()].idle_task))
 
 static int task_num=0;
 static list_head task_list={NULL,NULL};
@@ -29,7 +29,8 @@ static _Context *kmt_context_save(_Event ev,_Context *context){
     protect_canary(current);
   }
   else{
-    cur_idle=context;
+    cur_idle->context=context;
+    current=cur_idle;
   }
   return NULL;
 }
@@ -67,14 +68,15 @@ static _Context *kmt_schedule(_Event ev,_Context *context){
     }
   }
   if(!flag){  //如果没有sleep的线程，则继续执行原线程不变
-    if(current){
+    /*if(current){
       current->cpu=_cpu();
       current->status=RUN;
     }
     else{
       current=NULL;
       return cur_idle;
-    }
+    }*/
+    current->status=RUN;
   }
   assert(current);
   protect_canary(current);
@@ -86,7 +88,16 @@ static void kmt_init(){
   //lock_init(&kmt_lk,"kmt_lk");
   for(int i=0;i<_ncpu();i++){
     current=NULL;
-    cur_idle=NULL;
+    cur_idle->name="idle";
+    cur_idle->pid=-1;
+    cur_idle->cpu=i;
+    cur_idle->status=SLEEP;
+    cur_idle->entry=NULL;
+    cur_idle->arg=NULL;
+    cur_idle->context=NULL;
+    cur_idle->list.next=NULL;
+    cur_idle->list.prev=NULL;
+    cur_idle->canary=MAGIC;
   }
   os->on_irq(INI_MIN,_EVENT_NULL,kmt_context_save);
   os->on_irq(INI_MAX,_EVENT_NULL,kmt_schedule);
