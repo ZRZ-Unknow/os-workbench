@@ -41,7 +41,7 @@ static _Context *kmt_schedule(_Event ev,_Context *context){
     while(lh!=NULL){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
-      if(task->status==SLEEP && task->cpu==_cpu()){
+      if(task->cpu==_cpu()){
         current=task;
         current->status=RUN;
         flag=true;
@@ -57,7 +57,7 @@ static _Context *kmt_schedule(_Event ev,_Context *context){
     while(lh!=NULL){
       task_t *task=list_entry(lh,task_t,list);
       protect_canary(task);
-      if(task->status==SLEEP && task->pid!=pid && task->cpu==_cpu()){
+      if(task->pid!=pid && task->cpu==_cpu()){
         current=task;
         current->status=RUN;
         flag=true;
