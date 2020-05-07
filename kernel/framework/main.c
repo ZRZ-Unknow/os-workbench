@@ -2,7 +2,6 @@
 #include <klib.h>
 
 int main() {
-  printf("cpu reset\n");
   _ioe_init();
   _cte_init(os->trap);
   os->init();
