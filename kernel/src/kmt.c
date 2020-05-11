@@ -68,14 +68,6 @@ static _Context *kmt_schedule(_Event ev,_Context *context){
     }
   }
   if(!flag){  //如果没有sleep的线程，则继续执行原线程不变
-    /*if(current){
-      current->cpu=_cpu();
-      current->status=RUN;
-    }
-    else{
-      current=NULL;
-      return cur_idle;
-    }*/
     current->status=RUN;
   }
   assert(current);
@@ -85,7 +77,6 @@ static _Context *kmt_schedule(_Event ev,_Context *context){
 }
 
 static void kmt_init(){
-  //lock_init(&kmt_lk,"kmt_lk");
   for(int i=0;i<_ncpu();i++){
     current=NULL;
     cur_idle->name="idle";
