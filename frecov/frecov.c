@@ -54,6 +54,7 @@ struct fat {
 
 void recover(){
   int fd=open(filename,O_RDONLY);
+  assert(fd!=-1);
   struct stat buf;
   fstat(fd,&buf);
   void *file=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
