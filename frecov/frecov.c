@@ -91,6 +91,8 @@ void recover(){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
     if((dir->data[11])==0x0F){   //长文件名
       //printf("%d\n",dir->data[1]);
+      dir++;
+      continue;
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char short_name[32];
