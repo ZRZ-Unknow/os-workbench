@@ -61,7 +61,7 @@ void recover(){
   assert(file!=MAP_FAILED);
   struct fat_header *header=file;
   printf("%x\n",header->BS_jmpBoot[0]);
-  assert(header->Signature_word==0x55AA);
+  assert(header->Signature_word==0xaa55);
 }
 
 
