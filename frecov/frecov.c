@@ -72,9 +72,7 @@ struct fat_long_dir{
 }__attribute__((packed));
 
 struct DIR{
-  //uint8_t data1;
-  //uint8_t data2;
-  uint8_t data;
+  uint8_t data[32];
 }__attribute__((packed));
 
 void recover(){
@@ -88,15 +86,12 @@ void recover(){
   assert(header->Signature_word==0xaa55);
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
-  printf("%d\n",header->Signature_word);
-  struct DIR *dir=data_begin;
-  struct fat_header *fsd=data_begin;
-  assert(fsd->BS_jmpBoot[0]==0x00);
+  struct DIR *dir=fat_fs+data_begin;
   while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     printf("%p,%p\n",dir,fat_fs+buf.st_size);
-    //if((dir->data[11])==0b00111100){   //长文件名
-    //printf("%d\n",dir->data[1]);
-    /**
+    if((dir->data[11])==0x0F){   //长文件名
+    printf("%d\n",dir->data[1]);
+    }/**
     else if(dir->data[8]==(uint8_t)'B' && dir->data[9]==(uint8_t)'M' && dir->data[10]==(uint8_t)'P'){
         char short_name[12];
         strncpy(short_name,(char*)dir,11);
