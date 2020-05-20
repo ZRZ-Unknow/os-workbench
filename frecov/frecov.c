@@ -17,11 +17,11 @@ struct fat_header {
   uint8_t  BS_jmpBoot[3];
   uint8_t  BS_OEMName[8];
   uint16_t BPB_BytsPerSec;  //每扇区字节数
-  uint8_t BPB_SecPerClus;　　//每簇扇区数
-  uint16_t BPB_RsvdSecCnt;　　//保留扇区数
-  uint8_t BPB_NumFATs;　　　　　//fat表个数
-  uint16_t BPB_RootEntCnt;  //in FAT32 must be 0
-  uint16_t BPB_TotSec16;    //int FAT32 must be 0
+  uint8_t BPB_SecPerClus;    //每簇扇区数
+  uint16_t BPB_RsvdSecCnt;   //保留扇区数
+  uint8_t BPB_NumFATs;      //fat表个数
+  uint16_t BPB_RootEntCnt;   //in FAT32 must be 0
+  uint16_t BPB_TotSec16;   //int FAT32 must be 0
   uint8_t BPB_Media;
   uint16_t BPB_FATSz16;     //0
   uint16_t BPB_SecPerTrk;
