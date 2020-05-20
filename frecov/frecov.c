@@ -89,7 +89,7 @@ void recover(){
   struct DIR *dir=data_begin;
   while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
-    if(dir->data[11]==0x0F){   //长文件名
+    if(dir->data[11]==(uint8_t)0x0F){   //长文件名
       printf("dd\n");
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
