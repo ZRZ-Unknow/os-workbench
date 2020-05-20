@@ -11,7 +11,7 @@
 int main(int argc, char *argv[]) {
   char buf[128];
   assert(argc>=3);
-  assert(argv[1]=="frecov");
+  assert(strcpy(argv[1],"frecov")==0);
   sprintf(buf,"%s",argv[2]);
   printf("%s\n",buf);
   
