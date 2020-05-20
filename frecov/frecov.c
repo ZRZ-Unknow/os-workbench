@@ -86,13 +86,12 @@ void recover(){
   assert(fat_fs!=MAP_FAILED);
   struct fat_header *header=fat_fs;
   assert(header->Signature_word==0xaa55);
-  assert(header->BS_jmpBoot[0]==0x98);
   void *data_begin=(void*)(uintptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   printf("%d\n",header->Signature_word);
   struct DIR *dir=data_begin;
-  struct fat_short_dir *fsd=data_begin;
-  assert(fsd->DIR_Attr==0x00);
+  struct fat_header *fsd=data_begin;
+  assert(fsd->BS_jmpBoot[0]==0x00);
   while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     printf("%p,%p\n",dir,fat_fs+buf.st_size);
     //if((dir->data[11])==0b00111100){   //长文件名
