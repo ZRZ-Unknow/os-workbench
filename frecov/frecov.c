@@ -85,7 +85,7 @@ void recover(){
   struct fat_header *header=fat_fs;
   assert(header->Signature_word==0xaa55);
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
-  printf("start:%p,data_start:%p,size:%d\n",fat_fs,data_begin,buf.st_size);
+  printf("start:%p,data_start:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   struct DIR *dir=data_begin;
   while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     dir++;
