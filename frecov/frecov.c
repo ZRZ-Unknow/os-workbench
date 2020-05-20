@@ -89,10 +89,10 @@ void recover(){
   struct DIR *dir=data_begin;
   while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
-    if(1){   //长文件名
-      printf("%d\n",dir[11]);
+    if(dir->data[11]==0x0F){   //长文件名
+      printf("%d\n",3);
     }
-    else if(strncmp((char*)&dir[8],"BMP",3)==0){
+    else if(strncmp((char*)&dir.data[8],"BMP",3)==0){
         char short_name[12];
         strncpy(short_name,(char*)dir,11);
         printf("%s\n",short_name);
