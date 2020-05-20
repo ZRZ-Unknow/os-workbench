@@ -28,10 +28,10 @@ struct fat_header {
   uint16_t BPB_NumHeads;
   uint32_t BPB_HiddSec;
   uint32_t BPB_TotSec32;
-  uint32_t BPB_FATSz32;
+  uint32_t BPB_FATSz32;   //FAT表扇区数
   uint16_t BPB_ExtFlags;
   uint16_t BPB_FSVer;
-  uint32_t BPB_RootClus;
+  uint32_t BPB_RootClus;   //FAT根目录起始簇号
   uint16_t BPB_FSInfo;
   uint16_t BPB_BkBootSec;
   uint8_t BPB_Reserved[12];
