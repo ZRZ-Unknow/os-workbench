@@ -91,7 +91,7 @@ void recover(){
   printf("%d\n",header->Signature_word);
   struct DIR *dir=data_begin;
   struct fat_short_dir *fsd=data_begin;
-  assert(fsd->DIR_Attr==0x98);
+  assert(fsd->DIR_Attr==0x00);
   while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     printf("%p,%p\n",dir,fat_fs+buf.st_size);
     //if((dir->data[11])==0b00111100){   //长文件名
