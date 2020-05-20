@@ -58,7 +58,7 @@ void recover(){
   fstat(fd,&buf);
   void *file=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
   struct fat_header *header=(struct fat_header*)file;
-  printf("%c\n",header->BS_jmpBoot[0]);
+  //printf("%c\n",header->BS_jmpBoot[0]);
 }
 
 
