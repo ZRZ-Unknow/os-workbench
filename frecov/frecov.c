@@ -90,7 +90,6 @@ void recover(){
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   printf("%d\n",header->Signature_word);
   struct DIR *dir=data_begin;
-  assert(dir->(data)==0x34);
   while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     printf("%p,%p\n",dir,fat_fs+buf.st_size);
     //if((dir->data[11])==0b00111100){   //长文件名
