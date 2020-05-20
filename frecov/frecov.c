@@ -94,6 +94,7 @@ void recover(){
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char short_name[32];
+        memset(short_name,0,sizeof(short_name));
         strncpy(short_name,(char*)dir,8);
         strcat(short_name,".bmp");
         printf("%s\n",short_name);
