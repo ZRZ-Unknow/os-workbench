@@ -57,6 +57,7 @@ void recover(){
   struct stat buf;
   fstat(fd,&buf);
   void *file=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
+  assert(file!=MAP_FAILED);
   struct fat_header *header=file;
   //printf("%c\n",header->BS_jmpBoot[0]);
   assert(header->BPB_RootEntCnt==0);
