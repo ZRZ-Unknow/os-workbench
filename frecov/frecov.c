@@ -92,9 +92,11 @@ void recover(){
     if((dir->data[11])==0x0F){   //长文件名
       //printf("%d\n",dir->data[1]);
     }
-    else if(dir->data[8]==(uint8_t)'B' && dir->data[9]==(uint8_t)'M' && dir->data[10]==(uint8_t)'P'){
-        char short_name[12];
-        strncpy(short_name,(char*)dir,11);
+    else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
+        char short_name[32];
+        strncpy(short_name,(char*)dir,8);
+        strncpy(short_name[8],".",1);
+        strncpy(short_name[9],"bmp",3);
         printf("%s\n",short_name);
     }
     dir++;
