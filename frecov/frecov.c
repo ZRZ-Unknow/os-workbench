@@ -86,7 +86,7 @@ void recover(){
   assert(header->Signature_word==0xaa55);
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
-  struct DIR *dir=fat_fs+data_begin;
+  struct DIR *dir=(intptr_t)fat_fs+(intptr_t)data_begin;
   while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     printf("%p,%p\n",dir,fat_fs+buf.st_size);
     if((dir->data[11])==0x0F){   //长文件名
