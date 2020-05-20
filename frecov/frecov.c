@@ -41,7 +41,7 @@ struct fat_header {
 
 struct fat {
   struct fat_header header;
-  uint8_t padding[PADDING_SIZE];
+  //uint8_t padding[PADDING_SIZE];
   //struct fat_table fat[FAT_COPIES];
   //struct cluster clusters[CLUSTER_SIZE];
 } __attribute__((packed)); 
