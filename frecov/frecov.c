@@ -57,13 +57,15 @@ void recover(){
   assert(fd!=-1);
   struct stat buf;
   fstat(fd,&buf);
-  void *file=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
-  assert(file!=MAP_FAILED);
+  void *fat_fs=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
+  assert(fat_fs!=MAP_FAILED);
   struct fat_header *header=file;
   printf("%x\n",header->BS_jmpBoot[0]);
   assert(header->Signature_word==0xaa55);
   printf("%d\n",header->BPB_RsvdSecCnt);
   printf("%d\n",header->BPB_NumFATs);
+  void *data_begin=(header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPBSecPerClus)*header->BPB_BytsPerSec;
+  printf("%d\n",data_begin);
 }
 
 
