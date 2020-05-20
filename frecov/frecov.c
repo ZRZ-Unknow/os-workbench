@@ -90,7 +90,7 @@ void recover(){
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("%p\n",data_begin);
   struct DIR *dir=data_begin;
-  while((intptr_t*)dir<(intptr_t*)(fat_fs+buf.st_size)){
+  while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     dir++;
   }
   printf("ddd\n");
