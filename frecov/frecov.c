@@ -92,7 +92,7 @@ void recover(){
     if(dir->data[11]==0x0F){   //长文件名
       printf("%d\n",3);
     }
-    else if(strncmp((char*)dir->data[8],"BMP",3)==0){
+    else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char short_name[12];
         strncpy(short_name,(char*)dir,11);
         printf("%s\n",short_name);
