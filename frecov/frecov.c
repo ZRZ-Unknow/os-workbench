@@ -91,7 +91,7 @@ void recover(){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
     if((dir[11]+0)==0x0F){   //长文件名
     }
-    else if((dir[8]+0)=='B' && (dir[9]+0)=='M' && (0+dir[10])=='P'){
+    else if((*dir[8]+0)=='B' && (*dir[9]+0)=='M' && (0+*dir[10])=='P'){
         char short_name[12];
         strncpy(short_name,(char*)dir,11);
         printf("%s\n",short_name);
