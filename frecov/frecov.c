@@ -59,7 +59,7 @@ void recover(){
   fstat(fd,&buf);
   void *fat_fs=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
   assert(fat_fs!=MAP_FAILED);
-  struct fat_header *header=file;
+  struct fat_header *header=fat_fs;
   printf("%x\n",header->BS_jmpBoot[0]);
   assert(header->Signature_word==0xaa55);
   printf("%d\n",header->BPB_RsvdSecCnt);
