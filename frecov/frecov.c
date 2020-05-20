@@ -106,10 +106,10 @@ void recover(){
 
 
 int main(int argc, char *argv[]) {
-  assert(argc>=3);
+  /**assert(argc>=3);
   assert(strcmp(argv[1],"frecov")==0);
-  assert(sizeof(struct fat_header)==512);
-  sprintf(filename,"%s",argv[2]);
+  assert(sizeof(struct fat_header)==512);**/
+  sprintf(filename,"%s","/home/zrz/temp/M5-frecov.img");
   printf("%s\n",filename);
   recover();
   return 0;
