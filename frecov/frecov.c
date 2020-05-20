@@ -71,6 +71,10 @@ struct fat_long_dir{
   uint8_t LDIR_Name3[4];
 };
 
+struct DIR{
+  uint8_t data[32];
+};
+
 void recover(){
   int fd=open(filename,O_RDONLY);
   assert(fd!=-1);
@@ -83,8 +87,15 @@ void recover(){
   assert(header->Signature_word==0xaa55);
   printf("%d\n",header->BPB_RsvdSecCnt);
   printf("%d\n",header->BPB_NumFATs);
-  void *data_begin=(void*)(uintptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
+  void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("%p\n",data_begin);
+  struct DIR *dir=data_begin;
+  while((intptr_t*)dir<(intptr_t*)(fat_fs+buf.st_size)){
+    dir++;
+  }
+  printf("ddd\n");
+
+
 }
 
 
