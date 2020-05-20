@@ -89,7 +89,7 @@ void recover(){
   struct DIR *dir=data_begin;
   while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     dir++;
-    printf("%p,%p\n",dir,fat_fs+buf.st_size);
+    //printf("%p,%p\n",dir,fat_fs+buf.st_size);
   }
   printf("ddd\n");
 
