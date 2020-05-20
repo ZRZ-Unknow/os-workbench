@@ -65,7 +65,7 @@ void recover(){
   printf("%d\n",header->BPB_RsvdSecCnt);
   printf("%d\n",header->BPB_NumFATs);
   void *data_begin=(header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPBSecPerClus)*header->BPB_BytsPerSec;
-  printf("%d\n",data_begin);
+  printf("%p\n",data_begin);
 }
 
 
