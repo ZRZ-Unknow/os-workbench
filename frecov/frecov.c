@@ -98,6 +98,7 @@ void recover(){
         printf("%s\n",short_name);
     }**/
     dir++;
+    printf("ddd\n");
   }
   printf("ddd\n");
 
