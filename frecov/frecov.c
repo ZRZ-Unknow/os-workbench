@@ -58,7 +58,7 @@ struct fat_short_dir{
   uint8_t DIR_WrtDate[2];
   uint16_t DIR_FstClusLO;  //文件起始簇号低16位
   uint32_t DIR_FileSize;  //文件长度
-}
+};
 
 struct fat_long_dir{
   uint8_t LDIR_Ord;  //属性字节
@@ -69,7 +69,7 @@ struct fat_long_dir{
   uint8_t LDIR_Name2[12];
   uint8_t LDIR_FstClusLO[2];  //0
   uint8_t LDIR_Name3[4];
-}
+};
 
 void recover(){
   int fd=open(filename,O_RDONLY);
