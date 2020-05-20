@@ -94,9 +94,9 @@ void recover(){
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char short_name[32];
-        strncpy(short_name,(char*)dir,8);
-        strncpy(short_name[8],".",1);
-        strncpy(short_name[9],"bmp",3);
+        strncpy(&short_name[0],(char*)dir,8);
+        strncpy(&short_name[8],".",1);
+        strncpy(&short_name[9],"bmp",3);
         printf("%s\n",short_name);
     }
     dir++;
