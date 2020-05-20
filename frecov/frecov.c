@@ -72,7 +72,7 @@ struct fat_long_dir{
 }__attribute__((packed));
 
 struct DIR{
-  uint8_t data[32];
+  uint16_t data[16];
 }__attribute__((packed));
 
 void recover(){
