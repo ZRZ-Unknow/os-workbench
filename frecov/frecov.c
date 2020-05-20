@@ -6,6 +6,11 @@
 #include <time.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
 
 char filename[128];
 struct fat_header {
@@ -35,7 +40,7 @@ struct fat_header {
   uint8_t BS_BootSig;
   uint32_t BS_VollD;
   uint8_t BS_VolLab[11];
-  uint32_t BS_FilSysType[2];
+  uint8_t BS_FilSysType[8];
   uint8_t  padding[420];
   uint16_t Signature_word;
 } __attribute__((packed));
@@ -48,6 +53,10 @@ struct fat {
 } __attribute__((packed)); 
 
 void recover(){
+  int fd=open(filename,O_RDONLY);
+  struct stat buf;
+  fstat(fd,buf);
+  void *file=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
 
 }
 
