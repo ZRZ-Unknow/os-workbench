@@ -62,6 +62,8 @@ void recover(){
   struct fat_header *header=file;
   printf("%x\n",header->BS_jmpBoot[0]);
   assert(header->Signature_word==0xaa55);
+  printf("%d\n",header->BPB_RsvdSecCnt);
+  printf("%d\n",header->BPB_NumFATs);
 }
 
 
