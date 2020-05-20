@@ -45,13 +45,6 @@ struct fat_header {
   uint16_t Signature_word;
 } __attribute__((packed));
 
-struct fat {
-  struct fat_header header;
-  //uint8_t padding[PADDING_SIZE];
-  //struct fat_table fat[FAT_COPIES];
-  //struct cluster clusters[CLUSTER_SIZE];
-} __attribute__((packed)); 
-
 void recover(){
   int fd=open(filename,O_RDONLY);
   assert(fd!=-1);
