@@ -6,14 +6,18 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+char filename[128];
+
+void recover(){
+
+}
 
 
 int main(int argc, char *argv[]) {
-  char buf[128];
   assert(argc>=3);
   assert(strcmp(argv[1],"frecov")==0);
-  sprintf(buf,"%s",argv[2]);
-  printf("%s\n",buf);
-  
+  sprintf(filename,"%s",argv[2]);
+  printf("%s\n",filename);
+  recover();
   return 0;
 }
