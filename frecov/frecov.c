@@ -83,15 +83,13 @@ void recover(){
   void *fat_fs=mmap(NULL,buf.st_size,PROT_READ,MAP_SHARED,fd,0);
   assert(fat_fs!=MAP_FAILED);
   struct fat_header *header=fat_fs;
-  printf("%x\n",header->BS_jmpBoot[0]);
   assert(header->Signature_word==0xaa55);
-  printf("%d\n",header->BPB_RsvdSecCnt);
-  printf("%d\n",header->BPB_NumFATs);
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
-  printf("%p\n",data_begin);
+  printf("start:%p,data_start:%p,size:%d\n",fat_fs,data_begin,buf.st_size);
   struct DIR *dir=data_begin;
   while((intptr_t)dir<(intptr_t)(fat_fs+buf.st_size)){
     dir++;
+    printf("%p,%p\n",dir,fat_fs+buf.st_size);
   }
   printf("ddd\n");
 
