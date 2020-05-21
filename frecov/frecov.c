@@ -136,15 +136,15 @@ void recover(){
       }
       else{
         char *short_name=malloc(16);
-        memset(short_name,'\0',16);
-        int i;
-        for(i=0;i<8;i++){
+        memset(short_name,0,16);
+        for(int i=0;i<8;i++){
           if(dir->data[i]==0x20) break;
           short_name[i]=dir->data[i];
         }
         strcat(short_name,".bmp");
         printf("%s %s\n",shla,short_name);
       }
+      fflush(stdout);
     }
   }
   printf("done\n");
