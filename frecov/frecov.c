@@ -131,7 +131,8 @@ void recover(){
       if(dir->data[6]=='~'){    //是长文件的短文件名目录
         int lenth=sizeof(long_name_buf);
         if(lenth<25 && lenth>0){
-          char *long_name=malloc(32);
+          char long_name[32];
+          memset(long_name,0,sizeof(long_name));
           int name_lenth=0;
           int rem=lenth%13;
           int times=(lenth-rem)/13;
