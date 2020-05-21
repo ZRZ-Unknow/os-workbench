@@ -128,12 +128,25 @@ void recover(){
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
       if(dir->data[6]=='~'){    //是长文件的短文件名目录
-
+        int lenth=sizeof(long_name_buf);
+        if(lenth<25){
+          char *long_name=malloc(32);
+          int name_lenth=0;
+          int rem=lenth%13;
+          int times=(lenth-rem)/13;
+          for(int i=lenth-rem;i<lenth;i++){
+            long_name[name_lenth++]=long_name_buf[i];
+          }
+          for(int i=times-1;i>=0;i--){
+            strncat(long_name,long_name_buf+i*13,13);
+          }
+          printf("%s\n",long_name);
+        }
         memset(long_name_buf,'\0',64); 
       }
       else{
-        char *short_name=malloc(32);
-        memset(short_name,'\0',32);
+        char *short_name=malloc(16);
+        memset(short_name,'\0',16);
         int i;
         for(i=0;i<8;i++){
           if(dir->data[i]==0x20) break;
