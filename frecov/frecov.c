@@ -90,48 +90,40 @@ void recover(){
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   struct DIR *dir=(void*)((intptr_t)fat_fs+(intptr_t)data_begin);
   while((uintptr_t)dir++<(uintptr_t)(fat_fs+buf.st_size)){
-    if(dir->data[0]==0x00 || dir->data[0]==0xE5){
+    if(dir->data[0]==0x00 || dir->data[0]==0xE5 || dir->data[11]==0x0F){
       continue;
     }
-    if(dir->data[11]==0x0F){   //长文件名目录
-      
-    }
-    else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
-      if(dir->data[6]=='~'){    //是长文件的短文件名目录
-        memset(long_name_buf,'\0',64); 
+    if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
+      if(dir->data[6]=='~'){    //是长文件的短文件名目录,需要倒推
+        memset(long_name_buf,0,sizeof(long_name_buf)); 
         struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
-      int lenth=sizeof(long_name_buf); 
-      printf("%d--",lenth);
-      bool reach_end=false;
-      for(int i=0;i<5;i++){
+        int lenth=sizeof(long_name_buf); 
+        bool reach_end=false;
+        for(int i=0;i<5;i++){
         /**if(long_dir->LDIR_Name1[i]==0x00){
           reach_end=true;
           break;
-        }*/
-        long_name_buf[lenth++]=(char)long_dir->LDIR_Name1[i];
-      } 
-      if(!reach_end){
-        for(int i=0;i<6;i++){
-          /**if(long_dir->LDIR_Name2[i]==0xFFFF){
-            reach_end=true;
-            break;
           }*/
-          long_name_buf[lenth++]=(char)long_dir->LDIR_Name2[i];
+          long_name_buf[lenth++]=(char)long_dir->LDIR_Name1[i];
+        } 
+        if(!reach_end){
+          for(int i=0;i<6;i++){
+              /**if(long_dir->LDIR_Name2[i]==0xFFFF){
+              reach_end=true;
+              break;
+          }*/
+            long_name_buf[lenth++]=(char)long_dir->LDIR_Name2[i];
+          }
         }
-      }
-      if(!reach_end){
-        for(int i=0;i<2;i++){
+        if(!reach_end){
+          for(int i=0;i<2;i++){
           /*if(long_dir->LDIR_Name3[i]==0xFFFF){
             reach_end=true;
             break;
           }*/
-          long_name_buf[lenth++]=(char)long_dir->LDIR_Name3[i];
+            long_name_buf[lenth++]=(char)long_dir->LDIR_Name3[i];
+          }
         }
-      }
-      if(lenth>=50){
-        memset(long_name_buf,'\0',64);
-      }
-      //printf("d");
       }
       else{
         char *short_name=malloc(16);
