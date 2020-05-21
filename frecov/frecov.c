@@ -122,7 +122,7 @@ void recover(){
                 reach_end=true;
                 break;
               }
-              long_name_buf[lenth++]=long_dir->LDIR_Name3[i];
+              long_name_buf[long_name_lenth++]=long_dir->LDIR_Name3[i];
             }
           }
           if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
