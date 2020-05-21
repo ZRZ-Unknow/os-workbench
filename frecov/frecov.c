@@ -103,7 +103,7 @@ void recover(){
         short_name[i]='\0';
         //strncpy(short_name,(char*)dir,8);
         strcat(short_name,".bmp");
-        printf("%s\n",short_name);
+        printf("%s,%d\n",short_name,sizeof(short_name));
     }
     dir++;
   }
