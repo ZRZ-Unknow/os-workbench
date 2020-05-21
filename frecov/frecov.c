@@ -129,6 +129,6 @@ int main(int argc, char *argv[]) {
   printf("%s\n",filename);
   recover();
   char a[3];
-  printf("%d\n",sizeof(a));
+  printf("%d\n",sizeof(a)==3);
   return 0;
 }
