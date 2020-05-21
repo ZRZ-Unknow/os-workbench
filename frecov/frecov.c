@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
-
+#define getbit(x,pos)   ((x) >> (pos)&1) 
 char filename[64];
 char long_name_buf[64];
 int long_name_lenth=0;
@@ -95,34 +95,42 @@ void recover(){
     }
     if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
       if(dir->data[6]=='~'){    //是长文件的短文件名目录,需要倒推
-        memset(long_name_buf,0,sizeof(long_name_buf)); 
+        memset(long_name_buf,0,sizeof(long_name_buf));
+        long_name_lenth=0; 
         struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
-        int lenth=sizeof(long_name_buf); 
-        bool reach_end=false;
-        for(int i=0;i<5;i++){
-        /**if(long_dir->LDIR_Name1[i]==0x00){
-          reach_end=true;
-          break;
-          }*/
-          long_name_buf[lenth++]=(char)long_dir->LDIR_Name1[i];
-        } 
-        if(!reach_end){
-          for(int i=0;i<6;i++){
-              /**if(long_dir->LDIR_Name2[i]==0xFFFF){
+        while(long_dir->LDIR_Attr==0x0F){
+          bool reach_end=false;
+          for(int i=0;i<5;i++){
+            if(long_dir->LDIR_Name1[i]==0x00){
               reach_end=true;
               break;
-          }*/
-            long_name_buf[lenth++]=(char)long_dir->LDIR_Name2[i];
+            }
+            long_name_buf[long_name_lenth++]=long_dir->LDIR_Name1[i];
+          } 
+          if(!reach_end){
+            for(int i=0;i<6;i++){
+              if(long_dir->LDIR_Name2[i]==0xFFFF){
+                reach_end=true;
+                break;
+              }
+              long_name_buf[long_name_lenth++]=long_dir->LDIR_Name2[i];
+            }
           }
-        }
-        if(!reach_end){
-          for(int i=0;i<2;i++){
-          /*if(long_dir->LDIR_Name3[i]==0xFFFF){
-            reach_end=true;
+          if(!reach_end){
+            for(int i=0;i<2;i++){
+              if(long_dir->LDIR_Name3[i]==0xFFFF){
+                reach_end=true;
+                break;
+              }
+              long_name_buf[lenth++]=long_dir->LDIR_Name3[i];
+            }
+          }
+          if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
+            strcat(long_name_lenth,".bmp");
+            printf("long_name:%s\n",long_name_buf);
             break;
-          }*/
-            long_name_buf[lenth++]=(char)long_dir->LDIR_Name3[i];
           }
+          long_dir--;
         }
       }
       else{
