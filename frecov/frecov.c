@@ -131,7 +131,7 @@ void recover(){
           }
           if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
             
-            printf("%s %s\n",shal,long_name_buf);
+            printf("%s %s\n",shla,long_name_buf);
             break;
           }
           if(strlen(long_name_buf)>40){
