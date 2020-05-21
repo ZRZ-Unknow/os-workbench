@@ -109,6 +109,9 @@ void recover(){
         printf("\n");**/
         printf("name:%s.\n",short_name);
     }
+    else{
+      printf("c");
+    }
     dir++;
   }
   printf("ddd\n");
