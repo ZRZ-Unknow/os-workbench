@@ -147,6 +147,7 @@ void recover(){
       fflush(stdout);
     }
   }
+  close(fd);
   printf("done\n");
 }
 
