@@ -138,7 +138,7 @@ void recover(){
             long_name[name_lenth++]=long_name_buf[i];
           }
           for(int i=times-1;i>=0;i--){
-            strncat(long_name,long_name_buf[i*13],13);
+            strncat(long_name,long_name_buf+i*13,13);
           }
           printf("%s\n",long_name);
         }
