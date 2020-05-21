@@ -128,5 +128,7 @@ int main(int argc, char *argv[]) {
   sprintf(filename,"%s","/home/zrz/temp/M5-frecov.img");
   printf("%s\n",filename);
   recover();
+  char a[3];
+  printf("%d\n",sizeof(a));
   return 0;
 }
