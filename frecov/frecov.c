@@ -98,7 +98,7 @@ void recover(){
         printf("start\n");
         memset(long_name_buf,0,sizeof(long_name_buf));
         long_name_lenth=0; 
-        struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
+        struct fat_long_dir *long_dir=(struct fat_long_dir*)(dir-1);
         while(long_dir->LDIR_Attr==0x0F){
           bool reach_end=false;
           for(int i=0;i<5;i++){
