@@ -94,7 +94,7 @@ void recover(){
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char *short_name=malloc(32);
-        memset(short_name,'\0',sizeof(short_name));
+        memset(short_name,'\0',32);
         int i;
         for(i=0;i<8;i++){
           if(dir->data[i]==0x20) break;
