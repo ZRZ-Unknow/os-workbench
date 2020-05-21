@@ -140,7 +140,7 @@ void recover(){
           for(int i=times-1;i>=0;i--){
             strncat(long_name,long_name_buf+i*13,13);
           }
-          printf("%s\n",long_name);
+          printf("%s,%d\n",long_name,lenth);
         }
         memset(long_name_buf,'\0',64); 
       }
