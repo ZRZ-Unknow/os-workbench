@@ -105,19 +105,19 @@ void recover(){
       } 
       if(!reach_end){
         for(int i=0;i<6;i++){
-          if(long_dir->LDIR_Name2[i]==0xFFFF){
+          /**if(long_dir->LDIR_Name2[i]==0xFFFF){
             reach_end=true;
             break;
-          }
+          }*/
           long_name_buf[lenth++]=long_dir->LDIR_Name2[i];
         }
       }
       if(!reach_end){
         for(int i=0;i<2;i++){
-          if(long_dir->LDIR_Name3[i]==0xFFFF){
+          /*if(long_dir->LDIR_Name3[i]==0xFFFF){
             reach_end=true;
             break;
-          }
+          }*/
           long_name_buf[lenth++]=long_dir->LDIR_Name3[i];
         }
       }
