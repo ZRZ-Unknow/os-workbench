@@ -12,11 +12,10 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-
 #define getbit(x,pos)   ((x) >> (pos)&1) 
 char filename[64];
 char long_name_buf[64];
-char shla[]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83";
+char sha[]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83";
 
 int long_name_lenth=0;
 struct fat_header {
@@ -130,8 +129,7 @@ void recover(){
             }
           }
           if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
-            
-            printf("%s %s\n",shla,long_name_buf);
+            printf("%s %s\n",sha,long_name_buf);
             break;
           }
           if(strlen(long_name_buf)>40){
@@ -148,20 +146,16 @@ void recover(){
           short_name[i]=dir->data[i];
         }
         strcat(short_name,".bmp");
-        printf("%s %s\n",shla,short_name);
+        printf("%s %s\n",sha,short_name);
       }
       fflush(stdout);
     }
   }
   close(fd);
-  printf("%d\n",(int)strlen(shla));
 }
 
 
 int main(int argc, char *argv[]) {
-  /**assert(argc>=3);
-  assert(strcmp(argv[1],"frecov")==0);
-  assert(sizeof(struct fat_header)==512);**/
   sprintf(filename,"%s",argv[1]);
   memset(long_name_buf,0,sizeof(long_name_buf));
   recover();
