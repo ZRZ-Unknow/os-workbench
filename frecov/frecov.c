@@ -98,10 +98,10 @@ void recover(){
       printf("d");
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
-      if(dir->data[6]=='~'){    //是长文件的短文件名目录
+      //if(dir->data[6]=='~'){    //是长文件的短文件名目录
         
-      }
-      else{
+     //}
+      //else{
         char *short_name=malloc(32);
         memset(short_name,'\0',32);
         int i;
@@ -111,7 +111,7 @@ void recover(){
         }
         strcat(short_name,".bmp");
         printf("short_name:%s\n",short_name);
-      }
+     // }
     }
     dir++;
   }
