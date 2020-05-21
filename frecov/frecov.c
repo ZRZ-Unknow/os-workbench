@@ -16,7 +16,7 @@
 #define getbit(x,pos)   ((x) >> (pos)&1) 
 char filename[64];
 char long_name_buf[64];
-char shla[41]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83";
+char shla[]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83";
 
 int long_name_lenth=0;
 struct fat_header {
@@ -130,7 +130,8 @@ void recover(){
             }
           }
           if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
-            printf("%s\n",long_name_buf);
+            
+            printf("%s %s\n",shal,long_name_buf);
             break;
           }
           if(strlen(long_name_buf)>40){
@@ -147,7 +148,7 @@ void recover(){
           short_name[i]=dir->data[i];
         }
         strcat(short_name,".bmp");
-        printf("%s\n",short_name);
+        printf("%s %s\n",shla,short_name);
       }
       fflush(stdout);
     }
