@@ -95,6 +95,7 @@ void recover(){
     if(dir->data[11]==0x0F){   //长文件名目录
       struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
       int lenth=sizeof(long_name_buf); 
+      printf("%d--",lenth);
       bool reach_end=false;
       for(int i=0;i<5;i++){
         /**if(long_dir->LDIR_Name1[i]==0x00){
