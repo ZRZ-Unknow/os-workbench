@@ -154,7 +154,7 @@ void recover(){
     }
   }
   close(fd);
-  printf("%d\n",strlen(shla));
+  printf("%d\n",(int)strlen(shla));
 }
 
 
