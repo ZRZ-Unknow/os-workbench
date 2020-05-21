@@ -14,7 +14,7 @@
 #define getbit(x,pos)   ((x) >> (pos)&1) 
 char filename[64];
 char long_name_buf[64];
-char shla[41]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83"
+char shla[41]="d60e7d3d2b47d19418af5b0ba52406b86ec6ef83";
 
 int long_name_lenth=0;
 struct fat_header {
