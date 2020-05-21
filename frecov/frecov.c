@@ -13,7 +13,8 @@
 
 
 char filename[64];
-char *long_name_buf=NULL;
+char long_name_buf[64];
+int long_name_lenth=0;
 struct fat_header {
   uint8_t  BS_jmpBoot[3];
   uint8_t  BS_OEMName[8];
@@ -93,7 +94,12 @@ void recover(){
       continue;
     }
     if(dir->data[11]==0x0F){   //长文件名目录
-      struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
+      
+    }
+    else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
+      if(dir->data[6]=='~'){    //是长文件的短文件名目录
+        memset(long_name_buf,'\0',64); 
+        struct fat_long_dir *long_dir=(struct fat_long_dir*)dir;
       int lenth=sizeof(long_name_buf); 
       printf("%d--",lenth);
       bool reach_end=false;
@@ -126,25 +132,6 @@ void recover(){
         memset(long_name_buf,'\0',64);
       }
       //printf("d");
-    }
-    else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
-      if(dir->data[6]=='~'){    //是长文件的短文件名目录
-        int lenth=sizeof(long_name_buf);
-        if(lenth<25 && lenth>0){
-          char long_name[32];
-          memset(long_name,0,sizeof(long_name));
-          int name_lenth=0;
-          int rem=lenth%13;
-          int times=(lenth-rem)/13;
-          for(int i=lenth-rem;i<lenth;i++){
-            long_name[name_lenth++]=long_name_buf[i];
-          }
-          for(int i=times-1;i>=0;i--){
-            strncat(long_name,long_name_buf+i*13,13);
-          }
-          printf("%s,%d\n",long_name,lenth);
-        }
-        memset(long_name_buf,'\0',64); 
       }
       else{
         char *short_name=malloc(16);
@@ -168,7 +155,7 @@ int main(int argc, char *argv[]) {
   assert(strcmp(argv[1],"frecov")==0);
   assert(sizeof(struct fat_header)==512);**/
   sprintf(filename,"%s","/home/zrz/temp/M5-frecov.img");
-  long_name_buf=malloc(64);
+  memset(long_name_buf,0,sizeof(long_name_buf));
   recover();
   return 0;
 }
