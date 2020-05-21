@@ -10,6 +10,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <unistd.h>
+
 
 #define getbit(x,pos)   ((x) >> (pos)&1) 
 char filename[64];
