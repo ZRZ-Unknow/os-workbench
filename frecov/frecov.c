@@ -97,10 +97,10 @@ void recover(){
       int lenth=sizeof(long_name_buf); 
       bool reach_end=false;
       for(int i=0;i<5;i++){
-        if(long_dir->LDIR_Name1[i]==0x00){
+        /**if(long_dir->LDIR_Name1[i]==0x00){
           reach_end=true;
           break;
-        }
+        }*/
         long_name_buf[lenth++]=long_dir->LDIR_Name1[i];
       } 
       if(!reach_end){
