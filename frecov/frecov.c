@@ -101,7 +101,7 @@ void recover(){
           reach_end=true;
           break;
         }*/
-        long_name_buf[lenth++]=long_dir->LDIR_Name1[i];
+        long_name_buf[lenth++]=(char)long_dir->LDIR_Name1[i];
       } 
       if(!reach_end){
         for(int i=0;i<6;i++){
@@ -109,7 +109,7 @@ void recover(){
             reach_end=true;
             break;
           }*/
-          long_name_buf[lenth++]=long_dir->LDIR_Name2[i];
+          long_name_buf[lenth++]=(char)long_dir->LDIR_Name2[i];
         }
       }
       if(!reach_end){
@@ -118,7 +118,7 @@ void recover(){
             reach_end=true;
             break;
           }*/
-          long_name_buf[lenth++]=long_dir->LDIR_Name3[i];
+          long_name_buf[lenth++]=(char)long_dir->LDIR_Name3[i];
         }
       }
       if(lenth>=50){
