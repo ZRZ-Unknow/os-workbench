@@ -130,7 +130,10 @@ void recover(){
             }
           }
           if(getbit(long_dir->LDIR_Ord,6)==1){  //长文件名的最后一个目录项
-            printf("%s %s\n",shla,long_name_buf);
+            printf("%s\n",long_name_buf);
+            break;
+          }
+          if(strlen(long_name_buf)>40){
             break;
           }
           long_dir--;
@@ -144,13 +147,13 @@ void recover(){
           short_name[i]=dir->data[i];
         }
         strcat(short_name,".bmp");
-        printf("%s %s\n",shla,short_name);
+        printf("%s\n",short_name);
       }
       fflush(stdout);
     }
   }
   close(fd);
-  printf("done\n");
+  //printf("done\n");
 }
 
 
