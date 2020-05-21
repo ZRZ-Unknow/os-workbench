@@ -95,7 +95,6 @@ void recover(){
     }
     if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
       if(dir->data[6]=='~'){    //是长文件的短文件名目录,需要倒推
-        printf("start\n");
         memset(long_name_buf,0,sizeof(long_name_buf));
         long_name_lenth=0; 
         struct fat_long_dir *long_dir=(struct fat_long_dir*)(dir-1);
