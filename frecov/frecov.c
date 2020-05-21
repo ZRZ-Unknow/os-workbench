@@ -12,7 +12,8 @@
 #include <sys/mman.h>
 
 
-char filename[128];
+char filename[64];
+char long_name[64];
 struct fat_header {
   uint8_t  BS_jmpBoot[3];
   uint8_t  BS_OEMName[8];
@@ -87,16 +88,20 @@ void recover(){
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   struct DIR *dir=(void*)((intptr_t)fat_fs+(intptr_t)data_begin);
-  while((uintptr_t)dir++<(uintptr_t)(fat_fs+buf.st_size)){
+  while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
     if(dir->data[0]==0x00 || dir->data[0]==0xE5){
-      //dir++;
+      dir++;
       continue;
     }
-    if((dir->data[11])==0x0F){   //长文件名
+    if((dir->data[11])==0x0F){   //长文件名目录
       printf("d");
     }
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
+      if(dir->data[6]=='~'){    //是长文件的短文件名目录
+        
+      }
+      else{
         char *short_name=malloc(32);
         memset(short_name,'\0',32);
         int i;
@@ -104,16 +109,11 @@ void recover(){
           if(dir->data[i]==0x20) break;
           short_name[i]=dir->data[i];
         }
-        //short_name[i]='\0';
-        //strncpy(short_name,(char*)dir,8);
         strcat(short_name,".bmp");
-        /**for(int j=0;j<sizeof(short_name);j++){
-          printf("%d",short_name[j]);
-        }
-        printf("\n");**/
-        printf("name:%s.\n",short_name);
+        printf("short_name:%s\n",short_name);
+      }
     }
-    //dir++;
+    dir++;
   }
   printf("ddd\n");
 
@@ -128,7 +128,5 @@ int main(int argc, char *argv[]) {
   sprintf(filename,"%s","/home/zrz/temp/M5-frecov.img");
   printf("%s\n",filename);
   recover();
-  char a[3];
-  printf("%d\n",sizeof(a)==3);
   return 0;
 }
