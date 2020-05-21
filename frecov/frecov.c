@@ -95,10 +95,12 @@ void recover(){
     else if(dir->data[8]=='B' && dir->data[9]=='M' && dir->data[10]=='P'){
         char short_name[32];
         memset(short_name,0,sizeof(short_name));
-        for(int i=0;i<8;i++){
+        int i;
+        for(i=0;i<8;i++){
           if(dir->data[i]==0x20) break;
           short_name[i]=dir->data[i];
         }
+        short_name[i]='\0';
         //strncpy(short_name,(char*)dir,8);
         strcat(short_name,".bmp");
         printf("%s\n",short_name);
