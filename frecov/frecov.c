@@ -159,10 +159,10 @@ void recover(){
 
 
 int main(int argc, char *argv[]) {
-  assert(argc>=3);
+  /**assert(argc>=3);
   assert(strcmp(argv[1],"frecov")==0);
-  assert(sizeof(struct fat_header)==512);
-  sprintf(filename,"%s",argv[2]);
+  assert(sizeof(struct fat_header)==512);**/
+  sprintf(filename,"%s",argv[1]);
   memset(long_name_buf,0,sizeof(long_name_buf));
   recover();
   return 0;
