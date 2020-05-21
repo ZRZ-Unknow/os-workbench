@@ -87,10 +87,10 @@ void recover(){
   void *data_begin=(void*)(intptr_t)((header->BPB_RsvdSecCnt+header->BPB_NumFATs*header->BPB_FATSz32+(header->BPB_RootClus-2)*header->BPB_SecPerClus)*header->BPB_BytsPerSec);
   printf("start:%p,data_begin:%p,size:%ld\n",fat_fs,data_begin,buf.st_size);
   struct DIR *dir=(void*)((intptr_t)fat_fs+(intptr_t)data_begin);
-  while((uintptr_t)dir<(uintptr_t)(fat_fs+buf.st_size)){
+  while((uintptr_t)dir++<(uintptr_t)(fat_fs+buf.st_size)){
     //printf("%p,%p\n",dir,fat_fs+buf.st_size);
     if(dir->data[0]==0x00 || dir->data[0]==0xE5){
-      dir++;
+      //dir++;
       continue;
     }
     if((dir->data[11])==0x0F){   //长文件名
@@ -113,7 +113,7 @@ void recover(){
         printf("\n");**/
         printf("name:%s.\n",short_name);
     }
-    dir++;
+    //dir++;
   }
   printf("ddd\n");
 
