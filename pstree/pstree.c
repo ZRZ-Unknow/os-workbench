@@ -46,8 +46,8 @@ proc *get_last_proc(){
 void build_tree(){
 
 }
-char path1[400];
-char path2[400];
+char path1[600];
+char path2[600];
 char tmp;
 void get_procs(){
   DIR *dir=opendir("/proc");
