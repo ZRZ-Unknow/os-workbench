@@ -43,7 +43,6 @@ void get_procs(){
   struct dirent *dire;
   while((dire=readdir(dir))!=NULL){
     if(dire->d_type==4 && is_num(dire->d_name)){
-      printf("%s,%d\n",dire->d_name,dire->d_type);
       sprintf(path,"/proc/%s/stat",dire->d_name);
       FILE *fp=fopen(path,"r");
       char name[32];
@@ -51,6 +50,7 @@ void get_procs(){
       int ppid;
       char s;
       fscanf(fp,"%d (%s %c %d",&pid,&name[0],&s,&ppid);
+      name[strlen(name)-1]='\0';
       printf("%s,%d,%d\n",name,pid,ppid);
     }
   }
