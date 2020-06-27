@@ -22,7 +22,7 @@ typedef struct childs{
 typedef struct proc{
   char* name;
   pid_t pid;
-  pid_t fpid;
+  pid_t ppid;
   childs *child ;
 }proc;
 
@@ -37,12 +37,20 @@ bool is_num(char *str){
 void build_tree(){
 
 }
+char[64] path;
 void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
   while((dire=readdir(dir))!=NULL){
     if(dire->d_type==4 && is_num(dire->d_name)){
       printf("%s,%d\n",dire->d_name,dire->d_type);
+      sprintf(path,"/proc/%s/stat",dire->d_name);
+      FILE *fp=fopen(path,"r");
+      char[32] name;
+      int pid;
+      int ppid;
+      fscanf(fp,"%d (%s %c %d",pid,name,ppid,ppid);
+      print("%s,%d,%d\n",name,pid,ppid);
     }
   }
 }
@@ -59,7 +67,6 @@ int main(int argc, char *argv[]) {
       V=true;
     }
   }
-  printf("%d,%d,%d\n",P,N,V);
   if(V){
     fprintf(stderr,"pstree version 1.0 CopyRight (C) 2020 ZRZ\n");
   }
