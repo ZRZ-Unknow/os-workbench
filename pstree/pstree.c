@@ -66,7 +66,7 @@ void get_procs(){
         fp=fopen(path2,"r");
         pid_t child_pid;
         while(fscanf(fp,"%d",&child_pid)!=EOF){
-          root->child_pid[root->child_pid++]=child_pid;
+          root->child_pid[root->child_num++]=child_pid;
         }
       }
       else{
@@ -81,7 +81,7 @@ void get_procs(){
         cur_proc->child_num=0;
         cur_proc->next=NULL;
         while(fscanf(fp,"%d",&child_pid)!=EOF){
-          cur_proc->child_pid[cur_proc->child_pid++]=child_pid;
+          cur_proc->child_pid[cur_proc->child_num++]=child_pid;
         }
       }
       fclose(fp); 
