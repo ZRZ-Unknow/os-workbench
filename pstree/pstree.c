@@ -23,11 +23,12 @@ typedef struct proc{
   char name[128];
   pid_t pid;
   pid_t ppid;
+  int child_num;
+  pid_t child_pid[128];
   struct proc *next;
-  childs *child;
 }proc;
 
-proc root_proc={.pid=1,.ppid=0,.next=NULL};
+proc root_proc={.pid=1,.ppid=0,.child_num=0,.next=NULL};
 proc *root=&root_proc;
 
 bool is_num(char *str){
@@ -61,15 +62,29 @@ void get_procs(){
         fscanf(fp,"%d (%s %c %d",&root->pid,root->name,&tmp,&root->ppid);
         printf("%s\n",root->name);
         root->name[strlen(root->name)-1]='\0';
+        fclose(fp);
+        fp=fopen(path2,"r");
+        pid_t child_pid;
+        while(fscanf(fp,"%d",&child_pid)!=EOF){
+          root->child_pid[root->child_pid++]=child_pid;
+        }
       }
       else{
         proc *last_proc=get_last_proc();
         proc *cur_proc=malloc(sizeof(proc));
         fscanf(fp,"%d (%s %c %d",&cur_proc->pid,cur_proc->name,&tmp,&cur_proc->ppid);
         cur_proc->name[strlen(cur_proc->name)-1]='\0';
-        printf("%s,%d,%d\n",cur_proc->name,cur_proc->pid,cur_proc->ppid);
+        last_proc->next=cur_proc;
+        fclose(fp);
+        fp=fopen(path2,"r");
+        pid_t child_pid;
+        cur_proc->child_num=0;
+        cur_proc->next=NULL;
+        while(fscanf(fp,"%d",&child_pid)!=EOF){
+          cur_proc->child_pid[cur_proc->child_pid++]=child_pid;
+        }
       }
-      
+      fclose(fp); 
     }
   }
 }
