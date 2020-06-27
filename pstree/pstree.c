@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
   }
   else{
     build_tree();
-    get_procs()
+    get_procs();
   }
   return 0;
 }
