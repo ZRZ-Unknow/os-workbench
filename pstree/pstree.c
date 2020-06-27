@@ -45,7 +45,7 @@ proc *get_last_proc(){
 }
 void debugprint(){
   for(proc* p=root;p!=NULL;p=p->next){
-    printf("%s,%d,ppid:%d,childs:\n",p->name,p->pid,p->ppid);  
+    printf("%s,%d,ppid:%d,childs:",p->name,p->pid,p->ppid);  
     for(int i=0;i<p->child_num;i++){
       printf("%d,",p->child_pid[i]);
     }
