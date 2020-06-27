@@ -14,17 +14,28 @@ bool P=false;
 bool N=false;
 bool V=false;
 
+typedef struct childs{
+  pid_t pid;
+  struct childs* next;
+}childs;
+
 typedef struct proc{
   char* name;
   pid_t pid;
   pid_t fpid;
-  struct proc *child;
+  childs *child ;
 }proc;
 
 void build_tree(){
 
 }
-
+void get_procs(){
+  DIR *dir=opendir("/proc");
+  struct dirent *dire;
+  while((dire=readdir(dir))!=NULL){
+    printf("%s,%d\n",dire->d_name,dire->d_type);
+  }
+}
 
 int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
@@ -44,6 +55,7 @@ int main(int argc, char *argv[]) {
   }
   else{
     build_tree();
+    get_procs()
   }
   return 0;
 }
