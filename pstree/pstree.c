@@ -59,6 +59,7 @@ void get_procs(){
       FILE *fp=fopen(path1,"r");
       if(strcmp(dire->d_name,"1")==0){
         fscanf(fp,"%d (%s %c %d",&root->pid,root->name,&tmp,&root->ppid);
+        printf("%s\n",root->name);
         root->name[strlen(root->name)-1]='\0';
       }
       else{
