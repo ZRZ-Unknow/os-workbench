@@ -30,6 +30,10 @@ typedef struct proc{
 
 proc root_proc={.pid=1,.ppid=0,.child_num=0,.next=NULL};
 proc *root=&root_proc;
+char path1[600];
+char path2[600];
+char tmp;
+
 
 bool is_num(char *str){
   for(int i=0;i<strlen(str);i++){
@@ -43,6 +47,7 @@ proc *get_last_proc(){
   while(pr->next!=NULL) pr=pr->next;
   return pr;
 }
+
 void debugprint(){
   for(proc* p=root;p!=NULL;p=p->next){
     printf("%s,%d,ppid:%d,childs:",p->name,p->pid,p->ppid);  
@@ -52,12 +57,24 @@ void debugprint(){
     printf("\n");
   }
 }
-void build_tree(){
 
+proc *find_proc(int pid){
+  return NULL;
 }
-char path1[600];
-char path2[600];
-char tmp;
+
+void print_tree(proc *p){
+  if(P){
+    printf("%s(%d)-",p->name,p->pid);
+  } 
+  else{
+    printf("%s-",p->name);
+  }
+  for(int i=0;i<p->child_num;i++){
+    proc *child=find_proc(p->child_pid[i]);
+  } 
+}
+
+
 void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
@@ -74,6 +91,7 @@ void get_procs(){
         pid_t child_pid;
         while(fscanf(fp,"%d",&child_pid)!=EOF){
           root->child_pid[root->child_num++]=child_pid;
+          assert(root->child_num<=128);
         }
       }
       else{
@@ -89,6 +107,7 @@ void get_procs(){
         cur_proc->next=NULL;
         while(fscanf(fp,"%d",&child_pid)!=EOF){
           cur_proc->child_pid[cur_proc->child_num++]=child_pid;
+          assert(cur_proc->child_num<=128);
         }
       }
       fclose(fp); 
