@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
   }
   printf("%d,%d,%d\n",P,N,V);
   if(V){
-    printf("pstree version 1.0 @CopyRight ZRZ\n");
+    fprintf(stderr,"pstree version 1.0 CopyRight (C) 2020 ZRZ\n");
   }
   return 0;
 }
