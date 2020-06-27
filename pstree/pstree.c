@@ -80,7 +80,7 @@ void print_tree(proc *p){
       print_tree(child);
     }
   } 
-  print("\n");
+  printf("\n");
 }
 
 
