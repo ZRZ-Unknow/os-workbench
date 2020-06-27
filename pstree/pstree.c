@@ -46,26 +46,27 @@ proc *get_last_proc(){
 void build_tree(){
 
 }
-char path[300];
+char path1[300];
+char path2[300];
+char tmp;
 void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
   while((dire=readdir(dir))!=NULL){
     if(dire->d_type==4 && is_num(dire->d_name)){
-      sprintf(path,"/proc/%s/stat",dire->d_name);
-      FILE *fp=fopen(path,"r");
+      sprintf(path1,"/proc/%s/stat",dire->d_name);
+      sprintf(path2,"/proc/%s/task/%s/children",dire->d_name,dire->d_name);
+      FILE *fp=fopen(path1,"r");
       if(strcmp(dire->d_name,"1")==0){
-
+        fscanf(fp,"%d (%s %c %d",root->pid,root->name,tmp,root->ppid);
+        root->name[strlen(root->name)-1]='\0';
       }
       else{
         proc *last_proc=get_last_proc();
-        char name[32];
-        int pid;
-        int ppid;
-        char s;
-        fscanf(fp,"%d (%s %c %d",&pid,&name[0],&s,&ppid);
-        name[strlen(name)-1]='\0';
-        printf("%s,%d,%d\n",name,pid,ppid);
+        proc *cur_proc=malloc(sizeof(proc));
+        fscanf(fp,"%d (%s %c %d",cur_proc->pid,cur_proc->name,tmp,cur_proc->ppid);
+        cur_proc->name[strlen(cur_proc->name)-1]='\0';
+        printf("%s,%d,%d\n",cur_proc->name,cur_proc->pid,cur_proc->ppid);
       }
       
     }
