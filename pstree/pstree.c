@@ -10,6 +10,22 @@
 
 #define pid_t int
 
-int main(){
+bool P=false
+bool N=false
+bool V=false
+
+int main(int argc, char *argv[]) {
+  for (int i = 0; i < argc; i++) {
+    if (strcmp(argv[i],"-p")==0 || strcmp(argv[i],"--show-pids")==0){
+      P=true;
+    }
+    else if(strcmp(argv[i],"-n")==0 || strcmp(argv[i],"--numeric-sort")==0){
+      N=true;
+    }
+    else if(strcmp(argv[i],"-V")==0 || strcmp(argv[i],"--version")==0){
+      V=true;
+    }
+  }
+  printf("%d,%d,%d\n",P,N,V);
   return 0;
 }
