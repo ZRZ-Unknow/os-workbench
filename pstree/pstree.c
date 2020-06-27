@@ -59,6 +59,11 @@ void debugprint(){
 }
 
 proc *find_proc(int pid){
+  for(proc *p=root;p!=NULL;p=p->next){
+    if(p->pid==pid){
+      return p;
+    }
+  }
   return NULL;
 }
 
@@ -71,7 +76,11 @@ void print_tree(proc *p){
   }
   for(int i=0;i<p->child_num;i++){
     proc *child=find_proc(p->child_pid[i]);
+    if(child){
+      print_tree(child);
+    }
   } 
+  print("\n");
 }
 
 
@@ -132,7 +141,8 @@ int main(int argc, char *argv[]) {
   }
   else{
     get_procs();
-    debugprint();
+    //debugprint();
+    print_tree(root);
   }
   return 0;
 }
