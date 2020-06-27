@@ -23,8 +23,12 @@ typedef struct proc{
   char* name;
   pid_t pid;
   pid_t ppid;
-  childs *child ;
+  struct proc *next;
+  childs *child;
 }proc;
+
+proc root_proc={.pid=1,.ppid=0,.next=NULL};
+proc *root=&root_proc;
 
 bool is_num(char *str){
   for(int i=0;i<strlen(str);i++){
@@ -33,6 +37,11 @@ bool is_num(char *str){
   return true;
 }
 
+proc *get_last_proc(){
+  proc *pr=root;
+  while(pr->next!=NULL) pr=pr->next;
+  return pr;
+}
 
 void build_tree(){
 
@@ -45,13 +54,20 @@ void get_procs(){
     if(dire->d_type==4 && is_num(dire->d_name)){
       sprintf(path,"/proc/%s/stat",dire->d_name);
       FILE *fp=fopen(path,"r");
-      char name[32];
-      int pid;
-      int ppid;
-      char s;
-      fscanf(fp,"%d (%s %c %d",&pid,&name[0],&s,&ppid);
-      name[strlen(name)-1]='\0';
-      printf("%s,%d,%d\n",name,pid,ppid);
+      if(strcmp(dire->d_name,"1")==0){
+
+      }
+      else{
+        proc *last_proc=get_last_proc();
+        char name[32];
+        int pid;
+        int ppid;
+        char s;
+        fscanf(fp,"%d (%s %c %d",&pid,&name[0],&s,&ppid);
+        name[strlen(name)-1]='\0';
+        printf("%s,%d,%d\n",name,pid,ppid);
+      }
+      
     }
   }
 }
