@@ -10,9 +10,9 @@
 
 #define pid_t int
 
-bool P=false
-bool N=false
-bool V=false
+bool P=false;
+bool N=false;
+bool V=false;
 
 int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
