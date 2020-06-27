@@ -43,7 +43,15 @@ proc *get_last_proc(){
   while(pr->next!=NULL) pr=pr->next;
   return pr;
 }
-
+void debugprint(){
+  for(proc* p=root;p!=NULL;p=p->next){
+    printf("%s,%d,ppid:%d,childs:\n",p->name,p->pid,p->ppid);  
+    for(int i=0;i<p->child_num;i++){
+      printf("%d,",p->child_pid[i]);
+    }
+    print("\n");
+  }
+}
 void build_tree(){
 
 }
@@ -60,7 +68,6 @@ void get_procs(){
       FILE *fp=fopen(path1,"r");
       if(strcmp(dire->d_name,"1")==0){
         fscanf(fp,"%d (%s %c %d",&root->pid,root->name,&tmp,&root->ppid);
-        printf("%s\n",root->name);
         root->name[strlen(root->name)-1]='\0';
         fclose(fp);
         fp=fopen(path2,"r");
@@ -105,8 +112,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr,"pstree version 1.0 CopyRight (C) 2020 ZRZ\n");
   }
   else{
-    build_tree();
     get_procs();
+    debugprint()
   }
   return 0;
 }
