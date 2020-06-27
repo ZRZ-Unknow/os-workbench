@@ -49,7 +49,7 @@ void debugprint(){
     for(int i=0;i<p->child_num;i++){
       printf("%d,",p->child_pid[i]);
     }
-    print("\n");
+    printf("\n");
   }
 }
 void build_tree(){
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
   }
   else{
     get_procs();
-    debugprint()
+    debugprint();
   }
   return 0;
 }
