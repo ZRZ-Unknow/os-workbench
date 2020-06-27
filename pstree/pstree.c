@@ -37,7 +37,7 @@ bool is_num(char *str){
 void build_tree(){
 
 }
-char[64] path;
+char path[64];
 void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
@@ -46,11 +46,11 @@ void get_procs(){
       printf("%s,%d\n",dire->d_name,dire->d_type);
       sprintf(path,"/proc/%s/stat",dire->d_name);
       FILE *fp=fopen(path,"r");
-      char[32] name;
+      char name[32];
       int pid;
       int ppid;
       fscanf(fp,"%d (%s %c %d",pid,name,ppid,ppid);
-      print("%s,%d,%d\n",name,pid,ppid);
+      printf("%s,%d,%d\n",name,pid,ppid);
     }
   }
 }
