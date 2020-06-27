@@ -14,6 +14,18 @@ bool P=false;
 bool N=false;
 bool V=false;
 
+typedef struct proc{
+  char* name;
+  pid_t pid;
+  pid_t fpid;
+  struct proc *child;
+}proc;
+
+void build_tree(){
+
+}
+
+
 int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
     if (strcmp(argv[i],"-p")==0 || strcmp(argv[i],"--show-pids")==0){
@@ -29,6 +41,9 @@ int main(int argc, char *argv[]) {
   printf("%d,%d,%d\n",P,N,V);
   if(V){
     fprintf(stderr,"pstree version 1.0 CopyRight (C) 2020 ZRZ\n");
+  }
+  else{
+    build_tree();
   }
   return 0;
 }
