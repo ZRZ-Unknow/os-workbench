@@ -37,7 +37,7 @@ bool is_num(char *str){
 void build_tree(){
 
 }
-char path[64];
+char path[300];
 void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
