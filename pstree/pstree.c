@@ -33,7 +33,7 @@ void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
   while((dire=readdir(dir))!=NULL){
-    if(isdigit(dire->d_name)!=0 && dire->d_type==4){
+    if(dire->d_type==4){
       printf("%s,%d\n",dire->d_name,dire->d_type);
     }
   }
