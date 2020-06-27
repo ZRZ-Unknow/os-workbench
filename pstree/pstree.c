@@ -20,7 +20,7 @@ typedef struct childs{
 }childs;
 
 typedef struct proc{
-  char* name;
+  char name[128];
   pid_t pid;
   pid_t ppid;
   struct proc *next;
