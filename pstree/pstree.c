@@ -26,6 +26,14 @@ typedef struct proc{
   childs *child ;
 }proc;
 
+bool is_num(char *str){
+  for(int i=0;i<strlen(str);i++){
+    if(isdigit(str[i])==0) return false;
+  }
+  return true;
+}
+
+
 void build_tree(){
 
 }
@@ -33,7 +41,7 @@ void get_procs(){
   DIR *dir=opendir("/proc");
   struct dirent *dire;
   while((dire=readdir(dir))!=NULL){
-    if(dire->d_type==4){
+    if(dire->d_type==4 && is_num(dire->d_name)){
       printf("%s,%d\n",dire->d_name,dire->d_type);
     }
   }
