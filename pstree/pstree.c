@@ -49,7 +49,8 @@ void get_procs(){
       char name[32];
       int pid;
       int ppid;
-      fscanf(fp,"%d (%s %c %d",&pid,&name,&ppid,&ppid);
+      char s;
+      fscanf(fp,"%d (%s %c %d",&pid,&name,&s,&ppid);
       printf("%s,%d,%d\n",name,pid,ppid);
     }
   }
