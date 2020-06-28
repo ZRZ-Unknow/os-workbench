@@ -45,14 +45,16 @@ struct kvdb *kvdb_open(const char *filename) {
   if(buf.st_size==0){
     for(int i=0;i<2;i++){
       write(db->fd,"0",1);
-      for(int j=0;j<71;i++){
+      for(int j=0;j<71;j++){
         write(db->fd,"\0\0",2);
       }
       write(db->fd,"\n",1);
     }
-    for(int i=0;i<2;j++){
-      write(db->fd,'\0\0\0\0\0\0\0\0',512);
-      write(db->fd,'\n',1);
+    for(int i=0;i<2;i++){
+      for(int j=0;j<512;j++){
+        write(db->fd,"\0\0\0\0\0\0\0\0",8);
+      }
+      write(db->fd,"\n",1);
     }
   }
   else{
