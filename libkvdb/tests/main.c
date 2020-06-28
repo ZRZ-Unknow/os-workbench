@@ -1,4 +1,4 @@
-#include <kvdb.h>
+#include "kvdb-test.h"
 
 int main(){
   return 0;
