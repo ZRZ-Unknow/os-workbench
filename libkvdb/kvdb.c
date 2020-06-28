@@ -35,7 +35,7 @@ struct kvdb *kvdb_open(const char *filename) {
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   if(buf.st_size==0){
-    write(db->fd,"d",JSIZE);
+    write(db->fd,"d",1);
   }
   else{
     //recover
