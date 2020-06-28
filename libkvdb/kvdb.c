@@ -130,7 +130,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
   lseek(db->fd,db->start,SEEK_SET);
   write(db->fd,"kd",2);
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
-
+    printf("dd\n");
   };
   return NULL;
 }
