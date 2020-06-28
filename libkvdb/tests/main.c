@@ -5,7 +5,7 @@
 int main(){
   struct kvdb *db=kvdb_open("a.db");
   const char *key = "operating-systems";
-  char *value;
+  char *value="d";
 
   //panic_on(!(db = kvdb_open("a.db")), "cannot open db"); // 打开数据库
 
