@@ -13,11 +13,17 @@
 #define JSIZE (32 MB)
 
 //读写文件数据 (以及管理偏移量) 时使用 read, write 和 lseek，同步数据时使用 fsync。
+typedef struct journal{
+  int key_lenth,value_lenth;
+  char *key,*value;
+}journal;
+
 struct kvdb {
   int fd;
   int start;  
   int size;
   int committing;
+  journal jn;
 };
 
 struct kvdb *kvdb_open(const char *filename) {
