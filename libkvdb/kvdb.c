@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "kvdb.h"
+#include <unistd.h>
+
 
 #define B *1
 #define KB B*1024
@@ -33,7 +35,7 @@ struct kvdb *kvdb_open(const char *filename) {
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   if(buf.st_size==0){
-
+    write(db->fd,"d",JSIZE);
   }
   else{
     //recover
