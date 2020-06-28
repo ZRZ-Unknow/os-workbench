@@ -37,17 +37,16 @@ struct kvdb *kvdb_open(const char *filename) {
   db->fd=fd;
   if(buf.st_size==0){
     write(db->fd,"0",1);
-    write(db->fd," dd\n",3);
+    write(db->fd," dd\n",4);
     write(db->fd,"0 cc\n",5);
   }
   else{
     //recover
     char c;
     while(read(db->fd,&c,1)!=0){
-      if(c=='\n') break;
       printf("%s",&c);
     }
-    
+    write(db->fd,"i am",4); 
   }
   printf("%ld",buf.st_size);
   return NULL;
