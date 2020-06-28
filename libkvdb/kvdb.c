@@ -90,7 +90,12 @@ int kvdb_close(struct kvdb *db) {
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  return -1;
+  lseek(db->fd,db->start,SEEK_SET);
+  for(int i=0;i<LINESIZE-1;i++){
+    write(db->fd,"0",1);
+  }
+  write(db->fd,"\n",1);
+  return 0;
 }
 
 char *myread(int fd,int db_case){
