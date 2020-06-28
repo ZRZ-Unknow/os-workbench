@@ -28,6 +28,7 @@ struct kvdb {
   journal jn;
 };
 
+
 struct kvdb *kvdb_open(const char *filename) {
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   struct stat buf;
@@ -41,7 +42,11 @@ struct kvdb *kvdb_open(const char *filename) {
   }
   else{
     //recover
-
+    char c;
+    while(c=read(db->fd,&c,1)!=0){
+      printf("%s",c);
+    }
+    
   }
   printf("%ld",buf.st_size);
   return NULL;
