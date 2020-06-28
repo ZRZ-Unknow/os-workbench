@@ -123,7 +123,7 @@ char *myread(int fd,int case){
   else{
     assert(0);
   }
-  
+  return NULL; 
 }
 
 char *kvdb_get(struct kvdb *db, const char *key) {
