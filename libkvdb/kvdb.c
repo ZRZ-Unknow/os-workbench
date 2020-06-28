@@ -43,7 +43,8 @@ struct kvdb *kvdb_open(const char *filename) {
   if(stat(filename,&buf)!=0) assert(0);
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
-  db->committing=1;
+  db->committing=0;
+  db->start=288+4097*2;
   if(buf.st_size==0){
     for(int i=0;i<2;i++){
       write(db->fd,"0",1);
@@ -92,6 +93,40 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   return -1;
 }
 
+char *myread(int fd,int case){
+  if(case==0){   //readkey
+    char *key=malloc(KEYSIZE);
+    char tmp;
+    for(int i=0;i<sizeof(key);i++){
+      read(fd,&tmp,1);
+      if(tmp==" "|| "\n"){
+        key[i]="\0";
+        printf("key:%s\n",key);
+        return key;
+      }
+      key[i]=tmp;
+    }
+  }
+  else if(case==1){       //readvalue
+    char *value=malloc(VALUESIZE);
+    char tmp;
+    for(int i=0;i<sizeof(value);i++){
+      read(fd,&tmp,1);
+      if(tmp==" " || "\n"){
+        value[i]="\0";
+        printf("value:%s\n",value);
+        return value;
+      }
+      value[i]=tmp;
+    }
+  }
+  else{
+    assert(0);
+  }
+  
+}
+
 char *kvdb_get(struct kvdb *db, const char *key) {
+  lseek(db->fd,db->start,SEEK_SET);
   return NULL;
 }
