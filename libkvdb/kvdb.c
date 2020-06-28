@@ -93,8 +93,8 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   return -1;
 }
 
-char *myread(int fd,int case){
-  if(case==0){   //readkey
+char *myread(int fd,int db_case){
+  if(db_case==0){   //readkey
     char *key=malloc(KEYSIZE);
     char tmp;
     for(int i=0;i<sizeof(key);i++){
@@ -107,7 +107,7 @@ char *myread(int fd,int case){
       key[i]=tmp;
     }
   }
-  else if(case==1){       //readvalue
+  else if(db_case==1){       //readvalue
     char *value=malloc(VALUESIZE);
     char tmp;
     for(int i=0;i<sizeof(value);i++){
