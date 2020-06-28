@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include "kvdb.h"
 #include <unistd.h>
-
+#include <string.h>
 
 #define B *1
 #define KB B*1024
@@ -33,6 +33,7 @@ struct kvdb {
   int start;  
   int size;
   int committing;
+  char filename[128];
   journal jn;
 };
 
@@ -43,6 +44,7 @@ struct kvdb *kvdb_open(const char *filename) {
   if(stat(filename,&buf)!=0) assert(0);
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
+  strncpy(db->filename,filename,sizeof(db->filename));
   db->committing=0;
   db->start=288+4097*2;
   if(buf.st_size==0){
@@ -96,7 +98,8 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     write(db->fd,"0",1);
   }
   write(db->fd,"\n",1);
-  db->size+=LINESIZE;
+  stat(db->filename,&buf);
+  db->size=buf.st_size;
   return 0;
 }
 
