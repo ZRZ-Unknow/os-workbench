@@ -13,6 +13,13 @@
 #define KB B*1024
 #define MB KB*1024
 #define JSIZE (32 MB)
+#define KEYSIZE (128 B)
+#define VALUESIZE (4 KB)
+#define LEN1 (3 B)
+#define LEN2 (8 B)
+
+
+
 
 //读写文件数据 (以及管理偏移量) 时使用 read, write 和 lseek，同步数据时使用 fsync。
 typedef struct journal{
@@ -36,25 +43,32 @@ struct kvdb *kvdb_open(const char *filename) {
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   if(buf.st_size==0){
-    write(db->fd,"0",1);
-    write(db->fd," dd\n",4);
-    write(db->fd,"0 cc\n",5);
+    for(int i=0;i<2;j++){
+      write(db->fd,"0",1);
+      for(int j=0;j<71;i++){
+        write(db->fd,"\0\0",2);
+      }
+      write(db->fd,"\n",1);
+    }
+    for(int i=0;i<2;i++){
+      write(db->fd,'\0\0\0\0\0\0\0\0',512);
+      write(db->fd,'\n',1);
+    }
   }
   else{
     //recover
+    printf("size:%ld\n",buf.st_size);
     char c;
-    printf("%ld\n",lseek(db->fd,0,SEEK_CUR));
-    while(read(db->fd,&c,1)!=0){
+    /*while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
-    }
-    lseek(db->fd,0,SEEK_SET);
+    }*/
     write(db->fd,"1 kaer7324\n",11);
-    lseek(db->fd,0,SEEK_SET);
-    while(read(db->fd,&c,1)!=0){
+    lseek(db->fd,144,SEEK_SET);
+    printf("%s",&c)
+    /*while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
-    }
+    }*/
   }
-  printf("%ld",buf.st_size);
   return NULL;
 }
 
