@@ -142,7 +142,6 @@ char *myread(int fd,int db_case){
 }
 
 char *kvdb_get(struct kvdb *db, const char *key) {
-  lseek(db->fd,db->start,SEEK_SET);
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
