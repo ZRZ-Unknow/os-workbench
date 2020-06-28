@@ -81,7 +81,7 @@ struct kvdb *kvdb_open(const char *filename) {
 }
 
 int kvdb_close(struct kvdb *db) {
-  while(db->committing){};
+  while(db->committing);
   close(db->fd);
   free(db);
   return 0;
