@@ -99,8 +99,11 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   write(db->fd," ",1);
   //lseek(db->fd,129-strlen(key),SEEK_CUR);
   write(db->fd,value,strlen(value));
-  for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-2;i++){
-    write(db->fd,"0",1);
+  if(strlen(value)+strlen(key)+2<LINESIZE){
+    write(db->fd," ",1);
+    for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
+      write(db->fd,"0",1);
+    }
   }
   write(db->fd,"\n",1);
   stat(db->filename,&buf);
