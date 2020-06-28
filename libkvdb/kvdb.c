@@ -43,14 +43,14 @@ struct kvdb *kvdb_open(const char *filename) {
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   if(buf.st_size==0){
-    for(int i=0;i<2;j++){
+    for(int i=0;i<2;i++){
       write(db->fd,"0",1);
       for(int j=0;j<71;i++){
         write(db->fd,"\0\0",2);
       }
       write(db->fd,"\n",1);
     }
-    for(int i=0;i<2;i++){
+    for(int i=0;i<2;j++){
       write(db->fd,'\0\0\0\0\0\0\0\0',512);
       write(db->fd,'\n',1);
     }
