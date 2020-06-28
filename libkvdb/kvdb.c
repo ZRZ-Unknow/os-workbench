@@ -99,7 +99,7 @@ char *myread(int fd,int db_case){
     char tmp;
     for(int i=0;i<sizeof(key);i++){
       read(fd,&tmp,1);
-      if(tmp==" "|| "\n"){
+      if(tmp==" " || tmp=="\n"){
         key[i]="\0";
         printf("key:%s\n",key);
         return key;
@@ -112,7 +112,7 @@ char *myread(int fd,int db_case){
     char tmp;
     for(int i=0;i<sizeof(value);i++){
       read(fd,&tmp,1);
-      if(tmp==" " || "\n"){
+      if(tmp==" " || tmp=="\n"){
         value[i]="\0";
         printf("value:%s\n",value);
         return value;
