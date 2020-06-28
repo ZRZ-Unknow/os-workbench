@@ -60,7 +60,7 @@ struct kvdb *kvdb_open(const char *filename) {
       write(db->fd,"\n",1);
     }
     stat(filename,&buf);
-    printf("%ld\n",buf.st_size);
+    db->size=buf.st_size;
   }
   else{
     //recover
@@ -128,5 +128,9 @@ char *myread(int fd,int db_case){
 
 char *kvdb_get(struct kvdb *db, const char *key) {
   lseek(db->fd,db->start,SEEK_SET);
+  write(db->fd,"kd",2);
+  for(int i=0;i<(db->size-db->start)/LINESIZE;i++{
+
+  };
   return NULL;
 }
