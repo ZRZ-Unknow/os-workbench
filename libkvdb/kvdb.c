@@ -59,6 +59,7 @@ struct kvdb *kvdb_open(const char *filename) {
       }
       write(db->fd,"\n",1);
     }
+    stat(filename,&buf);
     printf("%ld\n",buf.st_size);
   }
   else{
@@ -82,7 +83,6 @@ struct kvdb *kvdb_open(const char *filename) {
 }
 
 int kvdb_close(struct kvdb *db) {
-  printf("cc:%d\n",db->committing);
   while(db->committing==1);
   close(db->fd);
   free(db);
