@@ -43,7 +43,7 @@ struct kvdb *kvdb_open(const char *filename) {
   else{
     //recover
     char c;
-    printf("%d\n",lseek(db->fd,0,SEEK_CUR));
+    printf("%ld\n",lseek(db->fd,0,SEEK_CUR));
     while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
     }
