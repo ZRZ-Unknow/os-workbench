@@ -64,13 +64,15 @@ struct kvdb *kvdb_open(const char *filename) {
     /*while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
     }*/
-    write(db->fd,"1 kaer7324",11);
+    write(db->fd,"1 kaer7324",10);
     lseek(db->fd,144,SEEK_SET);
     write(db->fd,"key2",4);
     lseek(db->fd,288,SEEK_SET);
     write(db->fd,"value1",6);
     lseek(db->fd,288+4096+1,SEEK_SET);
     write(db->fd,"value2",6);
+    lseek(db->fd,288+4097+4097,SEEK_SET);
+    write(db->fd,"kd",2);
     //printf("%s",&c);
     /*while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
