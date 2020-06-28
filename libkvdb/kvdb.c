@@ -58,6 +58,7 @@ struct kvdb *kvdb_open(const char *filename) {
       write(db->fd,"\n",1);
     }
     printf("%ld\n",buf.st_size);
+    db->committing=0;
   }
   else{
     //recover
