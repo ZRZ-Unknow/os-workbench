@@ -19,7 +19,7 @@
 #define LEN2 (8 B)
 
 
-
+//144处为第二行key开始
 
 //读写文件数据 (以及管理偏移量) 时使用 read, write 和 lseek，同步数据时使用 fsync。
 typedef struct journal{
@@ -46,13 +46,13 @@ struct kvdb *kvdb_open(const char *filename) {
     for(int i=0;i<2;i++){
       write(db->fd,"0",1);
       for(int j=0;j<71;j++){
-        write(db->fd,"\0\0",2);
+        write(db->fd,"00",2);
       }
       write(db->fd,"\n",1);
     }
     for(int i=0;i<2;i++){
       for(int j=0;j<512;j++){
-        write(db->fd,"\0\0\0\0\0\0\0\0",8);
+        write(db->fd,"00000000",8);
       }
       write(db->fd,"\n",1);
     }
@@ -65,7 +65,7 @@ struct kvdb *kvdb_open(const char *filename) {
       printf("%s",&c);
     }*/
     write(db->fd,"1 kaer7324\n",11);
-    lseek(db->fd,143,SEEK_SET);
+    lseek(db->fd,144,SEEK_SET);
     read(db->fd,&c,1);
     printf("%s",&c);
     /*while(read(db->fd,&c,1)!=0){
