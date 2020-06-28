@@ -97,7 +97,6 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   lseek(db->fd,0,SEEK_END);
   write(db->fd,key,strlen(key));
   write(db->fd," ",1);
-  //lseek(db->fd,129-strlen(key),SEEK_CUR);
   write(db->fd,value,strlen(value));
   if(strlen(value)+strlen(key)+2<LINESIZE){
     write(db->fd," ",1);
