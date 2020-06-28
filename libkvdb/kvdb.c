@@ -99,8 +99,8 @@ char *myread(int fd,int db_case){
     char tmp;
     for(int i=0;i<sizeof(key);i++){
       read(fd,&tmp,1);
-      if(tmp==" " || tmp=="\n"){
-        key[i]="\0";
+      if(tmp==' ' || tmp=='\n'){
+        key[i]='\0';
         printf("key:%s\n",key);
         return key;
       }
