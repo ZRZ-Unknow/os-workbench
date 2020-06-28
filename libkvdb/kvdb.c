@@ -36,10 +36,10 @@ struct kvdb {
   journal jn;
 };
 
+struct stat buf;
 
 struct kvdb *kvdb_open(const char *filename) {
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-  struct stat buf;
   if(stat(filename,&buf)!=0) assert(0);
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
@@ -95,6 +95,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     write(db->fd,"0",1);
   }
   write(db->fd,"\n",1);
+  db->size+=LINESIZE;
   return 0;
 }
 
