@@ -44,6 +44,7 @@ struct kvdb *kvdb_open(const char *filename) {
     //recover
     char c;
     while(read(db->fd,&c,1)!=0){
+      if(c=='\n') break;
       printf("%s",&c);
     }
     
