@@ -5,7 +5,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include "kvdb.h"
 
 #define B *1
 #define KB B*1024
