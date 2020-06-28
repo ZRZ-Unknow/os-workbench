@@ -112,22 +112,20 @@ char *myread(int fd,int db_case){
   if(db_case==0){   //readkey
     char *key=malloc(KEYSIZE);
     char tmp;
-    for(int i=0;i<sizeof(key);i++){
+    for(int i=0;i<KEYSIZE;i++){
       read(fd,&tmp,1);
-      printf("%s,",&tmp);
       if(tmp==' ' || tmp=='\n'){
         key[i]='\0';
         printf("key:%s\n",key);
         return key;
       }
       key[i]=tmp;
-      printf("%s\n",key);
     }
   }
   else if(db_case==1){       //readvalue
     char *value=malloc(VALUESIZE);
     char tmp;
-    for(int i=0;i<sizeof(value);i++){
+    for(int i=0;i<VALUESIZE;i++){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         value[i]='\0';
