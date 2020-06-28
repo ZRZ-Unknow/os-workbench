@@ -15,6 +15,7 @@
 #define JSIZE (32 MB)
 #define KEYSIZE (128 B)
 #define VALUESIZE (4 KB)
+#define LINESIZE (KEYSIZE+1+VALUESIZE+1)
 #define LEN1 (3 B)
 #define LEN2 (8 B)
 
@@ -56,14 +57,12 @@ struct kvdb *kvdb_open(const char *filename) {
       }
       write(db->fd,"\n",1);
     }
+    printf("%ld\n",buf.st_size);
   }
   else{
     //recover
-    printf("size:%ld\n",buf.st_size);
+    /*printf("size:%ld\n",buf.st_size);
     char c;
-    /*while(read(db->fd,&c,1)!=0){
-      printf("%s",&c);
-    }*/
     write(db->fd,"1 kaer7324",10);
     lseek(db->fd,144,SEEK_SET);
     write(db->fd,"key2",4);
@@ -73,8 +72,7 @@ struct kvdb *kvdb_open(const char *filename) {
     write(db->fd,"value2",6);
     lseek(db->fd,288+4097+4097,SEEK_SET);
     write(db->fd,"kd",2);
-    //printf("%s",&c);
-    /*while(read(db->fd,&c,1)!=0){
+    while(read(db->fd,&c,1)!=0){
       printf("%s",&c);
     }*/
   }
@@ -82,7 +80,10 @@ struct kvdb *kvdb_open(const char *filename) {
 }
 
 int kvdb_close(struct kvdb *db) {
-  return -1;
+  while(db->committing);
+  close(db->fd);
+  free(db);
+  return 0;
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
