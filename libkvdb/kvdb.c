@@ -23,7 +23,7 @@ struct kvdb {
 struct kvdb *kvdb_open(const char *filename) {
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   struct stat buf;
-  if(stat(filename,buf)!=0) assert(0);
+  if(stat(filename,&buf)!=0) assert(0);
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   if(buf.st_size==0){
@@ -32,7 +32,7 @@ struct kvdb *kvdb_open(const char *filename) {
   else{
     //recover
   }
-  
+  printf("%d",buf.st_size);
   return NULL;
 }
 
