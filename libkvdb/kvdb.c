@@ -43,7 +43,7 @@ struct kvdb *kvdb_open(const char *filename) {
   if(stat(filename,&buf)!=0) assert(0);
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
-  db->committing=0;
+  db->committing=1;
   if(buf.st_size==0){
     for(int i=0;i<2;i++){
       write(db->fd,"0",1);
