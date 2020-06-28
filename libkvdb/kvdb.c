@@ -32,7 +32,7 @@ struct kvdb *kvdb_open(const char *filename) {
   else{
     //recover
   }
-  printf("%d",buf.st_size);
+  printf("%ld",buf.st_size);
   return NULL;
 }
 
