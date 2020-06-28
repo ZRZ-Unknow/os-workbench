@@ -61,7 +61,7 @@ struct kvdb *kvdb_open(const char *filename) {
     }
     stat(filename,&buf);
     db->size=buf.st_size;
-    printf("%d,%d\n",db->size,db->start);
+    //printf("%d,%d\n",db->size,db->start);
   }
   else{
     //recover
