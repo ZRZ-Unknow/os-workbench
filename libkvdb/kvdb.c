@@ -120,6 +120,7 @@ char *myread(int fd,int db_case){
         return key;
       }
       key[i]=tmp;
+      printf("%s\n",key);
     }
   }
   else if(db_case==1){       //readvalue
