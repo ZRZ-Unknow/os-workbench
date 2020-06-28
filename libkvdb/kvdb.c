@@ -77,7 +77,7 @@ struct kvdb *kvdb_open(const char *filename) {
       printf("%s",&c);
     }*/
   }
-  return NULL;
+  return db;
 }
 
 int kvdb_close(struct kvdb *db) {
