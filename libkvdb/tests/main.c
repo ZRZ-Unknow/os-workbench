@@ -13,7 +13,7 @@ char *gen_string(int n){
     str[i]=string[random(26)];
   }
   str[n-1]='\0';
-  print("%s\n",str);
+  printf("%s\n",str);
   return str;
 }
 
