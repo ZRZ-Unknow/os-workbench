@@ -63,7 +63,7 @@ int test1(){
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s\n",p->key);*/
-  char tmp[150]="aksdfj aksldjfasdf ";
+  char tmp[150]="aksdfj aksldjfasdf  ";
   char *p=strtok(tmp," ");
   while(p){
     printf("k:%s,%d\n",p,strlen(p));
