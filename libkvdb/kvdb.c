@@ -56,7 +56,7 @@ struct kvdb {
 
 struct stat buf;
 
-char *myread(int fd,int db_case){
+/*char *myread(int fd,int db_case){
   if(db_case==0){   //readkey
     char *key=malloc(KEYSIZE+1);
     char tmp;
@@ -89,7 +89,7 @@ char *myread(int fd,int db_case){
     assert(0);
   }
   return NULL; 
-}
+}*/
 /*
 bool find_key(struct kvdb *db,const char *key){
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
@@ -127,7 +127,7 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
   db->size=buf.st_size;
   return 0;
 }*/
-
+/*
 int replay(struct kvdb *db){
   lseek(db->fd,0,SEEK_SET);
   char c;
@@ -145,7 +145,7 @@ int replay(struct kvdb *db){
     }
   }
   return 0;
-}
+}*/
 
 
 
@@ -165,10 +165,11 @@ struct kvdb *kvdb_open(const char *filename) {
     write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
-    printf("%d,%d\n",db->size);
+    printf("%d\n",db->size);
   }
   else{
     db->size=buf.st_size;
+    printf("size:%d\n",db->size);
     //replay(db);
     //recover
     /*printf("size:%ld\n",buf.st_size);
