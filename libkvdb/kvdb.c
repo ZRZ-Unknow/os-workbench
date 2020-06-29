@@ -179,7 +179,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
         break;
       }
       default:{
-        printf("%s,%d,%d\n",&flag,offset,db->size);
+        //printf("%s,%d,%d\n",&flag,offset,db->size);
         assert(0);
         break;
       }
@@ -266,7 +266,7 @@ struct kvdb *kvdb_open(const char *filename) {
   }
   else{
     db->size=buf.st_size;
-    printf("size:%d\n",db->size);
+    //printf("size:%d\n",db->size);
     //lseek(db->fd,db->size,SEEK_SET);
     //write(db->fd,"h",1);
     //replay(db);
