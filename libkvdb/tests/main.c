@@ -128,7 +128,7 @@ int test2(){
     printf("%s",p[i]);
   }
   int q=strtol(p->ksize,NULL,10);
-  printf("%d ",q);
+  printf(" %d\n",q);
   /*printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s ",p->vpos);
