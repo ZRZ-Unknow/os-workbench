@@ -54,7 +54,7 @@ int test1(){
   //struct r *p=malloc(sizeof(struct r));
   printf("dddd\n");
   char t[150];
-  char *tmp=&t;
+  char *tmp=&t[0];
   read(fd,tmp,150);
   for(int i=0;i<5;i++){
     printf("%s",tmp[i]);
