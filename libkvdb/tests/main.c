@@ -102,6 +102,7 @@ int db_test(){
     char *p=kvdb_get(db,k);
     //printf("%s\n",p);
     assert(strcmp(p,v)==0);
+    free(p);
   }
   kvdb_close(db);
 }
