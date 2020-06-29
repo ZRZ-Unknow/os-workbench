@@ -28,7 +28,7 @@ struct r{
   char ksize[3];
   char vsize[7];
   char key[128];
-}
+};
 
 
 int test(){
