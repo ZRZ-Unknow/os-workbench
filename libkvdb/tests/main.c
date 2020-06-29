@@ -39,9 +39,9 @@ int main(){
     int n1=random(128);
     printf("%d\n",n1);
     char *k=gen_string(n1);
-    assert(0);
     int n2=random(4096);
     char *v=gen_string(n2);
+    assert(0);
     kvdb_put(db,k,v);
   }
   return 0;
