@@ -16,7 +16,7 @@ int main(){
   printf("%d,%d\n",strlen(tmp),strlen(k));
   //kvdb_put(db,k,tmp); 
   //kvdb_put(db,"non","ksdjf-385");
-  kvdb_put(db, key, tmp); // db[key] = "three-easy-pieces"
+  kvdb_put(db, k, tmp); // db[key] = "three-easy-pieces"
   value=kvdb_get(db, key); // value = db[key];
   //printf("[%s]: [%s]\n",k,kvdb_get(db,k));
   kvdb_close(db); // 关闭数据库
