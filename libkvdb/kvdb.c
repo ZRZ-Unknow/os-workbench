@@ -200,7 +200,6 @@ int find_key(struct kvdb *db,const char *key,const char *value){
   return false;８／
 }
 
-/*
 int replay_put(struct kvdb *db, const char *key, const char *value) {
   if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
