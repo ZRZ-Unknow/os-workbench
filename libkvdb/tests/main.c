@@ -104,6 +104,6 @@ int db_test(){
 }
 
 int main(){
-  test();
+  db_test();
   return 0;
 }
