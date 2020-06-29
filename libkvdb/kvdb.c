@@ -99,6 +99,7 @@ int replay(struct kvdb *db){
       char *value=malloc(VALUESIZE);
     }
   }
+  return 0;
 }
 
 
