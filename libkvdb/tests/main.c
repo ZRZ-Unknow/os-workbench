@@ -13,6 +13,7 @@ char *gen_string(int n){
     str[i]=string[random(26)];
   }
   str[n-1]='\0';
+  print("%s\n",str);
   return str;
 }
 
@@ -32,7 +33,7 @@ int main(){
   kvdb_close(db); // 关闭数据库
   printf("[%s]: [%s]\n", key, value);
   free(value);
-  for(int i=0;i<50;i++){
+  for(int i=0;i<2;i++){
     int n1=random(128);
     char *k=gen_string(n1);
     int n2=random(4096);
