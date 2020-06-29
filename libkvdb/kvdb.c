@@ -280,7 +280,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   fsync(db->fd);
   return 0;
 }
-
+/*
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
   //flock(db->fd,LOCK_EX);
@@ -321,7 +321,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
-}
+}*/
 
 
 
