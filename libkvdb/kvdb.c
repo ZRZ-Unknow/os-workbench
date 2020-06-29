@@ -103,7 +103,7 @@ char *myread(int fd,int db_case){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         key[i]='\0';
-        printf("key:%s,%ld\n",key,lseek(fd,0,SEEK_CUR));
+        printf("key:%s\n",key);
         return key;
       }
       key[i]=tmp;
@@ -166,7 +166,6 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     write(db->fd,value,strlen(value));
   }
   else{
-    printf("%ld\n",lseek(db->fd,0,SEEK_CUR));
     write(db->fd,value,strlen(value));
   }
   if(strlen(value)+strlen(key)+2<LINESIZE){
