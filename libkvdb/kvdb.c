@@ -166,7 +166,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   lseek(db->fd,2,SEEK_SET);
   char len[15];
   sprintf(len,"%d %d ",len1,len2);
-  printf("%s,%d\n",len,strlen(len));
+  printf("%s,%ld\n",len,strlen(len));
   write(db->fd,&len,strlen(len));
   write(db->fd,key,len1);
   if(strlen(len)+len1<141) write(db->fd," ",1);
