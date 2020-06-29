@@ -90,13 +90,43 @@ bool find_key(struct kvdb *db,const char *key){
   return false;
 }
 
+int replay_put(struct kvdb *db, const char *key, const char *value) {
+  if(find_key(db,key)==false){
+    lseek(db->fd,0,SEEK_END);
+    write(db->fd,key,strlen(key));
+    write(db->fd," ",1);
+    write(db->fd,value,strlen(value));
+  }
+  else{
+    write(db->fd,value,strlen(value));
+  }
+  if(strlen(value)+strlen(key)+2<LINESIZE){
+      write(db->fd," ",1);
+      for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
+        write(db->fd,"0",1);
+      }
+    }
+  write(db->fd,"\n",1);
+  fsync(db->fd);
+  stat(db->filename,&buf);
+  db->size=buf.st_size;
+  return 0;
+}
+
 int replay(struct kvdb *db){
   lseek(db->fd,0,SEEK_SET);
   char c;
   if(read(db->fd,&c,1)>0){
     if(c=='!'){  //begin replay
-      char *key=malloc(KEYSIZE);
-      char *value=malloc(VALUESIZE);
+      lseek(db->fd,2,SEEK_SET);
+      char *key=myread(db->fd,0);
+      lseek(db->fd,288,SEEK_SET);
+      char *value=myread(db->fd,1);
+      printf("replay_put:%s,%s\n",key,value);
+      replay_put(db,key,value);
+      lseek(db->fd,0,SEEK_SET);
+      write(db->fd,"*",1);
+      fsync(db->fd);
     }
   }
   return 0;
