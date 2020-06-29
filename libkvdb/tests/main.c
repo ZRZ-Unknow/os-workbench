@@ -127,7 +127,8 @@ int test2(){
   for(int i=0;i<sizeof(struct r);i++){
     printf("%s",p[i]);
   }
-  printf("%s ",&p->flag);
+  int q=strtol(p->ksize,NULL,10);
+  printf("%d ",q);
   /*printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s ",p->vpos);
