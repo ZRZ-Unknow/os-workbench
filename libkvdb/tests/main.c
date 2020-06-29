@@ -109,6 +109,8 @@ int db_test(){
     //printf("%s\n",p);
     assert(strcmp(p,v2)==0);
     free(p);
+    free(k);
+    free(v);
   }
   kvdb_close(db);
 }
