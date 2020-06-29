@@ -111,6 +111,7 @@ int db_test(){
     free(p);
     free(k);
     free(v);
+    free(v2);
   }
   kvdb_close(db);
 }
