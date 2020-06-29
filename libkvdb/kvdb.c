@@ -158,7 +158,30 @@ char *kvdb_get(struct kvdb *db, const char *key) {
   return NULL;
 }
 
+int journal_put(struct kvdb *db,const char *key,const char *value){
+  lseek(db->fd,0,SEEK_SET);
+  write(db->fd,"*",1);
+  int len1=strlen(key);
+  int len2=strlen(value);
+  lseek(db->fd,2,SEEK_SET);
+  char len[15];
+  sprintf(len,"%d %d ",len1,len2);
+  printf("%s,%d\n",len,strlen(len));
+  write(db->fd,&len,strlen(len));
+  write(db->fd,key,len1);
+  if(strlen(len)+len1<141) write(db->fd," ",1);
+  lseek(db->fd,288,SEEK_SET); 
+  write(db->fd,value,len2);
+  if(len2<4 KB) write(db->fd," ",1);
+  fsync(db->fd);
+  lseek(db->fd,0,SEEK_SET);
+  write(db->fd,"!",1);
+  fsync(db->fd);
+  return 0;
+}
+
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
+  journal_put(db,key,value);
   if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
     write(db->fd,key,strlen(key));
