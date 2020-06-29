@@ -35,13 +35,12 @@ int main(){
   kvdb_close(db); // 关闭数据库
   printf("[%s]: [%s]\n", key, value);
   free(value);
-  for(int i=0;i<2;i++){
+  for(int i=0;i<1;i++){
     int n1=random(128);
     printf("%d\n",n1);
     char *k=gen_string(n1);
     int n2=random(4096);
     char *v=gen_string(n2);
-    assert(0);
     kvdb_put(db,k,v);
   }
   return 0;
