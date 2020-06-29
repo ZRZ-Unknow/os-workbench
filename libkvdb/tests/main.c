@@ -125,7 +125,7 @@ int test2(){
   printf("dddd\n");
   read(fd,p,sizeof(struct r));
   for(int i=0;i<sizeof(struct r);i++){
-    printf("%c",p[i]);
+    printf("%s",p[i]);
   }
   /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
