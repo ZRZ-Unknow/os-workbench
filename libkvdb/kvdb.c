@@ -224,6 +224,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     default:
       break;
     }
+    offset=db->size;
   }
   /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
