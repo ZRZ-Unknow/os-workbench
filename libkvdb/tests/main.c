@@ -52,6 +52,7 @@ int test1(){
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   struct r *p=malloc(sizeof(struct r));
+  printf("dddd\n");
   read(fd,p,sizeof(struct r));
   printf("%s ",p->flag);
   printf("%s ",p->ksize);
