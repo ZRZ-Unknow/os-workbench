@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+
 
 #define random(x) (rand()%x)
 
@@ -35,6 +37,8 @@ int main(){
   free(value);
   for(int i=0;i<2;i++){
     int n1=random(128);
+    printf("%d\n",n1);
+    assert(0);
     char *k=gen_string(n1);
     int n2=random(4096);
     char *v=gen_string(n2);
