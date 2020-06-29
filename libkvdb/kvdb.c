@@ -215,9 +215,10 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     read(db->fd,&flag,1);
     switch (flag)
     {
-    case '0': 
+    case '0':{ 
       char *str=malloc(DBSL+1);
       read(db->fd,str,DBSL);
+    }
       break;
     
     default:
