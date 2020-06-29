@@ -320,6 +320,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           flock(db->fd,LOCK_UN);
           return re_value;
         }
+        free(str);
         offset+=DBSL;
         break;
       }
@@ -335,6 +336,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           flock(db->fd,LOCK_UN);
           return re_value;
         }
+        free(str);
         offset+=DBLL;
         break;
       }
@@ -350,6 +352,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           flock(db->fd,LOCK_UN);
           return re_value;
         }
+        free(str);
         offset+=DBLL;
         break;
       }
