@@ -3,7 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-
+#include <sys/file.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 #define random(x) (rand()%x)
 
@@ -17,6 +22,19 @@ char *gen_string(int n){
   str[n-1]='\0';
   return str;
 }
+
+int test(){
+  struct stat buf;
+  char filename[5]="b.db";
+  int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+  stat(filen,&buf);
+  write(fd,"The first try\n",14);
+  lseek(fd,8,SEEK_CUR);
+  write(fd,"please",6);
+  close(fd);
+  return 0;
+}
+
 
 
 int main(){
@@ -42,5 +60,6 @@ int main(){
     kvdb_put(db,k,v);
   }
   kvdb_close(db);
+  test();
   return 0;
 }
