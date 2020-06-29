@@ -59,7 +59,7 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   co_new->func=func;
   co_new->arg=arg;
   co_new->status=CO_NEW;
-  return NULL;
+  return co_new;
 };
 void co_yield(){
 
