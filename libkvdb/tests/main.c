@@ -63,11 +63,11 @@ int test1(){
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s\n",p->key);*/
-  char tmp[150]="aksdfj aksldjfasdf\n";
+  char tmp[150]="aksdfj aksldjfasdf \n";
   char *p=strtok(tmp," ");
   while(p){
     printf("%s\n",p);
-    p=strtok(NULL,"\n");
+    p=strtok(NULL," ");
   }
   char *a=malloc(16*1024*1024);
   assert(a);
