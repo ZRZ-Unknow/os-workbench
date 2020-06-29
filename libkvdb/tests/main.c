@@ -64,6 +64,6 @@ int main(){
     kvdb_put(db,k,v);
   }
   kvdb_close(db);
-  test();
+  //test();
   return 0;
 }
