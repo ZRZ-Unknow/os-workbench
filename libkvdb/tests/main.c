@@ -64,7 +64,7 @@ int test1(){
   printf("%s ",p->vsize);
   printf("%s\n",p->key);*/
   char tmp[150]="aksdfj aksldjfasdf\n";
-  char *p=strtok(tmp," ");
+  char *p=strtok(tmp," \n");
   while(p){
     printf("%s\n",p);
     p=strtok(NULL," ");
