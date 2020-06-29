@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 
+
 #define B *1
 #define KB B*1024
 #define MB KB*1024
@@ -49,7 +50,7 @@ char *myread(int fd,int db_case){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         key[i]='\0';
-        printf("key:%s\n",key);
+        //printf("key:%s\n",key);
         return key;
       }
       key[i]=tmp;
@@ -63,7 +64,7 @@ char *myread(int fd,int db_case){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         value[i]='\0';
-        printf("value:%s\n",value);
+        //printf("value:%s\n",value);
         return value;
       }
       value[i]=tmp;
@@ -122,7 +123,7 @@ int replay(struct kvdb *db){
       char *key=myread(db->fd,0);
       lseek(db->fd,288,SEEK_SET);
       char *value=myread(db->fd,1);
-      printf("replay_put:%s,%s\n",key,value);
+      //printf("replay_put:%s,%s\n",key,value);
       replay_put(db,key,value);
       lseek(db->fd,0,SEEK_SET);
       write(db->fd,"*",1);
