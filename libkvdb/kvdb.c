@@ -93,23 +93,6 @@ int kvdb_close(struct kvdb *db) {
   return 0;
 }
 
-int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  lseek(db->fd,0,SEEK_END);
-  write(db->fd,key,strlen(key));
-  write(db->fd," ",1);
-  write(db->fd,value,strlen(value));
-  if(strlen(value)+strlen(key)+2<LINESIZE){
-    write(db->fd," ",1);
-    for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
-      write(db->fd,"0",1);
-    }
-  }
-  write(db->fd,"\n",1);
-  stat(db->filename,&buf);
-  db->size=buf.st_size;
-  return 0;
-}
-
 char *myread(int fd,int db_case){
   if(db_case==0){   //readkey
     char *key=malloc(KEYSIZE);
@@ -153,3 +136,28 @@ char *kvdb_get(struct kvdb *db, const char *key) {
   }
   return NULL;
 }
+
+int kvdb_put(struct kvdb *db, const char *key, const char *value) {
+  if(kvdb_get(db,key)==NULL){
+    lseek(db->fd,0,SEEK_END);
+    write(db->fd,key,strlen(key));
+    write(db->fd," ",1);
+    write(db->fd,value,strlen(value));
+  }
+  else{
+    write(db->fd,value,strlen(value));
+  }
+  if(strlen(value)+strlen(key)+2<LINESIZE){
+      write(db->fd," ",1);
+      for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
+        write(db->fd,"0",1);
+      }
+    }
+  write(db->fd,"\n",1);
+  stat(db->filename,&buf);
+  db->size=buf.st_size;
+  return 0;
+}
+
+
+
