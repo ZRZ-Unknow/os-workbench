@@ -19,13 +19,20 @@
 #define Log(format,...)
 #endif
 
+/*在Journal中，用!表示有效，*表示无效；在db中，用０表示短value，１表示长value，２表示长改短
+*/
+
 
 #define B *1
 #define KB B*1024
 #define MB KB*1024
-#define JSIZE (32 MB)
+#define JSIZE (20 MB)
 #define KEYSIZE (128 B)
-#define VALUESIZE (4 KB)
+#define SVALUESIZE (4 KB)
+#define LVALUESIZE (16 MB)
+#define DBSL (132+SVALUESIZE)     //db-shortline
+#define DBLL (132+LVALUESIZE)     //db-longline
+
 #define LINESIZE (KEYSIZE+1+VALUESIZE+1)
 #define LEN1 (3 B)
 #define LEN2 (8 B)
@@ -41,11 +48,10 @@ typedef struct journal{
 
 struct kvdb {
   int fd;
-  int start;  
+  //int start;  
   int size;
   int committing;
   char filename[128];
-  journal jn;
 };
 
 struct stat buf;
@@ -150,29 +156,20 @@ struct kvdb *kvdb_open(const char *filename) {
   db->fd=fd;
   strncpy(db->filename,filename,sizeof(db->filename));
   db->committing=0;
-  db->start=288+4097*2;
   //flock(db->fd,LOCK_EX);
   if(buf.st_size==0){
-    for(int i=0;i<2;i++){
-      write(db->fd,"0",1);
-      for(int j=0;j<71;j++){
-        write(db->fd,"00",2);
-      }
-      write(db->fd,"\n",1);
-    }
-    for(int i=0;i<2;i++){
-      for(int j=0;j<512;j++){
-        write(db->fd,"00000000",8);
-      }
-      write(db->fd,"\n",1);
-    }
+    char *tmp=malloc(JSIZE-2);
+    memset(tmp,0,JSIZE-2);
+    write(db->fd,"*",1);
+    write(db->fd,tmp,JSIZE-2);
+    write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
-    //printf("%d,%d\n",db->size,db->start);
+    printf("%d,%d\n",db->size);
   }
   else{
     db->size=buf.st_size;
-    replay(db);
+    //replay(db);
     //recover
     /*printf("size:%ld\n",buf.st_size);
     char c;
