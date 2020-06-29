@@ -216,7 +216,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     switch (flag)
     {
     case '0':{ 
-      char *str=malloc(DBSL+1);
+      //char *str=malloc(DBSL+1);
       //read(db->fd,str,DBSL);
     }
       break;
