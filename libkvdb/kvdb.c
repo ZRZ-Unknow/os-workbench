@@ -387,9 +387,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       write(db->fd," ",1);
       write(db->fd,value,strlen(value));
       write(db->fd," ",1);
-      lseek(db->fd,DBSL-4,SEEK_CUR);
-      write(db->fd,"\n",1);
-      lseek(db->fd,DBSL,SEEK_END);
+      lseek(db->fd,DBSL-4-strlen(key)-strlen(value),SEEK_CUR);
       write(db->fd,"\n",1);
     }
     else{
@@ -398,7 +396,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       write(db->fd," ",1);
       write(db->fd,value,strlen(value));
       write(db->fd," ",1);
-      lseek(db->fd,DBLL-4,SEEK_CUR);
+      lseek(db->fd,DBLL-4-strlen(key)-strlen(value),SEEK_CUR);
       write(db->fd,"\n",1);
     }
   }
