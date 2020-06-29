@@ -1,6 +1,7 @@
 #include <kvdb.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int main(){
   struct kvdb *db=kvdb_open("a.db");
@@ -8,8 +9,10 @@ int main(){
   char *value;
 
   //panic_on(!(db = kvdb_open("a.db")), "cannot open db"); // 打开数据库
-
-  kvdb_put(db, key, "three-easy-p"); // db[key] = "three-easy-pieces"
+  char *tmp=malloc(4096);
+  memset(tmp,'k',sizeof(tmp));
+  printf("%s\n",tmp);
+  kvdb_put(db, key, "three-easy-pieces-dkfj"); // db[key] = "three-easy-pieces"
   value=kvdb_get(db, key); // value = db[key];
   kvdb_close(db); // 关闭数据库
   printf("[%s]: [%s]\n", key, value);
