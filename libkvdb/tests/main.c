@@ -51,11 +51,12 @@ int test1(){
   struct stat buf;
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-  struct r *p=malloc(sizeof(struct r));
+  //struct r *p=malloc(sizeof(struct r));
   printf("dddd\n");
-  read(fd,p,sizeof(struct r));
+  char tmp[150];
+  read(fd,&tmp,sizeof(tmp));
   for(int i=0;i<sizeof(struct r);i++){
-    printf("%s",p[i]);
+    printf("%s",tmp[i]);
   }
   /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
