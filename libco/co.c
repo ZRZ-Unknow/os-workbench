@@ -47,3 +47,13 @@ struct co {
   struct co *waiter;
   uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
+
+struct co* co_start(const char *name, void (*func)(void *), void *arg){
+
+};
+void co_yield(){
+
+};
+void co_wait(struct co *co){
+
+};
