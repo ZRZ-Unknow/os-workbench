@@ -8,6 +8,8 @@
 #include "kvdb.h"
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
+
 
 #define B *1
 #define KB B*1024
