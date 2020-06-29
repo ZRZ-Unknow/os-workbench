@@ -69,6 +69,8 @@ int test1(){
     printf("%s\n",p);
     p=strtok(NULL,"\n");
   }
+  char *a=malloc(16*1024*1024);
+  assert(a);
   return 0;
   
 }
