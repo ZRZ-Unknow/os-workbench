@@ -96,14 +96,14 @@ int db_test(){
   for(int i=0;i<10;i++){
     int n1=random(128);
     char *k=gen_string(n1);
-    int n2=random(4096*3);
+    int n2=random(4096);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
     char *p=kvdb_get(db,k);
     //printf("%s\n",p);
     assert(strcmp(p,v)==0);
     free(p);
-    char *v2=gen_string(random(4096*3));
+    char *v2=gen_string(random(4096));
     kvdb_put(db,k,v2);
     p=kvdb_get(db,k);
     //printf("%s\n",p);
