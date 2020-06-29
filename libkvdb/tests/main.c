@@ -33,7 +33,7 @@ int test(){
   printf("%d\n",buf.st_size);
   lseek(fd,8,SEEK_CUR);
   write(fd,"please",6);
-  stat(filename,buf);
+  stat(filename,&buf);
   printf("％d\n",buf.st_size);
   close(fd);
   return 0;
