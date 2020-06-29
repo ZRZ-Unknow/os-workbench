@@ -313,7 +313,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         read(db->fd,str,DBSL-2);
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
-          p=strtok(str," ");
+          p=strtok(NULL," ");
           return p;
         }
         offset+=DBSL;
@@ -324,7 +324,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         read(db->fd,str,DBLL-2);
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
-          p=strtok(str," ");
+          p=strtok(NULL," ");
           return p;
         }
         offset+=DBLL;
@@ -335,7 +335,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         read(db->fd,str,DBSL-2);
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
-          p=strtok(str," ");
+          p=strtok(NULL," ");
           return p;
         }
         offset+=DBLL;
