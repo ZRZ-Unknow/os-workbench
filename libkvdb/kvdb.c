@@ -110,7 +110,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           if(strlen(value)<=SVALUESIZE){
-            lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
             write(db->fd,value,strlen(value));
             write(db->fd," ",1);
             free(str);
@@ -140,7 +140,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
             return 0;
           }
           else{
-            lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
             write(db->fd,value,strlen(value));
             write(db->fd," ",1);
             free(str);
@@ -155,7 +155,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           if(strlen(value)<=SVALUESIZE){
-            lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
             write(db->fd,value,strlen(value));
             write(db->fd," ",1);
             free(str);
@@ -380,6 +380,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   journal_put(db,key,value);
   if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
+    Log("size:%d",db->size);
     if(strlen(value)<=SVALUESIZE){
       write(db->fd,"0",1);
       write(db->fd,key,strlen(key));
@@ -412,6 +413,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   //flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
+  Log("after size:%d",db->size);
   return 0;
 }
 
