@@ -51,6 +51,14 @@ struct co {
 struct co *co_main,*co_current;
 
 __attribute__((constructor)) void co_init() {
+  co_main=malloc(sizeof(struct co));
+  co_main->name="main";
+  co_main->stackptr=co_main->stack+sizeof(co_main->stack);
+  co_main->status=CO_RUNNING;
+  memset(co_main->stack,0,sizeof(co_main->stack));
+  co_main->next=co_main;
+  co_main->prev=co_main;
+  co_current=co_main;
 }
 
 struct co* co_start(const char *name, void (*func)(void *), void *arg){
