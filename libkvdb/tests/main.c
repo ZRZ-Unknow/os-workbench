@@ -27,10 +27,14 @@ int test(){
   struct stat buf;
   char filename[5]="b.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-  stat(filen,&buf);
+  
   write(fd,"The first try\n",14);
+  stat(filename,&buf);
+  printf("%d\n",buf.st_size);
   lseek(fd,8,SEEK_CUR);
   write(fd,"please",6);
+  stat(filename,buf);
+  printf("％d\n",buf.st_size);
   close(fd);
   return 0;
 }
