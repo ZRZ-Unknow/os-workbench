@@ -94,9 +94,63 @@ struct stat buf;
   }
   return NULL; 
 }*/
-/*
-bool find_key(struct kvdb *db,const char *key){
-  for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
+
+int find_key(struct kvdb *db,const char *key,const char *value){
+  int offset=JSIZE;
+  while(offset<db->size){
+    lseek(db->fd,offset,SEEK_SET);
+    char flag;
+    read(db->fd,&flag,1);
+    char *str=malloc(KEYSIZE+1);
+    switch (flag)
+    {
+      case '0':{ 
+        read(db->fd,str,KEYSIZE);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+          free(str);
+          return 0;
+        }
+        offset+=DBSL;
+        break;
+      }
+      case '1':{
+        read(db->fd,str,KEYSIZE);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+          flag=true;
+        }
+        offset+=DBLL;
+        break;
+      }
+      case '2':{
+        read(db->fd,str,KEYSIZE);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+          flag=true;
+        }
+        offset+=DBLL;
+        break;
+      }
+      case '*':{
+        offset+=DBSL;
+        break;
+      }
+      default:{
+        assert(0);
+        break;
+      }
+    }
+    free(str);
+    str=NULL;
+    if(flag) break;
+  }
+  return flag;
+}
+  /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
     if(k==NULL || strcmp(k,key)!=0){
@@ -106,8 +160,9 @@ bool find_key(struct kvdb *db,const char *key){
     free(k);
     return true;
   }
-  return false;
-}*/
+  return false;８／
+}
+
 /*
 int replay_put(struct kvdb *db, const char *key, const char *value) {
   if(find_key(db,key)==false){
@@ -280,7 +335,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   fsync(db->fd);
   return 0;
 }
-/*
+
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
   //flock(db->fd,LOCK_EX);
@@ -307,21 +362,21 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     }
   }
   else{
-    write(db->fd,value,strlen(value));
+    find_key(db,key,value);
   }
-  if(strlen(value)+strlen(key)+2<LINESIZE){
+  /*if(strlen(value)+strlen(key)+2<LINESIZE){
       write(db->fd," ",1);
       for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
         write(db->fd,"0",1);
       }
     }
-  write(db->fd,"\n",1);
+  write(db->fd,"\n",1);*/
   fsync(db->fd);
   //flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
-}*/
+}
 
 
 
