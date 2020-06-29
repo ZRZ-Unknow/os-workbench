@@ -314,6 +314,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           p=strtok(NULL," ");
+          printf("%s\n",p);
           return p;
         }
         offset+=DBSL;
