@@ -31,7 +31,7 @@ int test(){
   write(fd,"The first try\n",14);
   stat(filename,&buf);
   printf("%d\n",buf.st_size);
-  lseek(fd,8,SEEK_CUR);
+  lseek(fd,8,SEEK_END);
   write(fd,"please",6);
   stat(filename,&buf);
   printf("%d\n",buf.st_size);
