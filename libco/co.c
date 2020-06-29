@@ -67,6 +67,13 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   co_new->func=func;
   co_new->arg=arg;
   co_new->status=CO_NEW;
+  co_new->stackptr=co_new->stack+sizeof(co_new->stack);
+  memset(co_new->stack,0,sizeof(co_new->stack));
+  struct co *prev=co_main->prev;
+  co_new->next=co_main;
+  co_main->prev=co_new;
+  co_new->prev=prev;
+  prev->next=co_new;
   return co_new;
 };
 void co_yield(){
