@@ -143,6 +143,7 @@ struct kvdb *kvdb_open(const char *filename) {
   strncpy(db->filename,filename,sizeof(db->filename));
   db->committing=0;
   db->start=288+4097*2;
+  flock(db->fd,LOCK_EX);
   if(buf.st_size==0){
     for(int i=0;i<2;i++){
       write(db->fd,"0",1);
@@ -180,6 +181,7 @@ struct kvdb *kvdb_open(const char *filename) {
       printf("%s",&c);
     }*/
   }
+  flock(db->fd,LOCK_UN);
   return db;
 }
 
@@ -193,6 +195,7 @@ int kvdb_close(struct kvdb *db) {
 
 
 char *kvdb_get(struct kvdb *db, const char *key) {
+  flock(db->fd,LOCK_EX);
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
@@ -201,8 +204,10 @@ char *kvdb_get(struct kvdb *db, const char *key) {
       continue;
     }
     char *value=myread(db->fd,1);
+    flock(db->fd,LOCK_UN);
     return value;
   }
+  flock(db->fd,LOCK_UN);
   return NULL;
 }
 
@@ -229,6 +234,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
+  flock(db->fd,LOCK_EX);
   journal_put(db,key,value);
   if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
@@ -247,6 +253,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     }
   write(db->fd,"\n",1);
   fsync(db->fd);
+  flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
