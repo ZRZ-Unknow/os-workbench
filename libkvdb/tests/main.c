@@ -127,11 +127,11 @@ int test2(){
   for(int i=0;i<sizeof(struct r);i++){
     printf("%c",p[i]);
   }
-  printf("%s ",p->flag);
+  /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s ",p->vpos);
-  printf("%s\n",p->key);
+  printf("%s\n",p->key);*/
 }
 
 int main(){
