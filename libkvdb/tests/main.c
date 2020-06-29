@@ -10,9 +10,9 @@ int main(){
 
   //panic_on(!(db = kvdb_open("a.db")), "cannot open db"); // 打开数据库
   char *tmp=malloc(4096);
-  memset(tmp,'k',sizeof(tmp));
+  memset(tmp,'k',4096);
   printf("%s\n",tmp);
-  kvdb_put(db, key, "three-easy-pieces-dkfj"); // db[key] = "three-easy-pieces"
+  kvdb_put(db, key, tmp); // db[key] = "three-easy-pieces"
   value=kvdb_get(db, key); // value = db[key];
   kvdb_close(db); // 关闭数据库
   printf("[%s]: [%s]\n", key, value);
