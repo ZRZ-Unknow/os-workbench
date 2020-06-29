@@ -253,7 +253,7 @@ struct kvdb *kvdb_open(const char *filename) {
   db->fd=fd;
   strncpy(db->filename,filename,sizeof(db->filename));
   db->committing=0;
-  //flock(db->fd,LOCK_EX);
+  flock(db->fd,LOCK_EX);
   if(buf.st_size==0){
     char *tmp=malloc(JSIZE-2);
     memset(tmp,0,JSIZE-2);
@@ -286,7 +286,7 @@ struct kvdb *kvdb_open(const char *filename) {
       printf("%s",&c);
     }*/
   }
-  //flock(db->fd,LOCK_UN);
+  flock(db->fd,LOCK_UN);
   return db;
 }
 
@@ -300,7 +300,7 @@ int kvdb_close(struct kvdb *db) {
 
 
 char *kvdb_get(struct kvdb *db, const char *key) {
-  //flock(db->fd,LOCK_EX);
+  flock(db->fd,LOCK_EX);
   int offset=JSIZE;
   while(offset<db->size){
     lseek(db->fd,offset,SEEK_SET);
@@ -317,6 +317,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           char *re_value=malloc(strlen(p)+1);
           strcpy(re_value,p);
           free(str);
+          flock(db->fd,LOCK_UN);
           return re_value;
         }
         offset+=DBSL;
@@ -331,6 +332,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           char *re_value=malloc(strlen(p)+1);
           strcpy(re_value,p);
           free(str);
+          flock(db->fd,LOCK_UN);
           return re_value;
         }
         offset+=DBLL;
@@ -345,6 +347,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           char *re_value=malloc(strlen(p)+1);
           strcpy(re_value,p);
           free(str);
+          flock(db->fd,LOCK_UN);
           return re_value;
         }
         offset+=DBLL;
@@ -360,6 +363,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
       }
     }
   }
+  flock(db->fd,LOCK_UN);
   return NULL;
 }
 
@@ -385,7 +389,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
-  //flock(db->fd,LOCK_EX);
+  flock(db->fd,LOCK_EX);
   journal_put(db,key,value);
   if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
@@ -417,7 +421,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     }
   write(db->fd,"\n",1);*/
   fsync(db->fd);
-  //flock(db->fd,LOCK_UN);
+  flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
   Log("after size:%d",db->size);
