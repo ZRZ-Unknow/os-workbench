@@ -56,7 +56,7 @@ int test1(){
   char tmp[150];
   read(fd,&tmp,sizeof(tmp));
   for(int i=0;i<sizeof(tmp);i++){
-    printf("%s",tmp[i]);
+    printf("%s",&tmp[i]);
   }
   /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
