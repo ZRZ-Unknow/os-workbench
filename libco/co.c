@@ -49,6 +49,7 @@ struct co {
 };
 
 struct co *co_main,*co_current;
+int co_num=0;
 
 __attribute__((constructor)) void co_init() {
   co_main=malloc(sizeof(struct co));
@@ -59,7 +60,17 @@ __attribute__((constructor)) void co_init() {
   co_main->next=co_main;
   co_main->prev=co_main;
   co_current=co_main;
+  co_num+=1;
 }
+
+void debugprint(){
+  struct co *p=co_main;
+  for(int i=0;i<co_num;i++){
+    printf("co:%s\n",p->name);
+    p=p->next;
+  }
+}
+
 
 struct co* co_start(const char *name, void (*func)(void *), void *arg){
   struct co *co_new=malloc(sizeof(struct co));
@@ -74,6 +85,8 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   co_main->prev=co_new;
   co_new->prev=prev;
   prev->next=co_new;
+  co_num+=1;
+  debugprint();
   return co_new;
 };
 void co_yield(){
