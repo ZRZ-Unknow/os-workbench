@@ -214,6 +214,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
 int journal_put(struct kvdb *db,const char *key,const char *value){
   lseek(db->fd,0,SEEK_SET);
   write(db->fd,"*",1);
+  assert(0);
   int len1=strlen(key);
   int len2=strlen(value);
   lseek(db->fd,2,SEEK_SET);
