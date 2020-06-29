@@ -22,6 +22,10 @@
 /*在Journal中，用!表示有效，*表示无效；在db中，用０表示短value，１表示长value，２表示长改短
 */
 
+#define SV 0
+#define LV 1
+#define LSV 2
+
 
 #define B *1
 #define KB B*1024
