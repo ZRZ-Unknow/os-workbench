@@ -100,6 +100,7 @@ int db_test(){
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
     char *p=kvdb_get(db,k);
+    printf("%s\n",p);
     assert(strcmp(p,v)==0);
   }
   kvdb_close(db);
