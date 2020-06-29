@@ -264,34 +264,47 @@ char *kvdb_get(struct kvdb *db, const char *key) {
 int journal_put(struct kvdb *db,const char *key,const char *value){
   lseek(db->fd,0,SEEK_SET);
   write(db->fd,"*",1);
-  int len1=strlen(key);
-  int len2=strlen(value);
-  lseek(db->fd,2,SEEK_SET);
-  //char len[64];
-  //sprintf(len,"%d %d ",len1,len2);
-  //printf("%s,%d\n",len,(int)strlen(len));
-  //write(db->fd,&len,strlen(len));
-  write(db->fd,key,len1);
-  if(len1<=128) write(db->fd," ",1);
-  lseek(db->fd,288,SEEK_SET); 
-  write(db->fd,value,len2);
-  if(len2<4 KB) write(db->fd," ",1);
+  fsync(db->fd);
+  int key_len=strlen(key);
+  int value_len=strlen(value);
+  if(value_len<=SVALUESIZE) write(db->fd,"0",1);
+  else write(db->fd,"1",1);
+  write(db->fd,key,key_len);
+  write(db->fd," ",1);
+  write(db->fd,value,value_len);
+  write(db->fd," ",1);
   fsync(db->fd);
   lseek(db->fd,0,SEEK_SET);
+  fsync(db->fd);
   write(db->fd,"!",1);
   fsync(db->fd);
   return 0;
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  /*Log("%s,%s",key,value); 
+  Log("%s,%s",key,value); 
   //flock(db->fd,LOCK_EX);
   journal_put(db,key,value);
   if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
-    write(db->fd,key,strlen(key));
-    write(db->fd," ",1);
-    write(db->fd,value,strlen(value));
+    if(strlen(value)<=SVALUESIZE){
+      write(db->fd,"0",1);
+      write(db->fd,key,strlen(key));
+      write(db->fd," ",1);
+      write(db->fd,value,strlen(value));
+      write(db->fd," ",1);
+      lseek(db->fd,DBSL-4,SEEK_CUR);
+      write(db->fd,"\n",1);
+    }
+    else{
+      write(db->fd,"1",1);
+      write(db->fd,key,strlen(key));
+      write(db->fd," ",1);
+      write(db->fd,value,strlen(value));
+      write(db->fd," ",1);
+      lseek(db->fd,DBLL-4,SEEK_CUR);
+      write(db->fd,"\n",1);
+    }
   }
   else{
     write(db->fd,value,strlen(value));
@@ -306,7 +319,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   fsync(db->fd);
   //flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
-  db->size=buf.st_size;*/
+  db->size=buf.st_size;
   return 0;
 }
 
