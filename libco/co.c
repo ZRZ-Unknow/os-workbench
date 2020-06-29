@@ -65,7 +65,7 @@ __attribute__((constructor)) void co_init() {
 
 void debugprint(){
   struct co *p=co_main;
-  for(int i=0;i<co_num;i++){
+  for(int i=0;i<co_num+1;i++){
     Log("co:%s,co_num:%d",p->name,co_num);
     p=p->next;
   }
