@@ -34,8 +34,8 @@
 #define KEYSIZE (128 B)
 #define SVALUESIZE (4 KB)
 #define LVALUESIZE (16 MB)
-#define DBSL (131+SVALUESIZE)     //db-shortline
-#define DBLL (131+LVALUESIZE)     //db-longline
+#define DBSL (132+SVALUESIZE)     //db-shortline
+#define DBLL (132+LVALUESIZE)     //db-longline
 
 #define LINESIZE (KEYSIZE+1+VALUESIZE+1)
 #define LEN1 (3 B)
