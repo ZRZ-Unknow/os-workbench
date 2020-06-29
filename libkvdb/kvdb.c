@@ -41,60 +41,6 @@ struct kvdb {
 
 struct stat buf;
 
-struct kvdb *kvdb_open(const char *filename) {
-  int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-  if(stat(filename,&buf)!=0) assert(0);
-  struct kvdb *db=malloc(sizeof(struct kvdb));
-  db->fd=fd;
-  strncpy(db->filename,filename,sizeof(db->filename));
-  db->committing=0;
-  db->start=288+4097*2;
-  if(buf.st_size==0){
-    for(int i=0;i<2;i++){
-      write(db->fd,"0",1);
-      for(int j=0;j<71;j++){
-        write(db->fd,"00",2);
-      }
-      write(db->fd,"\n",1);
-    }
-    for(int i=0;i<2;i++){
-      for(int j=0;j<512;j++){
-        write(db->fd,"00000000",8);
-      }
-      write(db->fd,"\n",1);
-    }
-    stat(filename,&buf);
-    db->size=buf.st_size;
-    //printf("%d,%d\n",db->size,db->start);
-  }
-  else{
-    db->size=buf.st_size;
-    //recover
-    /*printf("size:%ld\n",buf.st_size);
-    char c;
-    write(db->fd,"1 kaer7324",10);
-    lseek(db->fd,144,SEEK_SET);
-    write(db->fd,"key2",4);
-    lseek(db->fd,288,SEEK_SET);
-    write(db->fd,"value1",6);
-    lseek(db->fd,288+4096+1,SEEK_SET);
-    write(db->fd,"value2",6);
-    lseek(db->fd,288+4097+4097,SEEK_SET);
-    write(db->fd,"kd",2);
-    while(read(db->fd,&c,1)!=0){
-      printf("%s",&c);
-    }*/
-  }
-  return db;
-}
-
-int kvdb_close(struct kvdb *db) {
-  while(db->committing==1);
-  close(db->fd);
-  free(db);
-  return 0;
-}
-
 char *myread(int fd,int db_case){
   if(db_case==0){   //readkey
     char *key=malloc(KEYSIZE+1);
@@ -144,6 +90,76 @@ bool find_key(struct kvdb *db,const char *key){
   return false;
 }
 
+int replay(struct kvdb *db){
+  lseek(db->fd,0,SEEK_SET);
+  char c;
+  if(read(db->fd,&c,1)>0){
+    if(c=='!'){  //begin replay
+      char *key=malloc(KEYSIZE);
+      char *value=malloc(VALUESIZE);
+    }
+  };
+};
+
+
+
+struct kvdb *kvdb_open(const char *filename) {
+  int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+  if(stat(filename,&buf)!=0) assert(0);
+  struct kvdb *db=malloc(sizeof(struct kvdb));
+  db->fd=fd;
+  strncpy(db->filename,filename,sizeof(db->filename));
+  db->committing=0;
+  db->start=288+4097*2;
+  if(buf.st_size==0){
+    for(int i=0;i<2;i++){
+      write(db->fd,"0",1);
+      for(int j=0;j<71;j++){
+        write(db->fd,"00",2);
+      }
+      write(db->fd,"\n",1);
+    }
+    for(int i=0;i<2;i++){
+      for(int j=0;j<512;j++){
+        write(db->fd,"00000000",8);
+      }
+      write(db->fd,"\n",1);
+    }
+    stat(filename,&buf);
+    db->size=buf.st_size;
+    //printf("%d,%d\n",db->size,db->start);
+  }
+  else{
+    db->size=buf.st_size;
+    replay(db);
+    //recover
+    /*printf("size:%ld\n",buf.st_size);
+    char c;
+    write(db->fd,"1 kaer7324",10);
+    lseek(db->fd,144,SEEK_SET);
+    write(db->fd,"key2",4);
+    lseek(db->fd,288,SEEK_SET);
+    write(db->fd,"value1",6);
+    lseek(db->fd,288+4096+1,SEEK_SET);
+    write(db->fd,"value2",6);
+    lseek(db->fd,288+4097+4097,SEEK_SET);
+    write(db->fd,"kd",2);
+    while(read(db->fd,&c,1)!=0){
+      printf("%s",&c);
+    }*/
+  }
+  return db;
+}
+
+int kvdb_close(struct kvdb *db) {
+  while(db->committing==1);
+  close(db->fd);
+  free(db);
+  return 0;
+}
+
+
+
 char *kvdb_get(struct kvdb *db, const char *key) {
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
@@ -164,12 +180,12 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   int len1=strlen(key);
   int len2=strlen(value);
   lseek(db->fd,2,SEEK_SET);
-  char len[64];
-  sprintf(len,"%d %d ",len1,len2);
-  printf("%s,%d\n",len,(int)strlen(len));
-  write(db->fd,&len,strlen(len));
+  //char len[64];
+  //sprintf(len,"%d %d ",len1,len2);
+  //printf("%s,%d\n",len,(int)strlen(len));
+  //write(db->fd,&len,strlen(len));
   write(db->fd,key,len1);
-  if(strlen(len)+len1<141) write(db->fd," ",1);
+  if(len1<=128) write(db->fd," ",1);
   lseek(db->fd,288,SEEK_SET); 
   write(db->fd,value,len2);
   if(len2<4 KB) write(db->fd," ",1);
@@ -198,6 +214,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       }
     }
   write(db->fd,"\n",1);
+  fsync(db->fd);
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
