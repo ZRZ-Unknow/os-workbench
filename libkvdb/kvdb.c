@@ -90,7 +90,7 @@ char *myread(int fd,int db_case){
   }
   return NULL; 
 }
-
+/*
 bool find_key(struct kvdb *db,const char *key){
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
@@ -103,8 +103,8 @@ bool find_key(struct kvdb *db,const char *key){
     return true;
   }
   return false;
-}
-
+}*/
+/*
 int replay_put(struct kvdb *db, const char *key, const char *value) {
   if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
@@ -126,7 +126,7 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
-}
+}*/
 
 int replay(struct kvdb *db){
   lseek(db->fd,0,SEEK_SET);
@@ -201,7 +201,7 @@ int kvdb_close(struct kvdb *db) {
 
 char *kvdb_get(struct kvdb *db, const char *key) {
   //flock(db->fd,LOCK_EX);
-  for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
+  /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
     if(k==NULL || strcmp(k,key)!=0){
@@ -211,7 +211,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     char *value=myread(db->fd,1);
     //flock(db->fd,LOCK_UN);
     return value;
-  }
+  }*/
   //flock(db->fd,LOCK_UN);
   return NULL;
 }
@@ -239,7 +239,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  Log("%s,%s",key,value); 
+  /*Log("%s,%s",key,value); 
   //flock(db->fd,LOCK_EX);
   journal_put(db,key,value);
   if(find_key(db,key)==false){
@@ -261,7 +261,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   fsync(db->fd);
   //flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
-  db->size=buf.st_size;
+  db->size=buf.st_size;*/
   return 0;
 }
 
