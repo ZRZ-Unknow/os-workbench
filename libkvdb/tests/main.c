@@ -26,8 +26,9 @@ char *gen_string(int n){
 struct r{
   char flag;
   char ksize[3];
-  char vsize[7];
-  char key[128];
+  char vsize[8];
+  char vpos[10]
+  char key[12];
 };
 
 
@@ -116,7 +117,24 @@ int db_test(){
   kvdb_close(db);
 }
 
+int test2(){
+  struct stat buf;
+  char filename[5]="c.db";
+  int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+  struct r *p=malloc(sizeof(struct r));
+  printf("dddd\n");
+  read(fd,p,sizeof(struct r));
+  //for(int i=0;i<5;i++){
+  //  printf("%s",tmp[i]);
+  //}
+  printf("%s ",p->flag);
+  printf("%s ",p->ksize);
+  printf("%s ",p->vsize);
+  printf("%s ",p->vpos);
+  printf("%s\n",p->key);
+}
+
 int main(){
-  db_test();
+  test2();
   return 0;
 }
