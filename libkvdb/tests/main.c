@@ -124,9 +124,9 @@ int test2(){
   struct r *p=malloc(sizeof(struct r));
   printf("dddd\n");
   read(fd,p,sizeof(struct r));
-  //for(int i=0;i<5;i++){
-  //  printf("%s",tmp[i]);
-  //}
+  for(int i=0;i<sizeof(struct r);i++){
+    printf("%s",p[i]);
+  }
   printf("%s ",p->flag);
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
