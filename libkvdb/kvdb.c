@@ -331,7 +331,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           char *re_value=malloc(strlen(p)+1);
           strcpy(re_value,p);
           free(str);
-          return re_value
+          return re_value;
         }
         offset+=DBLL;
         break;
@@ -345,6 +345,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
           char *re_value=malloc(strlen(p)+1);
           strcpy(re_value,p);
           free(str);
+          return re_value;
         }
         offset+=DBLL;
         break;
