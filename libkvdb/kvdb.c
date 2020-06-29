@@ -108,9 +108,19 @@ int find_key(struct kvdb *db,const char *key,const char *value){
         read(db->fd,str,KEYSIZE);
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
-          lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
-          free(str);
-          return 0;
+          if(strlen(value)<=SVALUESIZE){
+            lseek(db->fd,strlen(p)-KEYSIZE+1,SEEK_CUR);
+            write(db->fd,value,strlen(value));
+            write(db->fd," ",1);
+            free(str);
+            return 0;
+          }
+          else{
+            lseek(db->fd,-KEYSIZE-1,SEEK_CUR);
+            write(db->fd,"*",1);
+            free(str);
+            return -1;
+          }
         }
         offset+=DBSL;
         break;
