@@ -98,8 +98,8 @@ int replay(struct kvdb *db){
       char *key=malloc(KEYSIZE);
       char *value=malloc(VALUESIZE);
     }
-  };
-};
+  }
+}
 
 
 
