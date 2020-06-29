@@ -43,6 +43,10 @@ int test(){
   write(fd,"please",6);
   stat(filename,&buf);
   printf("%d\n",buf.st_size);
+  lseek(fd,-8,SEEK_CUR);
+  write(fd,"hello",5);
+  stat(filename,&buf);
+  printf("%d\n",buf.st_size);
   close(fd);
   return 0;
 }
