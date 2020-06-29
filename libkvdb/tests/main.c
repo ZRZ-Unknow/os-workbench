@@ -96,7 +96,7 @@ int db_test(){
   for(int i=0;i<2;i++){
     int n1=random(128);
     char *k=gen_string(n1);
-    int n2=random(4096);
+    int n2=random(4096*2);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
   }
