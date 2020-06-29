@@ -89,13 +89,13 @@ int main(){
   //printf("[%s]: [%s]\n",k,kvdb_get(db,k));
   printf("[%s]: [%s]\n", key, value);
   free(value);
-  /*for(int i=0;i<50;i++){
+  for(int i=0;i<2;i++){
     int n1=random(128);
     char *k=gen_string(n1);
     int n2=random(4096);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
-  }*/
+  }
   kvdb_close(db);
   //test1();
   return 0;
