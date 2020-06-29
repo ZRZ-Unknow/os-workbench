@@ -52,17 +52,23 @@ int test1(){
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   //struct r *p=malloc(sizeof(struct r));
-  printf("dddd\n");
+  /*printf("dddd\n");
   char t[150];
   char *tmp=&t[0];
   read(fd,tmp,150);
   for(int i=0;i<5;i++){
     printf("%s",tmp[i]);
-  }
+  }*/
   /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s\n",p->key);*/
+  char tmp[150]="aksdfj aksldjf ";
+  char *p=strtok(tmp," ");
+  while(p){
+    printf("%s\n",p);
+    p=strtok(NULL," ");
+  }
   return 0;
   
 }
