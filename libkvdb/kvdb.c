@@ -215,29 +215,49 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     read(db->fd,&flag,1);
     switch (flag)
     {
-    case '0':{ 
-      //char *str=malloc(DBSL+1);
-      //read(db->fd,str,DBSL);
+      case '0':{ 
+        char *str=malloc(DBSL-1);
+        read(db->fd,str,DBSL-2);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          p=strtok(str," ");
+          return p;
+        }
+        offset+=DBSL;
+        break;
+      }
+      case '1':{
+        char *str=malloc(DBLL-1);
+        read(db->fd,str,DBLL-2);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          p=strtok(str," ");
+          return p;
+        }
+        offset+=DBLL;
+        break;
+      }
+      case '2':{
+        char *str=malloc(DBSL-1);
+        read(db->fd,str,DBSL-2);
+        char *p=strtok(str," ");
+        if(strcmp(p,key)==0){
+          p=strtok(str," ");
+          return p;
+        }
+        offset+=DBLL;
+        break;
+      }
+      case '*':{
+        offset+=DBSL;
+        break;
+      }
+      default:{
+        assert(0);
+        break;
+      }
     }
-      break;
-    
-    default:
-      break;
-    }
-    offset=db->size;
   }
-  /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
-    lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
-    char *k=myread(db->fd,0);
-    if(k==NULL || strcmp(k,key)!=0){
-      free(k);
-      continue;
-    }
-    char *value=myread(db->fd,1);
-    //flock(db->fd,LOCK_UN);
-    return value;
-  }*/
-  //flock(db->fd,LOCK_UN);
   return NULL;
 }
 
