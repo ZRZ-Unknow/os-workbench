@@ -27,7 +27,7 @@ struct r{
   char flag;
   char ksize[3];
   char vsize[8];
-  char vpos[10]
+  char vpos[10];
   char key[12];
 };
 
