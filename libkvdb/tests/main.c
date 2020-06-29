@@ -103,7 +103,7 @@ int db_test(){
     //printf("%s\n",p);
     assert(strcmp(p,v)==0);
     free(p);
-    char *v2=gen_string(4096);
+    char *v2=gen_string(random(4096));
     kvdb_put(db,k,v2);
     p=kvdb_get(db,k);
     //printf("%s\n",p);
