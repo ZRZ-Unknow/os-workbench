@@ -55,10 +55,13 @@ int test1(){
   printf("dddd\n");
   read(fd,p,sizeof(struct r));
   assert(0);
-  printf("%s ",p->flag);
+  for(int i=0;i<sizeof(struct r);i++){
+    printf("%s",p[i]);
+  }
+  /*printf("%s ",p->flag);
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
-  printf("%s\n",p->key);
+  printf("%s\n",p->key);*/
   return 0;
   
 }
