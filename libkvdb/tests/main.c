@@ -75,7 +75,7 @@ int test1(){
   
 }
 
-int main(){
+int db_test(){
   struct kvdb *db=kvdb_open("a.db");
   const char *key = "operating-systems";
   char *value;
@@ -97,6 +97,9 @@ int main(){
     kvdb_put(db,k,v);
   }
   kvdb_close(db);
-  //test1();
+}
+
+int main(){
+  test();
   return 0;
 }
