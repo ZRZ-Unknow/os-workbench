@@ -314,8 +314,10 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           p=strtok(NULL," ");
-          printf("%s\n",p);
-          return p;
+          char *re_value=malloc(strlen(p)+1);
+          strcpy(re_value,p);
+          free(str);
+          return re_value;
         }
         offset+=DBSL;
         break;
@@ -326,7 +328,10 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           p=strtok(NULL," ");
-          return p;
+          char *re_value=malloc(strlen(p)+1);
+          strcpy(re_value,p);
+          free(str);
+          return re_value
         }
         offset+=DBLL;
         break;
@@ -337,7 +342,9 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         char *p=strtok(str," ");
         if(strcmp(p,key)==0){
           p=strtok(NULL," ");
-          return p;
+          char *re_value=malloc(strlen(p)+1);
+          strcpy(re_value,p);
+          free(str);
         }
         offset+=DBLL;
         break;
