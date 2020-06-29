@@ -105,7 +105,7 @@ int db_test(){
     free(p);
     char *v2=gen_string(4096*3);
     kvdb_put(db,k,v2);
-    char *p=kvdb_get(db,k);
+    p=kvdb_get(db,k);
     //printf("%s\n",p);
     assert(strcmp(p,v2)==0);
     free(p);
