@@ -99,6 +99,8 @@ int db_test(){
     int n2=random(4096*2);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
+    char *p=kvdb_get(db,k);
+    assert(strcmp(p,v)==0);
   }
   kvdb_close(db);
 }
