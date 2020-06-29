@@ -93,17 +93,16 @@ int db_test(){
   //printf("[%s]: [%s]\n",k,kvdb_get(db,k));
   printf("[%s]: [%s]\n", key, value);
   free(value);
-  /*for(int i=0;i<10;i++){
+  for(int i=0;i<10;i++){
     int n1=random(128);
     char *k=gen_string(n1);
     int n2=random(4096);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
     char *p=kvdb_get(db,k);
-    assert(0);
-    printf("%s\n",p);
+    //printf("%s\n",p);
     assert(strcmp(p,v)==0);
-  }*/
+  }
   kvdb_close(db);
 }
 
