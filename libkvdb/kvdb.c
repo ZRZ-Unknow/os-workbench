@@ -174,6 +174,8 @@ struct kvdb *kvdb_open(const char *filename) {
   else{
     db->size=buf.st_size;
     printf("size:%d\n",db->size);
+    lseek(db->fd,db->size,SEEK_SET);
+    write(db->fd,"h",1);
     //replay(db);
     //recover
     /*printf("size:%ld\n",buf.st_size);
