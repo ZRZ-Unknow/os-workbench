@@ -32,7 +32,7 @@ int main(){
   kvdb_put(db, key, "three-easy-pieces"); // db[key] = "three-easy-pieces"
   value=kvdb_get(db, key); // value = db[key];
   //printf("[%s]: [%s]\n",k,kvdb_get(db,k));
-  kvdb_close(db); // 关闭数据库
+  //kvdb_close(db); // 关闭数据库
   printf("[%s]: [%s]\n", key, value);
   free(value);
   for(int i=0;i<1;i++){
@@ -43,5 +43,6 @@ int main(){
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
   }
+  kvdb_close(db);
   return 0;
 }
