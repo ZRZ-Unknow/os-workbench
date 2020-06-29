@@ -389,7 +389,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       lseek(db->fd,DBSL-4,SEEK_CUR);
       write(db->fd,"\n",1);
       lseek(db->fd,DBSL,SEEK_END);
-      write(db->fd,"a",1);
+      write(db->fd,"\n",1);
     }
     else{
       write(db->fd,"1",1);
