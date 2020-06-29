@@ -97,9 +97,9 @@ int kvdb_close(struct kvdb *db) {
 
 char *myread(int fd,int db_case){
   if(db_case==0){   //readkey
-    char *key=malloc(KEYSIZE);
+    char *key=malloc(KEYSIZE+1);
     char tmp;
-    for(int i=0;i<KEYSIZE;i++){
+    for(int i=0;i<KEYSIZE+1;i++){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         key[i]='\0';
@@ -111,9 +111,9 @@ char *myread(int fd,int db_case){
     free(key);
   }
   else if(db_case==1){       //readvalue
-    char *value=malloc(VALUESIZE);
+    char *value=malloc(VALUESIZE+1);
     char tmp;
-    for(int i=0;i<VALUESIZE;i++){
+    for(int i=0;i<VALUESIZE+1;i++){
       read(fd,&tmp,1);
       if(tmp==' ' || tmp=='\n'){
         value[i]='\0';
