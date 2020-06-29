@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
     printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
@@ -101,6 +101,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
     lseek(db->fd,offset,SEEK_SET);
     char flag;
     read(db->fd,&flag,1);
+    Log("%s,%d,%d",&flag,offset,db->size);
     char *str=malloc(KEYSIZE+1);
     switch (flag)
     {
