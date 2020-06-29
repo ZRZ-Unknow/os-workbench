@@ -178,6 +178,7 @@ int find_key(struct kvdb *db,const char *key,const char *value){
         break;
       }
       default:{
+        printf("%s,%d,%d\n",&flag,offset,db->size);
         assert(0);
         break;
       }
