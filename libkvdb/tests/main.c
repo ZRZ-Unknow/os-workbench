@@ -3,12 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#define random(x) (rand()%x)
+
 char string[27]="abcdefghijklmnopqrstuvwxyz";
 
 char *gen_string(int n){
   char *str=malloc(n);
   for(int i=0;i<n-1;i++){
-    str[i]=string[rand(25)];
+    str[i]=string[random(26)];
   }
   str[n-1]='\0';
   return str;
@@ -31,9 +33,9 @@ int main(){
   printf("[%s]: [%s]\n", key, value);
   free(value);
   for(int i=0;i<50;i++){
-    int n1=rand(128);
+    int n1=random(128);
     char *k=gen_string(n1);
-    int n2=rand(4096);
+    int n2=random(4096);
     char *v=gen_string(n2);
     kvdb_put(db,k,v);
   }
