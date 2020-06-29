@@ -54,6 +54,7 @@ int test1(){
   struct r *p=malloc(sizeof(struct r));
   printf("dddd\n");
   read(fd,p,sizeof(struct r));
+  assert(0);
   printf("%s ",p->flag);
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
