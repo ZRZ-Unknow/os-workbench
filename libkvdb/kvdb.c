@@ -106,6 +106,7 @@ char *myread(int fd,int db_case){
       }
       key[i]=tmp;
     }
+    free(key);
   }
   else if(db_case==1){       //readvalue
     char *value=malloc(VALUESIZE);
@@ -119,6 +120,7 @@ char *myread(int fd,int db_case){
       }
       value[i]=tmp;
     }
+    free(value);
   }
   else{
     assert(0);
@@ -126,11 +128,28 @@ char *myread(int fd,int db_case){
   return NULL; 
 }
 
+bool find_key(struct kvdb *db,const char *key){
+  for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
+    lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
+    char *k=myread(db->fd,0);
+    if(k==NULL || strcmp(k,key)!=0){
+      free(k);
+      continue;
+    }
+    free(k);
+    return true;
+  }
+  return false;
+}
+
 char *kvdb_get(struct kvdb *db, const char *key) {
   for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
-    if(k==NULL || strcmp(k,key)!=0) continue;
+    if(k==NULL || strcmp(k,key)!=0){
+      free(k);
+      continue;
+    }
     char *value=myread(db->fd,1);
     return value;
   }
@@ -138,7 +157,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  if(kvdb_get(db,key)==NULL){
+  if(find_key(db,key)==false){
     lseek(db->fd,0,SEEK_END);
     write(db->fd,key,strlen(key));
     write(db->fd," ",1);
