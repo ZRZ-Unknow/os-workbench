@@ -48,7 +48,17 @@ struct co {
   uint8_t stack[STACK_SIZE] __attribute__ ((aligned(16)));// 协程的堆栈
 };
 
+struct co *co_main,*co_current;
+
+__attribute__((constructor)) void co_init() {
+}
+
 struct co* co_start(const char *name, void (*func)(void *), void *arg){
+  struct co *co_new=malloc(sizeof(struct co));
+  co_new->name=name;
+  co_new->func=func;
+  co_new->arg=arg;
+  co_new->status=CO_NEW;
   return NULL;
 };
 void co_yield(){
