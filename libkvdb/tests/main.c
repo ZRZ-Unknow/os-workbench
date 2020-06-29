@@ -34,7 +34,7 @@ int test(){
   lseek(fd,8,SEEK_CUR);
   write(fd,"please",6);
   stat(filename,&buf);
-  printf("％d\n",buf.st_size);
+  printf("%d\n",buf.st_size);
   close(fd);
   return 0;
 }
