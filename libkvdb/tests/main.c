@@ -15,7 +15,7 @@ char *gen_string(int n){
     str[i]=string[random(26)];
   }
   str[n-1]='\0';
-  printf("%s\n",str);
+  printf("gen:%s\n",str);
   return str;
 }
 
