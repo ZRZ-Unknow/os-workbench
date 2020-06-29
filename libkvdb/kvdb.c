@@ -10,6 +10,14 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define DEBUG
+#ifdef DEBUG
+#define Log(format, ...) \
+    printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
+        __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+#else
+#define Log(format,...)
+#endif
 
 
 #define B *1
@@ -234,6 +242,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
+  Log("%s,%s",key,value); 
   flock(db->fd,LOCK_EX);
   journal_put(db,key,value);
   if(find_key(db,key)==false){
