@@ -34,8 +34,8 @@
 #define KEYSIZE (128 B)
 #define SVALUESIZE (4 KB)
 #define LVALUESIZE (16 MB)
-#define DBSL (132+SVALUESIZE)     //db-shortline
-#define DBLL (132+LVALUESIZE)     //db-longline
+#define DBSL (131+SVALUESIZE)     //db-shortline
+#define DBLL (131+LVALUESIZE)     //db-longline
 
 #define LINESIZE (KEYSIZE+1+VALUESIZE+1)
 #define LEN1 (3 B)
@@ -174,8 +174,8 @@ struct kvdb *kvdb_open(const char *filename) {
   else{
     db->size=buf.st_size;
     printf("size:%d\n",db->size);
-    lseek(db->fd,db->size,SEEK_SET);
-    write(db->fd,"h",1);
+    //lseek(db->fd,db->size,SEEK_SET);
+    //write(db->fd,"h",1);
     //replay(db);
     //recover
     /*printf("size:%ld\n",buf.st_size);
@@ -208,6 +208,22 @@ int kvdb_close(struct kvdb *db) {
 
 char *kvdb_get(struct kvdb *db, const char *key) {
   //flock(db->fd,LOCK_EX);
+  int offset=JSIZE;
+  while(offset<db->size){
+    lseek(db->fd,offset,SEEK_SET);
+    char flag;
+    read(db->fd,&flag,1);
+    switch (flag)
+    {
+    case '0': 
+      char *str=malloc(DBSL+1);
+      read(db->fd,str,DBSL)
+      break;
+    
+    default:
+      break;
+    }
+  }
   /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
     lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
     char *k=myread(db->fd,0);
