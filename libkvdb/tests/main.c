@@ -53,7 +53,8 @@ int test1(){
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   //struct r *p=malloc(sizeof(struct r));
   printf("dddd\n");
-  char *tmp=malloc(150);
+  char t[150];
+  char *tmp=&t;
   read(fd,tmp,150);
   for(int i=0;i<5;i++){
     printf("%s",tmp[i]);
