@@ -195,6 +195,7 @@ int get_valuepos(struct kvdb *db,const char *key,const char *value){
 }
 
 int journal_put(struct kvdb *db,const char *key,const char *value){
+  flock(db->fd,LOCK_EX);
   lseek(db->fd,0,SEEK_SET);
   write(db->fd,"*",1);
   fsync(db->fd);
@@ -212,6 +213,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   fsync(db->fd);
   write(db->fd,"!",1);
   fsync(db->fd);
+  flock(db->fd,LOCK_UN);
   return 0;
 }
 
@@ -224,7 +226,8 @@ char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
 }
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
-  Log("%s,%s",key,value); 
+  Log("%s,%s",key,value);
+  journal_put(db,key,value);            //this is journal_put! 
   flock(db->fd,LOCK_EX);
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
