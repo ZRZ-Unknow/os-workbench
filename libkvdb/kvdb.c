@@ -417,7 +417,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
   char *kl=malloc(34+keylen+1);
   memset(kl,'\0',35+keylen);
-  sprintf(kl,"!%-11%d%-11%d%-11%d%s",keylen,valuelen,valuepos,key);
+  sprintf(kl,"!%-11d%-11d%-11d%s",keylen,valuelen,valuepos,key);
   Log("%s",kl);
   return kl;
 }
