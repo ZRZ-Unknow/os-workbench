@@ -440,8 +440,6 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     free(kl);
   }
   free(kl);
-  flock(db->fd,LOCK_UN);
-  return NULL;
   //journal_put(db,key,value);
   /*if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
