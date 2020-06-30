@@ -143,6 +143,6 @@ int test2(){
 }
 
 int main(){
-  test1();
+  db_test();
   return 0;
 }
