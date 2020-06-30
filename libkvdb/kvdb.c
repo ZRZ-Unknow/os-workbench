@@ -171,7 +171,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
 
 
 //需要在调用者里上锁
-int get_valuepos(struct kvdb *db,const char *key){
+int get_valuepos(struct kvdb *db,const char *key,const char *value){
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
   while(true){
@@ -200,7 +200,14 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   fsync(db->fd);
   int keylen=strlen(key);
   int valuelen=strlen(value);
-  
+  int valuepos=get_valuepos(db,key,value);
+  char *kl=malloc(34+keylen+1);
+  memset(kl,'\0',35+keylen);
+  sprintf(kl,"*%-11d%-11d%-11d%s",keylen,valuelen,valuepos,key);
+  lseek(db->fd,0,SEEK_SET);
+  write(db->fd,kl,35+keylen);
+  free(kl);
+  write(db->fd,value,valuelen);
   lseek(db->fd,0,SEEK_SET);
   fsync(db->fd);
   write(db->fd,"!",1);
