@@ -57,9 +57,11 @@ int test1(){
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   write(fd,"mypen",5);
-  write(fd,"***",8-5);
+  lseek(fd,8-5,SEEK_CUR);
+  write(fd,"*",1);
   write(fd,"mypen",5);
-  write(fd,"***",8-5);
+  lseek(fd,3,SEEK_CUR);
+  write(fd,"*",1);
 
   //struct r *p=malloc(sizeof(struct r));
   /*printf("dddd\n");
