@@ -432,13 +432,23 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
     int keylen=strtol(kl->keylen,NULL,10);
+    Log("%d",keylen);
     if(strncmp(key,kl->key,keylen)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
-      int valuepos=strtol(kl->valuepos,NULL,10);
-      char *value=malloc(valuelen+1);
-      memset(value,'\0',valuelen+1);
-      lseek(db->fd,valuepos,SEEK_SET);
-      read(db->fd,value,valuelen);
+      if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
+        int key_len=strlen(key);
+        int value_len=strlen(value);
+        int value_pos=strtol(kl->valuepos,NULL,10);
+        char *key_line=gen_keyline(key_len,value_len,value_pos,key);
+        lseek(db->fd,-sizeof(keyline),SEEK_CUR);
+        write(db->fd,key_line,35+key_len);
+        free(key_line);
+        lseek(db->fd,value_pos,SEEK_SET);
+        write(db->fd,value,value_len);
+      }
+      else{
+        break;
+      }
       flock(db->fd,LOCK_UN);
       free(kl);
       return 0;
@@ -496,7 +506,6 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       }
     }
   write(db->fd,"\n",1);*/
-  fsync(db->fd);
   flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
