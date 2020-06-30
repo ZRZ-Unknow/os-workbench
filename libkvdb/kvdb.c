@@ -68,7 +68,7 @@ char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
   return kl;
 }
 
-int replay_put(struct kvdb *db, int keylen, int valuelen, int valuepos, const char *key, const char *value) {
+int replay_put(struct kvdb *db,int keylen,int valuelen,int valuepos,const char *key,const char *value) {
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
   while(true){
@@ -76,30 +76,39 @@ int replay_put(struct kvdb *db, int keylen, int valuelen, int valuepos, const ch
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
     if(strcmp(key,kl->key)==0){
-      /*int valuelen=strtol(kl->valuelen,NULL,10);
-      if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
-        int key_len=strlen(key);
-        int value_len=strlen(value);
-        int value_pos=strtol(kl->valuepos,NULL,10);
-        char *key_line=gen_keyline(key_len,value_len,value_pos,key);
-        lseek(db->fd,-sizeof(keyline),SEEK_CUR);
-        write(db->fd,key_line,35+key_len);
-        free(key_line);
-        lseek(db->fd,value_pos,SEEK_SET);
-        write(db->fd,value,value_len);
-        fsync(db->fd);
-        free(kl);
-        return 0;
+      char *key_line=gen_keyline(keylen,valuelen,valuepos,key);
+      lseek(db->fd,-sizeof(keyline),SEEK_CUR);
+      write(db->fd,key_line,35+key_len);
+      free(key_line);
+      if(db->size==valuepos){   //要新加的
+        lseek(db->fd,0,SEEK_END);
+        if(valuelen<SVALUESIZE){
+          write(db->fd,value,valuelen);
+          lseek(db->fd,SVALUESIZE-valuelen-1,SEEK_CUR);
+          write(db->fd," ",1);
+        }
+        else if(valuelen==SVALUESIZE || valuelen==LVALUESIZE){
+          write(db->fd,value,valuelen);
+        }
+        else{
+          write(db->fd,value,LVALUESIZE);
+          lseek(db->fd,LVALUESIZE-valuelen-1,SEEK_CUR);
+          write(db->fd," ",1);
+        }
       }
-      else break;*/
+      else{
+        lseek(db->fd,valuepos,SEEK_SET);
+        write(db->fd,value,value_len);
+      }
+      fsync(db->fd);
+      stat(db->filename,&buf);
+      db->size=buf.st_size;
+      free(kl);
+      return 0;
     }
     free(kl);
   }
   free(kl);
-  //到这里表明没有找到相同的key,或者需要重新定位valuepos
-  int keylen=strlen(key);
-  int valuelen=strlen(value);
-  int valuepos=db->size;
   char *key_line=gen_keyline(keylen,valuelen,valuepos,key);
   lseek(db->fd,-sizeof(keyline),SEEK_CUR);
   write(db->fd,key_line,35+keylen);
@@ -142,7 +151,7 @@ int replay(struct kvdb *db){
       free(key);
       free(value);
       lseek(db->fd,0,SEEK_SET);
-      fsync(db->fd);
+      fsync(db->fd);  //加入size的改变
       write(db->fd,"*",1);
       fsync(db->fd);
     }
