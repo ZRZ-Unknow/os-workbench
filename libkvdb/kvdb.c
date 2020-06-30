@@ -309,7 +309,6 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     kl=malloc(sizeof(keyline));
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
-    Log("%d",keylen);
     if(strcmp(key,kl->key)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
       int valuepos=strtol(kl->valuepos,NULL,10);
