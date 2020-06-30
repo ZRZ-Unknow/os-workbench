@@ -22,11 +22,6 @@
 /*在Journal中，用!表示有效，*表示无效；在db中，用０表示短value，１表示长value，２表示长改短
 */
 
-#define SV 0
-#define LV 1
-#define LSV 2
-
-
 #define B *1
 #define KB B*1024
 #define MB KB*1024
@@ -34,10 +29,6 @@
 #define KEYSIZE (128 B)
 #define SVALUESIZE (4 KB)
 #define LVALUESIZE (16 MB)
-#define DBSL (132+SVALUESIZE)     //db-shortline
-#define DBLL (132+LVALUESIZE)     //db-longline
-
-
 #define KEYLINE (163 B)
 #define KEYNUM (4 KB)
 
@@ -53,6 +44,13 @@ typedef struct keyline{
   char key[129];
 }keyline;
 
+typedef struct jnkl{
+  char flag;
+  char keylen[11];
+  char valuelen[11];
+  char valuepos[11];
+}jnkl;
+
 struct kvdb {
   int fd;
   int size;
@@ -61,148 +59,6 @@ struct kvdb {
 };
 
 struct stat buf;
-
-/*char *myread(int fd,int db_case){
-  if(db_case==0){   //readkey
-    char *key=malloc(KEYSIZE+1);
-    char tmp;
-    for(int i=0;i<KEYSIZE+1;i++){
-      read(fd,&tmp,1);
-      if(tmp==' ' || tmp=='\n'){
-        key[i]='\0';
-        //printf("key:%s\n",key);
-        return key;
-      }
-      key[i]=tmp;
-    }
-    free(key);
-  }
-  else if(db_case==1){       //readvalue
-    char *value=malloc(VALUESIZE+1);
-    char tmp;
-    for(int i=0;i<VALUESIZE+1;i++){
-      read(fd,&tmp,1);
-      if(tmp==' ' || tmp=='\n'){
-        value[i]='\0';
-        //printf("value:%s\n",value);
-        return value;
-      }
-      value[i]=tmp;
-    }
-    free(value);
-  }
-  else{
-    assert(0);
-  }
-  return NULL; 
-}*/
-
-int find_key(struct kvdb *db,const char *key,const char *value){
-  int offset=JSIZE;
-  while(offset<db->size){
-    lseek(db->fd,offset,SEEK_SET);
-    char flag;
-    read(db->fd,&flag,1);
-    Log("%s,%d,%d",&flag,offset,db->size);
-    char *str=malloc(KEYSIZE+1);
-    switch (flag)
-    {
-      case '0':{ 
-        read(db->fd,str,KEYSIZE);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          if(strlen(value)<=SVALUESIZE){
-            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
-            write(db->fd,value,strlen(value));
-            write(db->fd," ",1);
-            free(str);
-            return 0;
-          }
-          else{
-            lseek(db->fd,-KEYSIZE-1,SEEK_CUR);
-            write(db->fd,"*",1);
-            free(str);
-            return -1;
-          }
-        }
-        offset+=DBSL;
-        break;
-      }
-      case '1':{
-        read(db->fd,str,KEYSIZE);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          if(strlen(value)<=SVALUESIZE){
-            lseek(db->fd,-1-KEYSIZE,SEEK_CUR);
-            write(db->fd,"2",1);
-            lseek(db->fd,strlen(key)+1,SEEK_CUR);
-            write(db->fd,value,strlen(value));
-            write(db->fd," ",strlen(value));
-            free(str);
-            return 0;
-          }
-          else{
-            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
-            write(db->fd,value,strlen(value));
-            write(db->fd," ",1);
-            free(str);
-            return 0;
-          }
-        }
-        offset+=DBLL;
-        break;
-      }
-      case '2':{
-        read(db->fd,str,KEYSIZE);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          if(strlen(value)<=SVALUESIZE){
-            lseek(db->fd,strlen(key)-KEYSIZE+1,SEEK_CUR);
-            write(db->fd,value,strlen(value));
-            write(db->fd," ",1);
-            free(str);
-            return 0;
-          }
-          else{
-            lseek(db->fd,-1-KEYSIZE,SEEK_CUR);
-            write(db->fd,"1",1);
-            lseek(db->fd,strlen(key)+1,SEEK_CUR);
-            write(db->fd,value,strlen(value));
-            write(db->fd," ",strlen(value));
-            free(str);
-            return 0;
-          }
-        }
-        offset+=DBLL;
-        break;
-      }
-      case '*':{
-        offset+=DBSL;
-        break;
-      }
-      default:{
-        //printf("%s,%d,%d\n",&flag,offset,db->size);
-        assert(0);
-        break;
-      }
-    }
-    free(str);
-    str=NULL;
-  }
-  return -1;
-}
-  /*for(int i=0;i<(db->size-db->start)/LINESIZE;i++){
-    lseek(db->fd,db->start+i*LINESIZE,SEEK_SET);
-    char *k=myread(db->fd,0);
-    if(k==NULL || strcmp(k,key)!=0){
-      free(k);
-      continue;
-    }
-    free(k);
-    return true;
-  }
-  return false;８／
-}
 
 int replay_put(struct kvdb *db, const char *key, const char *value) {
   if(find_key(db,key)==false){
@@ -225,18 +81,23 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
-}*/
-/*
+}
+
+
 int replay(struct kvdb *db){
   lseek(db->fd,0,SEEK_SET);
   char c;
-  if(read(db->fd,&c,1)>0){
-    if(c=='!'){  //begin replay
-      lseek(db->fd,2,SEEK_SET);
-      char *key=myread(db->fd,0);
-      lseek(db->fd,288,SEEK_SET);
-      char *value=myread(db->fd,1);
-      //printf("replay_put:%s,%s\n",key,value);
+  jnkl *jkl=malloc(sizeof(jnkl));
+  if(read(db->fd,jkl,sizeof(jnkl))>0){
+    if(jkl->flag=='!'){  //begin replay
+      int keylen=strtol(jkl->keylen,NULL,10);
+      int valuelen=strtol(jkl->valuelen,NULL,10);
+      int valuepos=strtol(jkl->valuepos,NULL,10);
+      char *key=malloc(keylen+1);
+      char *value=malloc(valuelen+1);
+      read(db->fd,key,keylen+1);
+      read(db->fd,value,valuelen);
+      value[valuelen]='\0';
       replay_put(db,key,value);
       lseek(db->fd,0,SEEK_SET);
       write(db->fd,"*",1);
@@ -244,7 +105,7 @@ int replay(struct kvdb *db){
     }
   }
   return 0;
-}*/
+}
 
 
 
@@ -254,8 +115,8 @@ struct kvdb *kvdb_open(const char *filename) {
   struct kvdb *db=malloc(sizeof(struct kvdb));
   db->fd=fd;
   strncpy(db->filename,filename,sizeof(db->filename));
-  db->committing=0;
   flock(db->fd,LOCK_EX);
+  db->committing=0;
   if(buf.st_size==0){
     write(db->fd,"*",1);
     lseek(db->fd,JSIZE-2,SEEK_CUR);
@@ -268,25 +129,7 @@ struct kvdb *kvdb_open(const char *filename) {
   }
   else{
     db->size=buf.st_size;
-    //printf("size:%d\n",db->size);
-    //lseek(db->fd,db->size,SEEK_SET);
-    //write(db->fd,"h",1);
-    //replay(db);
-    //recover
-    /*printf("size:%ld\n",buf.st_size);
-    char c;
-    write(db->fd,"1 kaer7324",10);
-    lseek(db->fd,144,SEEK_SET);
-    write(db->fd,"key2",4);
-    lseek(db->fd,288,SEEK_SET);
-    write(db->fd,"value1",6);
-    lseek(db->fd,288+4096+1,SEEK_SET);
-    write(db->fd,"value2",6);
-    lseek(db->fd,288+4097+4097,SEEK_SET);
-    write(db->fd,"kd",2);
-    while(read(db->fd,&c,1)!=0){
-      printf("%s",&c);
-    }*/
+    replay();
   }
   flock(db->fd,LOCK_UN);
   return db;
@@ -294,12 +137,11 @@ struct kvdb *kvdb_open(const char *filename) {
 
 int kvdb_close(struct kvdb *db) {
   while(db->committing==1);
+  flock(db->fd,LOCK_EX);
   close(db->fd);
   free(db);
   return 0;
 }
-
-
 
 char *kvdb_get(struct kvdb *db, const char *key) {
   flock(db->fd,LOCK_EX);
@@ -325,71 +167,6 @@ char *kvdb_get(struct kvdb *db, const char *key) {
   free(kl);
   flock(db->fd,LOCK_UN);
   return NULL;
-  /*while(offset<db->size){
-    lseek(db->fd,offset,SEEK_SET);
-    char flag;
-    read(db->fd,&flag,1);
-    switch (flag)
-    {
-      case '0':{ 
-        char *str=malloc(DBSL-1);
-        read(db->fd,str,DBSL-2);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          p=strtok(NULL," ");
-          char *re_value=malloc(strlen(p)+1);
-          strcpy(re_value,p);
-          free(str);
-          flock(db->fd,LOCK_UN);
-          return re_value;
-        }
-        free(str);
-        offset+=DBSL;
-        break;
-      }
-      case '1':{
-        char *str=malloc(DBLL-1);
-        read(db->fd,str,DBLL-2);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          p=strtok(NULL," ");
-          char *re_value=malloc(strlen(p)+1);
-          strcpy(re_value,p);
-          free(str);
-          flock(db->fd,LOCK_UN);
-          return re_value;
-        }
-        free(str);
-        offset+=DBLL;
-        break;
-      }
-      case '2':{
-        char *str=malloc(DBSL-1);
-        read(db->fd,str,DBSL-2);
-        char *p=strtok(str," ");
-        if(strcmp(p,key)==0){
-          p=strtok(NULL," ");
-          char *re_value=malloc(strlen(p)+1);
-          strcpy(re_value,p);
-          free(str);
-          flock(db->fd,LOCK_UN);
-          return re_value;
-        }
-        free(str);
-        offset+=DBLL;
-        break;
-      }
-      case '*':{
-        offset+=DBSL;
-        break;
-      }
-      default:{
-        assert(0);
-        break;
-      }
-    }
-  }*/
-  
 }
 
 int journal_put(struct kvdb *db,const char *key,const char *value){
@@ -441,6 +218,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
         free(key_line);
         lseek(db->fd,value_pos,SEEK_SET);
         write(db->fd,value,value_len);
+        fsync(db->fd);
         flock(db->fd,LOCK_UN);
         free(kl);
         return 0;
@@ -473,39 +251,9 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     write(db->fd," ",1);
   }
   fsync(db->fd);
-  //journal_put(db,key,value);
-  /*if(find_key(db,key,value)==-1){
-    lseek(db->fd,0,SEEK_END);
-    Log("size:%d",db->size);
-    if(strlen(value)<=SVALUESIZE){
-      write(db->fd,"0",1);
-      write(db->fd,key,strlen(key));
-      write(db->fd," ",1);
-      write(db->fd,value,strlen(value));
-      write(db->fd," ",1);
-      lseek(db->fd,DBSL-4-strlen(key)-strlen(value),SEEK_CUR);
-      write(db->fd,"\n",1);
-    }
-    else{
-      write(db->fd,"1",1);
-      write(db->fd,key,strlen(key));
-      write(db->fd," ",1);
-      write(db->fd,value,strlen(value));
-      write(db->fd," ",1);
-      lseek(db->fd,DBLL-4-strlen(key)-strlen(value),SEEK_CUR);
-      write(db->fd,"\n",1);
-    }
-  }*/
-  /*if(strlen(value)+strlen(key)+2<LINESIZE){
-      write(db->fd," ",1);
-      for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
-        write(db->fd,"0",1);
-      }
-    }
-  write(db->fd,"\n",1);*/
-  flock(db->fd,LOCK_UN);
   stat(db->filename,&buf);
   db->size=buf.st_size;
+  flock(db->fd,LOCK_UN);
   Log("after size:%d",db->size);
   return 0;
 }
