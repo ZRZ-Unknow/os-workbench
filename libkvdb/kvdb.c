@@ -438,7 +438,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       read(db->fd,value,valuelen);
       flock(db->fd,LOCK_UN);
       free(kl);
-      return value;
+      return 0;
     }
     free(kl);
   }

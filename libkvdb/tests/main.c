@@ -68,14 +68,14 @@ int test1(){
   printf("%s ",p->ksize);
   printf("%s ",p->vsize);
   printf("%s\n",p->key);*/
-  char tmp[150]="aksdfj aksldjfasdf  ";
-  char *p=strtok(tmp," ");
-  while(p){
-    printf("k:%s,%d\n",p,strlen(p));
-    p=strtok(NULL," ");
-  }
-  char *a=malloc(16*1024*1024);
-  assert(a);
+  int keylen=76;
+  int valuelen=987;
+  int valuepos=90837653;
+  char *key="osppt";
+  char *kl=malloc(34+strlen(key)+1);
+  sprintf(kl,"!%11d%11d%11d%s",keylen,valuelen,valuepos,key);
+  printf("%s\n",kl);
+  
   return 0;
   
 }
@@ -136,6 +136,6 @@ int test2(){
 }
 
 int main(){
-  db_test();
+  test1();
   return 0;
 }
