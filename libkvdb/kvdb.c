@@ -248,6 +248,9 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
         lseek(db->fd,value_pos,SEEK_SET);
         write(db->fd,value,value_len);
         fsync(db->fd);
+        lseek(db->fd,0,SEEK_SET);
+        write(db->fd,"*",1);
+        fsync(db->fd);
         flock(db->fd,LOCK_UN);
         free(kl);
         return 0;
@@ -279,6 +282,9 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     lseek(db->fd,LVALUESIZE-valuelen-1,SEEK_CUR);
     write(db->fd," ",1);
   }
+  fsync(db->fd);
+  lseek(db->fd,0,SEEK_SET);
+  write(db->fd,"*",1);
   fsync(db->fd);
   stat(db->filename,&buf);
   db->size=buf.st_size;
