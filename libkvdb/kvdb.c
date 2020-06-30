@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
     printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
