@@ -255,10 +255,8 @@ struct kvdb *kvdb_open(const char *filename) {
   db->committing=0;
   flock(db->fd,LOCK_EX);
   if(buf.st_size==0){
-    char *tmp=malloc(JSIZE-2);
-    memset(tmp,0,JSIZE-2);
     write(db->fd,"*",1);
-    write(db->fd,tmp,JSIZE-2);
+    lseek(db->fd,JSIZE-2,SEEK_CUR);
     write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
