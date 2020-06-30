@@ -56,12 +56,12 @@ int test1(){
   struct stat buf;
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-  write(fd,"mypen",5);
+  /*write(fd,"mypen",5);
   lseek(fd,8-5-1,SEEK_CUR);
   write(fd,"*",1);
   write(fd,"mypen",5);
   lseek(fd,3-1,SEEK_CUR);
-  write(fd,"*",1);
+  write(fd,"*",1);*/
 
   //struct r *p=malloc(sizeof(struct r));
   /*printf("dddd\n");
@@ -80,8 +80,8 @@ int test1(){
   int valuepos=90837653;
   char *key="osppt";
   char *kl=malloc(34+strlen(key)+1);
-  sprintf(kl,"!%-'#11d%-'#11d%-'#11d%s",keylen,valuelen,valuepos,key);
-  printf("%s\n",kl);
+  sprintf(kl,"!%-'#11d%-'#11d%-'#11d%s\0",keylen,valuelen,valuepos,key);
+  printf("%s,%d\n",kl,strlen(kl));
   
   return 0;
   
@@ -143,6 +143,6 @@ int test2(){
 }
 
 int main(){
-  db_test();
+  test1();
   return 0;
 }
