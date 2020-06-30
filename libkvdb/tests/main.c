@@ -73,7 +73,7 @@ int test1(){
   int valuepos=90837653;
   char *key="osppt";
   char *kl=malloc(34+strlen(key)+1);
-  sprintf(kl,"-!%'#11d%'#11d%'#11d%s",keylen,valuelen,valuepos,key);
+  sprintf(kl,"!%'#-11d%'#-11d%'#-11d%s",keylen,valuelen,valuepos,key);
   printf("%s\n",kl);
   
   return 0;
