@@ -303,7 +303,6 @@ int kvdb_close(struct kvdb *db) {
 
 char *kvdb_get(struct kvdb *db, const char *key) {
   flock(db->fd,LOCK_EX);
-  int offset=JSIZE;
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
   while(true){
@@ -312,7 +311,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     if(kl->flag!='!') break;
     int keylen=strtol(kl->keylen,NULL,10);
     Log("%d",keylen);
-    if(strncmp(key,kl->key,keylen)==0){
+    if(strcmp(key,kl->key)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
       int valuepos=strtol(kl->valuepos,NULL,10);
       char *value=malloc(valuelen+1);
@@ -434,7 +433,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     if(kl->flag!='!') break;
     int keylen=strtol(kl->keylen,NULL,10);
     Log("%d",keylen);
-    if(strncmp(key,kl->key,keylen)==0){
+    if(strcmp(key,kl->key)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
       if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
         int key_len=strlen(key);
