@@ -309,7 +309,6 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     kl=malloc(sizeof(keyline));
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
-    int keylen=strtol(kl->keylen,NULL,10);
     Log("%d",keylen);
     if(strcmp(key,kl->key)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
@@ -431,8 +430,6 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     kl=malloc(sizeof(keyline));
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
-    int keylen=strtol(kl->keylen,NULL,10);
-    Log("%d",keylen);
     if(strcmp(key,kl->key)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
       if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
