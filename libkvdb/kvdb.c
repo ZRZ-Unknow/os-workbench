@@ -231,7 +231,7 @@ int get_valuepos(struct kvdb *db,const char *key,const char *value){
   }
   free(kl);
   //到这里表明没有找到相同的key,或者需要重新定位valuepos
-  return db->size;
+  return lseek(db->fd,0,SEEK_END);
 }
 
 int journal_put(struct kvdb *db,const char *key,const char *value){
