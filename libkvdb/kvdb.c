@@ -37,9 +37,9 @@
 #define DBSL (132+SVALUESIZE)     //db-shortline
 #define DBLL (132+LVALUESIZE)     //db-longline
 
-#define LINESIZE (KEYSIZE+1+VALUESIZE+1)
-#define LEN1 (3 B)
-#define LEN2 (8 B)
+
+#define KEYLINE (162 B)
+#define KEYNUM (4 KB)
 
 
 //144处为第二行key开始
@@ -256,11 +256,14 @@ struct kvdb *kvdb_open(const char *filename) {
   flock(db->fd,LOCK_EX);
   if(buf.st_size==0){
     write(db->fd,"*",1);
-    lseek(db->fd,JSIZE-1,SEEK_CUR);
+    lseek(db->fd,JSIZE-2,SEEK_CUR);
+    write(db->fd,"\n",1);
+    lseek(db->fd,KEYLINE*KEYNUM,SEEK_CUR);
     write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
-    assert(db->size==JSIZE);
+    pirntf("%d\n",db->size);
+    assert(db->size==JSIZE+KEYLINE*KEYNUM);
   }
   else{
     db->size=buf.st_size;
