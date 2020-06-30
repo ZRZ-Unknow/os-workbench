@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
     printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
@@ -311,6 +311,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
     int keylen=strtol(kl->keylen,NULL,10);
+    Log("%d",keylen);
     if(strncmp(key,kl->key,keylen)==0){
       int valuelen=strtol(kl->valuelen,NULL,10);
       int valuepos=strtol(kl->valuepos,NULL,10);
