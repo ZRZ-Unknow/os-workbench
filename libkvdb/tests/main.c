@@ -56,6 +56,11 @@ int test1(){
   struct stat buf;
   char filename[5]="c.db";
   int fd=open(filename,O_RDWR|O_CREAT,S_IRUSR|S_IXUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+  write(fd,"mypen",8);
+  write(db,"\n",1);
+  write(fd,"mypen",8);
+  write(db,"\n",1);
+
   //struct r *p=malloc(sizeof(struct r));
   /*printf("dddd\n");
   char t[150];
