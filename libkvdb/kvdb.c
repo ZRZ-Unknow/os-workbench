@@ -19,7 +19,7 @@
 #define Log(format,...)
 #endif
 
-/*在Journal中，用!表示有效，*表示无效；在db中，用０表示短value，１表示长value，２表示长改短
+/*在Journal中，用!表示有效，*表示无效
 */
 
 #define B *1
@@ -33,7 +33,6 @@
 #define KEYNUM (4 KB)
 
 
-//144处为第二行key开始
 
 //读写文件数据 (以及管理偏移量) 时使用 read, write 和 lseek，同步数据时使用 fsync。
 typedef struct keyline{
@@ -151,7 +150,7 @@ int replay(struct kvdb *db){
       free(key);
       free(value);
       lseek(db->fd,0,SEEK_SET);
-      fsync(db->fd);  //加入size的改变
+      fsync(db->fd);  
       write(db->fd,"*",1);
       fsync(db->fd);
     }
@@ -268,8 +267,6 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   flock(db->fd,LOCK_UN);
   return 0;
 }
-
-
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value);
