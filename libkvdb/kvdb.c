@@ -262,7 +262,7 @@ struct kvdb *kvdb_open(const char *filename) {
     write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
-    pirntf("%d\n",db->size);
+    printf("%d\n",db->size);
     assert(db->size==JSIZE+KEYLINE*KEYNUM);
   }
   else{
