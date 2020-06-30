@@ -259,7 +259,6 @@ struct kvdb *kvdb_open(const char *filename) {
     lseek(db->fd,JSIZE-2,SEEK_CUR);
     write(db->fd,"\n",1);
     lseek(db->fd,KEYLINE*KEYNUM,SEEK_CUR);
-    write(db->fd,"\n",1);
     stat(filename,&buf);
     db->size=buf.st_size;
     printf("%d\n",db->size);
