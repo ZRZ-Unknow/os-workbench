@@ -169,7 +169,7 @@ struct kvdb *kvdb_open(const char *filename) {
   }
   else{
     db->size=buf.st_size;
-    //replay(db);
+    replay(db);
   }
   flock(db->fd,LOCK_UN);
   return db;
