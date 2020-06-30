@@ -445,18 +445,16 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
         free(key_line);
         lseek(db->fd,value_pos,SEEK_SET);
         write(db->fd,value,value_len);
+        flock(db->fd,LOCK_UN);
+        free(kl);
+        return 0;
       }
-      else{
-        break;
-      }
-      flock(db->fd,LOCK_UN);
-      free(kl);
-      return 0;
+      else break;
     }
     free(kl);
   }
   free(kl);
-  //到这里表明没有找到相同的key
+  //到这里表明没有找到相同的key,或者需要重新定位valuepos
   int keylen=strlen(key);
   int valuelen=strlen(value);
   int valuepos=db->size;
