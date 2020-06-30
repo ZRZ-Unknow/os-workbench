@@ -169,19 +169,38 @@ char *kvdb_get(struct kvdb *db, const char *key) {
   return NULL;
 }
 
+
+//需要在调用者里上锁
+int get_valuepos(struct kvdb *db,const char *key){
+  lseek(db->fd,JSIZE,SEEK_SET);
+  keyline *kl;
+  while(true){
+    kl=malloc(sizeof(keyline));
+    read(db->fd,kl,sizeof(keyline));
+    if(kl->flag!='!') break;
+    if(strcmp(key,kl->key)==0){
+      int valuelen=strtol(kl->valuelen,NULL,10);
+      if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
+        int valuepos=strtol(kl->valuepos,NULL,10);
+        free(kl);
+        return valuepos;
+      }
+      else break;
+    }
+    free(kl);
+  }
+  free(kl);
+  //到这里表明没有找到相同的key,或者需要重新定位valuepos
+  return db->size;
+}
+
 int journal_put(struct kvdb *db,const char *key,const char *value){
   lseek(db->fd,0,SEEK_SET);
   write(db->fd,"*",1);
   fsync(db->fd);
-  int key_len=strlen(key);
-  int value_len=strlen(value);
-  if(value_len<=SVALUESIZE) write(db->fd,"0",1);
-  else write(db->fd,"1",1);
-  write(db->fd,key,key_len);
-  write(db->fd," ",1);
-  write(db->fd,value,value_len);
-  write(db->fd," ",1);
-  fsync(db->fd);
+  int keylen=strlen(key);
+  int valuelen=strlen(value);
+  
   lseek(db->fd,0,SEEK_SET);
   fsync(db->fd);
   write(db->fd,"!",1);
