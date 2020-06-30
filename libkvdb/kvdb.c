@@ -415,7 +415,10 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 }
 
 char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
-  char *kl=malloc(34+keylen);
+  char *kl=malloc(34+keylen+1);
+  memset(kl,'\0',35+keylen);
+  sprintf(kl,"!%-11%d%-11%d%-11%d%s",keylen,valuelen,valuepos,key);
+  Log("%s",kl);
   return kl;
 }
 
@@ -448,7 +451,17 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   int valuelen=strlen(value);
   int valuepos=db->size;
   char *key_line=gen_keyline(keylen,valuelen,valuepos,key);
-  free(kl);
+  lseek(db->fd,-sizeof(keyline),SEEK_CUR);
+  write(db->fd,key_line,35+keylen);
+  free(key_line);
+  lseek(db->fd,0,SEEK_END);
+  if(valuelen<=SVALUESIZE){
+    write(db->fd,value,SVALUESIZE);
+  }
+  else{
+    write(db->fd,value,LVALUESIZE);
+  }
+  fsync(db->fd);
   //journal_put(db,key,value);
   /*if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
