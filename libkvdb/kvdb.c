@@ -45,14 +45,16 @@
 //144处为第二行key开始
 
 //读写文件数据 (以及管理偏移量) 时使用 read, write 和 lseek，同步数据时使用 fsync。
-typedef struct journal{
-  int key_lenth,value_lenth;
-  char *key,*value;
-}journal;
+typedef struct keyline{
+  char flag;
+  char keylen[11];
+  char valuelen[11];
+  char valuepos[11];
+  char key[128];
+}keyline;
 
 struct kvdb {
   int fd;
-  //int start;  
   int size;
   int committing;
   char filename[128];
@@ -262,7 +264,6 @@ struct kvdb *kvdb_open(const char *filename) {
     write(db->fd," ",1);
     stat(filename,&buf);
     db->size=buf.st_size;
-    printf("%d\n",db->size);
     assert(db->size==JSIZE+KEYLINE*KEYNUM);
   }
   else{
@@ -303,7 +304,13 @@ int kvdb_close(struct kvdb *db) {
 char *kvdb_get(struct kvdb *db, const char *key) {
   flock(db->fd,LOCK_EX);
   int offset=JSIZE;
-  while(offset<db->size){
+  lseek(db->fd,JSIZE,SEEK_SET);
+  keyline *kl=malloc(sizeof(keyline));
+  while(true){
+    read(db->fd,kl,sizeof(keyline));
+    if(kl->flag!='!') break;
+  }
+  /*while(offset<db->size){
     lseek(db->fd,offset,SEEK_SET);
     char flag;
     read(db->fd,&flag,1);
@@ -366,7 +373,7 @@ char *kvdb_get(struct kvdb *db, const char *key) {
         break;
       }
     }
-  }
+  }*/
   flock(db->fd,LOCK_UN);
   return NULL;
 }
@@ -394,7 +401,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
   flock(db->fd,LOCK_EX);
-  journal_put(db,key,value);
+  //journal_put(db,key,value);
   if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
     Log("size:%d",db->size);
