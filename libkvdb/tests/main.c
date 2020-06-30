@@ -82,7 +82,13 @@ int test1(){
   char *kl=malloc(34+strlen(key)+1);
   sprintf(kl,"!%-'#11d%-'#11d%-'#11d%s\0",keylen,valuelen,valuepos,key);
   printf("%s,%d\n",kl,strlen(kl));
-  
+  write(fd,kl,strlen(kl)+1);
+  char *a=malloc(100);
+  lseek(fd,0,SEEK_SET);
+  read(fd,a,100);
+  if(strcmp(a,kl)==0){
+    printf("dd\n");
+  } 
   return 0;
   
 }
