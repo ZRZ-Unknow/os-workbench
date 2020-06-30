@@ -60,6 +60,14 @@ struct kvdb {
 
 struct stat buf;
 
+char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
+  char *kl=malloc(34+keylen+1);
+  memset(kl,'\0',35+keylen);
+  sprintf(kl,"!%-11d%-11d%-11d%s",keylen,valuelen,valuepos,key);
+  Log("%s",kl);
+  return kl;
+}
+
 int replay_put(struct kvdb *db, const char *key, const char *value) {
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
@@ -114,26 +122,6 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
   stat(db->filename,&buf);
   db->size=buf.st_size;
   return 0;
-  /*if(find_key(db,key)==false){
-    lseek(db->fd,0,SEEK_END);
-    write(db->fd,key,strlen(key));
-    write(db->fd," ",1);
-    write(db->fd,value,strlen(value));
-  }
-  else{
-    write(db->fd,value,strlen(value));
-  }
-  if(strlen(value)+strlen(key)+2<LINESIZE){
-      write(db->fd," ",1);
-      for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
-        write(db->fd,"0",1);
-      }
-    }
-  write(db->fd,"\n",1);
-  fsync(db->fd);
-  stat(db->filename,&buf);
-  db->size=buf.st_size;
-  return 0;*/
 }
 
 //该函数需要在调用者中上锁
@@ -159,7 +147,6 @@ int replay(struct kvdb *db){
   }
   return 0;
 }
-
 
 
 struct kvdb *kvdb_open(const char *filename) {
@@ -270,13 +257,7 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   return 0;
 }
 
-char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
-  char *kl=malloc(34+keylen+1);
-  memset(kl,'\0',35+keylen);
-  sprintf(kl,"!%-11d%-11d%-11d%s",keylen,valuelen,valuepos,key);
-  Log("%s",kl);
-  return kl;
-}
+
 
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value);
