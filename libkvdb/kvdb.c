@@ -417,8 +417,33 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
   flock(db->fd,LOCK_EX);
+  flock(db->fd,LOCK_EX);
+  int offset=JSIZE;
+  lseek(db->fd,JSIZE,SEEK_SET);
+  keyline *kl;
+  while(true){
+    kl=malloc(sizeof(keyline));
+    read(db->fd,kl,sizeof(keyline));
+    if(kl->flag!='!') break;
+    int keylen=strtol(kl->keylen,NULL,10);
+    if(strncmp(key,kl->key,keylen)==0){
+      int valuelen=strtol(kl->valuelen,NULL,10);
+      int valuepos=strtol(kl->valuepos,NULL,10);
+      char *value=malloc(valuelen+1);
+      memset(value,'\0',valuelen+1);
+      lseek(db->fd,valuepos,SEEK_SET);
+      read(db->fd,value,valuelen);
+      flock(db->fd,LOCK_UN);
+      free(kl);
+      return value;
+    }
+    free(kl);
+  }
+  free(kl);
+  flock(db->fd,LOCK_UN);
+  return NULL;
   //journal_put(db,key,value);
-  if(find_key(db,key,value)==-1){
+  /*if(find_key(db,key,value)==-1){
     lseek(db->fd,0,SEEK_END);
     Log("size:%d",db->size);
     if(strlen(value)<=SVALUESIZE){
@@ -439,7 +464,7 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
       lseek(db->fd,DBLL-4-strlen(key)-strlen(value),SEEK_CUR);
       write(db->fd,"\n",1);
     }
-  }
+  }*/
   /*if(strlen(value)+strlen(key)+2<LINESIZE){
       write(db->fd," ",1);
       for(int i=0;i<LINESIZE-strlen(key)-strlen(value)-3;i++){
