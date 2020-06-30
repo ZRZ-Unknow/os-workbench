@@ -456,10 +456,14 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   free(key_line);
   lseek(db->fd,0,SEEK_END);
   if(valuelen<=SVALUESIZE){
-    write(db->fd,value,SVALUESIZE);
+    write(db->fd,value,valuelen);
+    lseek(db->fd,SVALUESIZE-valuelen-1,SEEK_CUR);
+    write(db->fd," ",1);
   }
   else{
     write(db->fd,value,LVALUESIZE);
+    lseek(db->fd,LVALUESIZE-valuelen-1,SEEK_CUR);
+    write(db->fd," ",1);
   }
   fsync(db->fd);
   //journal_put(db,key,value);
