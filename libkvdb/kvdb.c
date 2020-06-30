@@ -414,11 +414,14 @@ int journal_put(struct kvdb *db,const char *key,const char *value){
   return 0;
 }
 
+char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
+  char *kl=malloc(34+keylen);
+  return kl;
+}
+
 int kvdb_put(struct kvdb *db, const char *key, const char *value) {
   Log("%s,%s",key,value); 
   flock(db->fd,LOCK_EX);
-  flock(db->fd,LOCK_EX);
-  int offset=JSIZE;
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
   while(true){
@@ -439,6 +442,12 @@ int kvdb_put(struct kvdb *db, const char *key, const char *value) {
     }
     free(kl);
   }
+  free(kl);
+  //到这里表明没有找到相同的key
+  int keylen=strlen(key);
+  int valuelen=strlen(value);
+  int valuepos=db->size;
+  char *key_line=gen_keyline(keylen,valuelen,valuepos,key);
   free(kl);
   //journal_put(db,key,value);
   /*if(find_key(db,key,value)==-1){
