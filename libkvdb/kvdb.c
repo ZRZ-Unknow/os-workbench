@@ -78,7 +78,7 @@ int replay_put(struct kvdb *db,int keylen,int valuelen,int valuepos,const char *
     if(strcmp(key,kl->key)==0){
       char *key_line=gen_keyline(keylen,valuelen,valuepos,key);
       lseek(db->fd,-sizeof(keyline),SEEK_CUR);
-      write(db->fd,key_line,35+key_len);
+      write(db->fd,key_line,35+keylen);
       free(key_line);
       if(db->size==valuepos){   //要新加的
         lseek(db->fd,0,SEEK_END);
@@ -98,7 +98,7 @@ int replay_put(struct kvdb *db,int keylen,int valuelen,int valuepos,const char *
       }
       else{
         lseek(db->fd,valuepos,SEEK_SET);
-        write(db->fd,value,value_len);
+        write(db->fd,value,valuelen);
       }
       fsync(db->fd);
       stat(db->filename,&buf);
