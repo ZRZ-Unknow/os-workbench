@@ -68,7 +68,7 @@ char *gen_keyline(int keylen,int valuelen,int valuepos,const char *key){
   return kl;
 }
 
-int replay_put(struct kvdb *db, const char *key, const char *value) {
+int replay_put(struct kvdb *db, int keylen, int valuelen, int valuepos, const char *key, const char *value) {
   lseek(db->fd,JSIZE,SEEK_SET);
   keyline *kl;
   while(true){
@@ -76,7 +76,7 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
     read(db->fd,kl,sizeof(keyline));
     if(kl->flag!='!') break;
     if(strcmp(key,kl->key)==0){
-      int valuelen=strtol(kl->valuelen,NULL,10);
+      /*int valuelen=strtol(kl->valuelen,NULL,10);
       if(strlen(value)<=SVALUESIZE || (strlen(value)>SVALUESIZE && valuelen>SVALUESIZE)){
         int key_len=strlen(key);
         int value_len=strlen(value);
@@ -91,7 +91,7 @@ int replay_put(struct kvdb *db, const char *key, const char *value) {
         free(kl);
         return 0;
       }
-      else break;
+      else break;*/
     }
     free(kl);
   }
@@ -138,13 +138,16 @@ int replay(struct kvdb *db){
       read(db->fd,key,keylen+1);
       read(db->fd,value,valuelen);
       value[valuelen]='\0';
-      replay_put(db,key,value);
+      replay_put(db,keylen,valuelen,valuepos,key,value);
+      free(key);
+      free(value);
       lseek(db->fd,0,SEEK_SET);
       fsync(db->fd);
       write(db->fd,"*",1);
       fsync(db->fd);
     }
   }
+  free(jkl);
   return 0;
 }
 
