@@ -95,5 +95,10 @@ void co_yield(){
 
 };
 void co_wait(struct co *co){
-
+  while(co->status!=CO_DEAD) co_yield();
+    struct co *prev=co->prev;
+    struct co *next=co->next;
+    prev->next=next;
+    next->prev=prev;
+    free(co);
 };
