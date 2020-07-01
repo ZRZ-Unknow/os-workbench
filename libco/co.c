@@ -94,7 +94,8 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
 void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
-
+    struct co *next=co_current->next;
+    
   }
   else{
 
