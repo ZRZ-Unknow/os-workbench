@@ -92,6 +92,13 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   return co_new;
 };
 void co_yield(){
+  int val=setjmp(co_current->context);
+  if(val==0){
+
+  }
+  else{
+
+  }
 
 };
 void co_wait(struct co *co){
