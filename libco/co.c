@@ -111,13 +111,10 @@ void co_yield(){
       longjmp(next->context,0);
     } 
   }
-  else{
-
-  }
-
 };
 void co_wait(struct co *co){
   while(co->status!=CO_DEAD) co_yield();
+  Log("free %s",co->name);
   struct co *prev=co->prev;
   struct co *next=co->next;
   prev->next=next;
