@@ -112,7 +112,7 @@ void co_yield(){
     if(next->status==CO_NEW){
       if(sizeof(void*)==4) stack_switch_call(next->stackptr,wrapper,(uintptr_t)NULL);
       else{
-        asm volatile("mov %0,%%rsp"::"b"(uintptr_t(next->stackptr)));
+        asm volatile("mov %0,%%rsp"::"b"((uintptr_t)next->stackptr));
         wrapper();
       }
     }
