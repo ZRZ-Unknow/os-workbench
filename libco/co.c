@@ -95,7 +95,11 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
 void wrapper(){
   co_current->status=CO_RUNNING;
   co_current->func(co_current->arg);
-  co_current->status=CO_DEAD; 
+  co_current->status=CO_DEAD;
+  if(co_current->waiter!=NULL){
+    co_current->waiter->status=CO_RUNNING;
+    co_current->waiter=NULL;
+  }
 }
 
 void co_yield(){
