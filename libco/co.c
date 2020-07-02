@@ -91,16 +91,23 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   debugprint();
   return co_new;
 };
+
+void wrapper(){
+  co_current->status=CO_RUNNING;
+  co_current->func(co_current->arg);
+  co_current->status=CO_DEAD; 
+}
+
 void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
     struct co *next=co_current->next;
     while(next->status==CO_WAITING || next->status==CO_DEAD) next=next->next;
+    co_current=next;
     if(next->status==CO_NEW){
-
+      stack_switch_call(next->stackptr,wrapper,NULL);
     }
     else{
-      co_current=next;
       longjmp(next->context,0);
     } 
   }
@@ -111,9 +118,9 @@ void co_yield(){
 };
 void co_wait(struct co *co){
   while(co->status!=CO_DEAD) co_yield();
-    struct co *prev=co->prev;
-    struct co *next=co->next;
-    prev->next=next;
-    next->prev=prev;
-    free(co);
+  struct co *prev=co->prev;
+  struct co *next=co->next;
+  prev->next=next;
+  next->prev=prev;
+  free(co);
 };
