@@ -95,6 +95,7 @@ void co_yield(){
   int val=setjmp(co_current->context);
   if(val==0){
     struct co *next=co_current->next;
+    while(next->status==CO_WAITING || next->status==CO_DEAD) next=next->next;
     if(next->status==CO_NEW){
 
     }
