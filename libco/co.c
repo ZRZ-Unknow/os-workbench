@@ -88,7 +88,7 @@ struct co* co_start(const char *name, void (*func)(void *), void *arg){
   co_new->prev=prev;
   prev->next=co_new;
   co_num+=1;
-  debugprint();
+  //debugprint();
   return co_new;
 };
 
