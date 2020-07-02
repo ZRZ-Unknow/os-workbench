@@ -105,7 +105,7 @@ void co_yield(){
     while(next->status==CO_WAITING || next->status==CO_DEAD) next=next->next;
     co_current=next;
     if(next->status==CO_NEW){
-      stack_switch_call(next->stackptr,wrapper,NULL);
+      stack_switch_call(next->stackptr,wrapper,(uintptr_t)NULL);
     }
     else{
       longjmp(next->context,0);
