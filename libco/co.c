@@ -110,8 +110,11 @@ void co_yield(){
     while(next->status==CO_WAITING || next->status==CO_DEAD) next=next->next;
     co_current=next;
     if(next->status==CO_NEW){
-      Log("%d",(int)sizeof(void*));
-      stack_switch_call(next->stackptr,wrapper,(uintptr_t)NULL);
+      if(sizeof(void*)==4) stack_switch_call(next->stackptr,wrapper,(uintptr_t)NULL);
+      else{
+        asm volatile("mov %0,%%rsp"::"b"(uintptr_t(next->stackptr)));
+        wrapper();
+      }
     }
     else{
       longjmp(next->context,0);
