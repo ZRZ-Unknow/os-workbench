@@ -100,7 +100,7 @@ void co_yield(){
     }
     else{
       co_current=next;
-      longjmp(next->context);
+      longjmp(next->context,0);
     } 
   }
   else{
