@@ -10,7 +10,7 @@
 
 #define KB *1024
 #define STACK_SIZE (64 KB)
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
     printf("\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
