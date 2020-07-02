@@ -100,6 +100,7 @@ void wrapper(){
     co_current->waiter->status=CO_RUNNING;
     co_current->waiter=NULL;
   }
+  co_yield();
 }
 
 void co_yield(){
