@@ -122,11 +122,17 @@ void co_yield(){
   }
 };
 void co_wait(struct co *co){
-  while(co->status!=CO_DEAD) co_yield();
-  Log("free %s",co->name);
-  struct co *prev=co->prev;
-  struct co *next=co->next;
-  prev->next=next;
-  next->prev=prev;
-  free(co);
+  if(co->status==CO_DEAD){
+    Log("free %s",co->name);
+    struct co *prev=co->prev;
+    struct co *next=co->next;
+    prev->next=next;
+    next->prev=prev;
+    free(co);
+  }
+  else{
+    co->waiter=co_current;
+    co_current->status=CO_WAITING;
+    co_yield();
+  }
 };
