@@ -110,7 +110,7 @@ void co_yield(){
     while(next->status==CO_WAITING || next->status==CO_DEAD) next=next->next;
     co_current=next;
     if(next->status==CO_NEW){
-      Log("%d",sizeof(void*));
+      Log("%ld",sizeof(void*));
       stack_switch_call(next->stackptr,wrapper,(uintptr_t)NULL);
     }
     else{
