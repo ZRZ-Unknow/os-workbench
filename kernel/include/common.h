@@ -2,6 +2,10 @@
 #include <klib.h>
 #include <klib-macros.h>
 
+typedef intptr_t ssize_t;
+typedef intptr_t off_t;
+typedef int32_t pid_t;
+
 #ifndef MAX_CPU
  #define MAX_CPU 8
 #endif

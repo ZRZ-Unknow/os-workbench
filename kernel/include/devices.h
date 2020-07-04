@@ -1,4 +1,5 @@
 #include <common.h>
+#include <amdev.h>
 
 typedef struct devops {
   int (*init)(device_t *dev);

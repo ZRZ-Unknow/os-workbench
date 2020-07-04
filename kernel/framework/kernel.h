@@ -62,6 +62,7 @@ MODULE(vfs) {
   int (*mkdir)(const char *pathname);
   int (*chdir)(const char *path);
   int (*dup)(int fd);
+};
 typedef struct device device_t;
 MODULE(dev) {
   void (*init)();
