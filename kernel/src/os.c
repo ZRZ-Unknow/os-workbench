@@ -57,7 +57,7 @@ static void os_init() {  //必须在这里完成所有必要的初始化
   lock_init(&os_trap_lk,"os_trap_lk");
   pmm->init();
   kmt->init();
-
+  printf("skadfjlk\n");
   #ifdef TEST_KMT
   srand(uptime());
   kmt->sem_init(&empty,"empty",5);
